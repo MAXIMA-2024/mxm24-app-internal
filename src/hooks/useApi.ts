@@ -1,11 +1,14 @@
 import axios, { AxiosError, isAxiosError } from "axios";
 import { useToast } from "@chakra-ui/react";
+import useAuth from "./useAuth";
+import { useEffect } from "react";
 
 export const baseUrl =
   import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
 
 export const instance = axios.create({
   baseURL: baseUrl,
+  withCredentials: true,
 });
 
 export type ResponseModel<T = undefined> = {
@@ -27,7 +30,29 @@ export enum Responses {
 }
 
 const useApi = () => {
-  // !TODO: Add interceptors
+  const auth = useAuth();
+
+  useEffect(() => {
+    // since we are using jwt in cookies, we can only assume if token is still valid by checkin if certain request is successful
+    // if we get 401, we can assume that the token is invalid and try to refresh it
+    // if refresh token is invalid, we can assume that the user is not authenticated
+
+    instance.interceptors.response.use(
+      (resp) => resp,
+      async (error: AxiosError<ResponseModel>) => {
+        if (error.response?.status === 401) {
+          try {
+            await auth.refresh();
+            return instance.request(error.config!);
+          } catch (e) {
+            auth.logout();
+          }
+        }
+
+        return Promise.reject(error);
+      }
+    );
+  }, [auth]);
   return instance;
 };
 
