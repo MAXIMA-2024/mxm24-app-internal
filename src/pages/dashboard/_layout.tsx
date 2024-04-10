@@ -151,7 +151,7 @@ const DashboardLayout = () => {
               </Stack>
               <HiChevronDown />
             </Button>
-            <Link to="/malpun">
+            <Link to="/dashboard/malpun">
               <Button
                 variant={"ghost"}
                 w={"full"}
@@ -164,22 +164,20 @@ const DashboardLayout = () => {
                 </Text>
               </Button>
             </Link>
-            <Link to="/qrscanner">
-              <Button
-                variant={"ghost"}
-                w={"full"}
-                justifyContent={"space-between"}
-                p={5}
-              >
-                <Stack direction={"row"}>
-                  <Image src="icons/qr.png" w={"1.5rem"} mr={"0.75rem"}></Image>
-                  <Text fontSize={"1rem"} fontWeight={"medium"}>
-                    QR Scan
-                  </Text>
-                </Stack>
-                <HiChevronDown />
-              </Button>
-            </Link>
+            <Button
+              variant={"ghost"}
+              w={"full"}
+              justifyContent={"space-between"}
+              p={5}
+            >
+              <Stack direction={"row"}>
+                <Image src="icons/qr.png" w={"1.5rem"} mr={"0.75rem"}></Image>
+                <Text fontSize={"1rem"} fontWeight={"medium"}>
+                  QR Scan
+                </Text>
+              </Stack>
+              <HiChevronDown />
+            </Button>
           </Stack>
         </Stack>
         <Stack w={"full"}>
