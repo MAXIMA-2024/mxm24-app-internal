@@ -8,20 +8,27 @@ import {
   Tag,
   Text,
 } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 
 const Verification = () => {
   return (
     <>
       <Stack gap={7}>
+        {/* Breadcrumb */}
         <Breadcrumb fontWeight="medium" fontSize="sm">
           <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
+            <Link to={"/dashboard"}>
+              <BreadcrumbLink>Dashboard</BreadcrumbLink>
+            </Link>
           </BreadcrumbItem>
 
           <BreadcrumbItem isCurrentPage>
-            <BreadcrumbLink href="/verification">Verification</BreadcrumbLink>
+            <Link to={"/dashboard/verification"}>
+              <BreadcrumbLink>Verification</BreadcrumbLink>
+            </Link>
           </BreadcrumbItem>
         </Breadcrumb>
+        {/* Header */}
         <Stack direction={"row"} gap={5}>
           <Heading fontFamily={"Poppins"} color={"text.primary"}>
             Verifikasi
@@ -38,6 +45,7 @@ const Verification = () => {
             </Tag>
           </Stack>
         </Stack>
+        {/* Content */}
         <Box
           bgColor={"white"}
           w={"full"}
