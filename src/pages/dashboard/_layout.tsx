@@ -625,7 +625,6 @@ const MobileLayout = () => {
                 transition: "opacity 0.2s ease-in-out",
               },
             }}
-            
             onClick={() => setIsMenuExpanded(!isMenuExpanded)}
           >
             <Button

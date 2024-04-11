@@ -24,23 +24,30 @@ type DataTableProps = {
 
 const DataTable = ({ colDefs, data }: DataTableProps) => {
   return (
-    <Prose p={"25px"}>
-      <ThemeProvider theme={theme}>
-        <MUIDataTable
-          title={""}
-          data={data}
-          columns={colDefs}
-          options={{
-            rowsPerPage: 10,
-            selectableRows: "none",
-            elevation: 0,
-            tableBodyHeight: "100%",
-            tableBodyMaxHeight: "100%",
-            responsive: "standard",
-          }}
-        />
-      </ThemeProvider>
-    </Prose>
+    <>
+      <Prose
+        p={"25px"}
+        // w={["full", "80vw", "60vw", "full"]}
+        h={["55vh", "60vh", "60vh", "65vh"]}
+        className="removeLive"
+      >
+        <ThemeProvider theme={theme}>
+          <MUIDataTable
+            title={""}
+            data={data}
+            columns={colDefs}
+            options={{
+              rowsPerPage: 10,
+              selectableRows: "none",
+              elevation: 0,
+              tableBodyHeight: "auto",
+              tableBodyMaxHeight: "none",
+              responsive: "vertical",
+            }}
+          />
+        </ThemeProvider>
+      </Prose>
+    </>
   );
 };
 

@@ -6,11 +6,10 @@ import {
   Heading,
   Stack,
   Tag,
-  Text,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import DataTable from "../../components/datatables";
-import MUIDataTable, { MUIDataTableColumn } from "mui-datatables";
+import { MUIDataTableColumn } from "mui-datatables";
 
 const Verification = () => {
   const colDefs: MUIDataTableColumn[] = [
@@ -37,10 +36,32 @@ const Verification = () => {
     ["John Walsh", "Test Corp", "Hartford", "CT"],
     ["Bob Herm", "Test Corp", "Tampa", "FL"],
     ["James Houston", "Test Corp", "Dallas", "TX"],
+    ["Joe James", "Test Corp", "Yonkers", "NY"],
+    ["John Walsh", "Test Corp", "Hartford", "CT"],
+    ["Bob Herm", "Test Corp", "Tampa", "FL"],
+    ["James Houston", "Test Corp", "Dallas", "TX"],
+    ["Joe James", "Test Corp", "Yonkers", "NY"],
+    ["John Walsh", "Test Corp", "Hartford", "CT"],
+    ["Bob Herm", "Test Corp", "Tampa", "FL"],
+    ["James Houston", "Test Corp", "Dallas", "TX"],
   ];
 
   return (
     <>
+      <style>
+        {`
+          .tss-hwdp7s-MUIDataTable-liveAnnounce {
+              border: 0 !important;
+              clip: rect(0 0 0 0) !important;
+              height: 1px !important;
+              margin: -1px !important;
+              overflow: hidden !important;
+              padding: 0 !important;
+              position: relative !important;
+              width: 1px !important;
+          }
+        `}
+      </style>
       <Stack gap={7}>
         {/* Breadcrumb */}
         <Breadcrumb fontWeight="medium" fontSize="sm">
@@ -79,10 +100,9 @@ const Verification = () => {
         {/* Content */}
         <Box
           bgColor={"white"}
-          w={"full"}
-          // h={"70vh"}
+          w={["full", "full", "80%", "full"]}
+          h={"full"}
           shadow={"lg"}
-          // p={25}
           rounded={"xl"}
           overflow={"auto"}
         >
