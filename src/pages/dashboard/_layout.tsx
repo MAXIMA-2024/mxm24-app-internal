@@ -17,13 +17,34 @@ import {
 import { Outlet, useLocation, Link } from "react-router-dom";
 import { HiChevronDown } from "react-icons/hi";
 // import { MdAccountCircle } from "react-icons/md";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const DesktopLayout = () => {
   const loc = useLocation();
   const currentPath = loc.pathname;
 
   const [isHovered, setIsHovered] = useState(false);
+
+  const [isQrMenuExpanded, setIsQrMenuExpanded] = useState(false);
+
+  const qrDesktopRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        qrDesktopRef.current &&
+        !qrDesktopRef.current.contains(event.target as Node)
+      ) {
+        setIsQrMenuExpanded(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -68,7 +89,7 @@ const DesktopLayout = () => {
       icon: "/icons/mahasiswa.png",
     },
     {
-      label: "State",
+      label: "STATE",
       path: "/dashboard/state",
       icon: "/icons/state.png",
     },
@@ -91,8 +112,13 @@ const DesktopLayout = () => {
 
   return (
     <Stack
-      bgGradient={"linear(to-b, white, #f7e8cb)"}
-      minH={"100vh"}
+      bgImage={"url('/bg/bg-desktop-all.png')"}
+      bgSize={"cover"}
+      bgRepeat={"no-repeat"}
+      bgPos={"center"}
+      h={"100vh"}
+      w={"100vw"}
+      gap={0}
       direction={"row"}
     >
       <Stack
@@ -238,6 +264,7 @@ const DesktopLayout = () => {
             {/* Dropdown QR */}
             <Menu>
               <MenuButton
+                ref={qrDesktopRef}
                 as={Button}
                 variant={"ghost"}
                 p={0}
@@ -249,6 +276,7 @@ const DesktopLayout = () => {
                 _active={{
                   transform: "scale(1.05)",
                 }}
+                onClick={() => setIsQrMenuExpanded(!isQrMenuExpanded)}
               >
                 <Button
                   variant={"ghost"}
@@ -264,7 +292,8 @@ const DesktopLayout = () => {
                       opacity={
                         currentPath === "/dashboard/qrscanner/state" ||
                         currentPath === "/dashboard/qrscanner/malpun" ||
-                        isHovered
+                        isHovered ||
+                        isQrMenuExpanded
                           ? 1
                           : 0.25
                       }
@@ -276,7 +305,8 @@ const DesktopLayout = () => {
                       color={
                         currentPath === "/dashboard/qrscanner/state" ||
                         currentPath === "/dashboard/qrscanner/malpun" ||
-                        isHovered
+                        isHovered ||
+                        isQrMenuExpanded
                           ? "brand.maroon"
                           : "text.primary"
                       }
@@ -401,7 +431,6 @@ const DesktopLayout = () => {
               draggable: "none",
             }}
           >
-            {/* <MdAccountCircle size={"3rem"} opacity={"0.75"} /> */}
             <Avatar
               w={["2rem", "2rem", "2rem", "3rem"]}
               mr={"0.5rem"}
@@ -448,15 +477,49 @@ const MobileLayout = () => {
   const loc = useLocation();
   const currentPath = loc.pathname;
 
-  // const [isHovered, setIsHovered] = useState(false);
+  const [isMenuExpanded, setIsMenuExpanded] = useState(false);
+  const [isStatusMenuExpanded, setIsStatusMenuExpanded] = useState(false);
+  const [isAcaraMenuExpanded, setIsAcaraMenuExpanded] = useState(false);
 
-  // const handleMouseEnter = () => {
-  //   setIsHovered(true);
-  // };
+  const menuRef = useRef<HTMLDivElement>(null);
+  const statusMenuRef = useRef<HTMLDivElement>(null);
+  const acaraMenuRef = useRef<HTMLDivElement>(null);
 
-  // const handleMouseLeave = () => {
-  //   setIsHovered(false);
-  // };
+  useEffect(() => {
+    const handleMenuOutsideClick = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuExpanded(false);
+      }
+    };
+
+    const handleStatusMenuOutsideClick = (event: MouseEvent) => {
+      if (
+        statusMenuRef.current &&
+        !statusMenuRef.current.contains(event.target as Node)
+      ) {
+        setIsStatusMenuExpanded(false);
+      }
+    };
+
+    const handleAcaraMenuOutsideClick = (event: MouseEvent) => {
+      if (
+        acaraMenuRef.current &&
+        !acaraMenuRef.current.contains(event.target as Node)
+      ) {
+        setIsAcaraMenuExpanded(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleMenuOutsideClick);
+    document.addEventListener("mousedown", handleStatusMenuOutsideClick);
+    document.addEventListener("mousedown", handleAcaraMenuOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleMenuOutsideClick);
+      document.removeEventListener("mousedown", handleStatusMenuOutsideClick);
+      document.removeEventListener("mousedown", handleAcaraMenuOutsideClick);
+    };
+  }, []);
 
   return (
     <Stack>
@@ -499,13 +562,28 @@ const MobileLayout = () => {
       </Stack>
 
       {/* Content */}
-      <Text>This is Mobile Layout</Text>
-
+      <Stack
+        pos={"absolute"}
+        // Ganti BG Image di Sini
+        bgImage={"url('/bg/bg-dashboard.png')"}
+        bgSize={"110%"}
+        bgRepeat={"no-repeat"}
+        bgPos={"center"}
+        h={"100vh"}
+        w={"100vw"}
+        gap={0}
+      >
+        <Stack p={25} pt={75} gap={"1rem"} w={"full"}>
+          <Stack>
+            <Outlet />
+          </Stack>
+        </Stack>
+      </Stack>
       {/* Bottom Bar */}
       <Stack
         direction="row"
         alignItems="center"
-        justifyContent={"center"}
+        justifyContent={"space-between"}
         p={2}
         px={4}
         bg="gray.100"
@@ -514,169 +592,430 @@ const MobileLayout = () => {
         position="fixed"
         bottom={0}
         width="100%"
+        shadow={"bottomOutline"}
       >
         {/* Left */}
         {/* Super Admin */}
-        <Button
-          variant={"ghost"}
-          alignItems={"center"}
-          justifyContent={"center"}
-          gap={1}
-          flexDirection={"column"}
-          _hover={{
-            transform: "scale(1.05)",
-            color: "brand.maroon",
-            "> img": {
-              opacity: 1,
-              transition: "opacity 0.2s ease-in-out",
-            },
-          }}
-          transition={"transform 0.2s ease-in-out"}
-        >
-          <Image
-            src="/icons/stateSunting.png"
-            w={["1.25rem", "1.25rem", "1.25rem", "1.5rem"]}
-            ml={["0.5rem", "0.5rem", "0.5rem", "1rem"]}
-            opacity={
-              currentPath === "/dashboard/toggles" ||
-              currentPath === "/dashboard/verification"
-                ? 1
-                : 0.25
-            }
-          ></Image>
-          <Text
-            fontSize={"0.5rem"}
-            fontWeight={"medium"}
-            color={
-              currentPath === "/dashboard/toggles" ||
-              currentPath === "/dashboard/verification"
-                ? "brand.maroon"
-                : "text.primary"
-            }
+        <Menu>
+          <MenuButton
+            ref={menuRef}
+            as={Button}
+            variant={"ghost"}
+            p={0}
+            _hover={{
+              transform: "scale(1.05)",
+            }}
+            _active={{
+              transform: "scale(1.05)",
+              color: "brand.maroon",
+              "> img": {
+                opacity: 1,
+                transition: "opacity 0.2s ease-in-out",
+              },
+            }}
+            _expanded={{
+              transform: "scale(1.05)",
+              color: "brand.maroon",
+              "> img": {
+                opacity: 1,
+                transition: "opacity 0.2s ease-in-out",
+              },
+            }}
+            onClick={() => setIsMenuExpanded(!isMenuExpanded)}
           >
-            Super Admin
-          </Text>
-        </Button>
+            <Button
+              w={"full"}
+              flexDirection={"column"}
+              p={0}
+              gap={1}
+              // onBlur={() => setIsMenuExpanded(false)}
+            >
+              <Image
+                src="/icons/stateSunting.png"
+                w={["1.25rem", "1.25rem", "1.25rem", "1.5rem"]}
+                ml={["0.5rem", "0.5rem", "0.5rem", "1rem"]}
+                opacity={
+                  currentPath === "/dashboard/verification" ||
+                  currentPath === "/dashboard/toggles" ||
+                  isMenuExpanded
+                    ? 1
+                    : 0.25
+                }
+              />
+              <Text
+                fontSize={"0.5rem"}
+                fontWeight={"medium"}
+                color={
+                  currentPath === "/dashboard/verification" ||
+                  currentPath === "/dashboard/toggles" ||
+                  isMenuExpanded
+                    ? "brand.maroon"
+                    : "text.primary"
+                }
+              >
+                Super Admin
+              </Text>
+            </Button>
+          </MenuButton>
+
+          <MenuList minWidth={"auto"} rounded={"2xl"}>
+            <Link to="/dashboard/verification">
+              <MenuItem>
+                <Image
+                  src="/icons/verification.png"
+                  w={"1rem"}
+                  mr={"0.75rem"}
+                  opacity={currentPath === "/dashboard/verification" ? 1 : 0.25}
+                />
+                <Text
+                  fontSize={"0.75rem"}
+                  fontWeight={"medium"}
+                  color={
+                    currentPath === "/dashboard/verification"
+                      ? "brand.maroon"
+                      : "text.primary"
+                  }
+                >
+                  Verifikasi
+                </Text>
+              </MenuItem>
+            </Link>
+            <Link to="/dashboard/toggles">
+              <MenuItem>
+                <Image
+                  src="/icons/toggle.png"
+                  w={"1rem"}
+                  mr={"0.75rem"}
+                  opacity={currentPath === "/dashboard/toggles" ? 1 : 0.25}
+                />
+                <Text
+                  fontSize={"0.75rem"}
+                  fontWeight={"medium"}
+                  color={
+                    currentPath === "/dashboard/toggles"
+                      ? "brand.maroon"
+                      : "text.primary"
+                  }
+                >
+                  Toggle
+                </Text>
+              </MenuItem>
+            </Link>
+          </MenuList>
+        </Menu>
         {/* Super Admin */}
         {/* Dashboard */}
-        <Button
-          variant={"ghost"}
-          alignItems={"center"}
-          justifyContent={"center"}
-          gap={1}
-          flexDirection={"column"}
-          _hover={{
-            transform: "scale(1.05)",
-            color: "brand.maroon",
-            "> img": {
-              opacity: 1,
-              transition: "opacity 0.2s ease-in-out",
-            },
-          }}
-          transition={"transform 0.2s ease-in-out"}
-        >
-          <Image
-            src="/icons/dashboard.png"
-            w={["1.25rem", "1.25rem", "1.25rem", "1.5rem"]}
-            opacity={currentPath === "/dashboard" ? 1 : 0.25}
-          ></Image>
-          <Text
-            fontSize={"0.5rem"}
-            fontWeight={"medium"}
-            color={
-              currentPath === "/dashboard" ? "brand.maroon" : "text.primary"
-            }
+        <Link to={"/dashboard"}>
+          <Button
+            mr={5}
+            variant={"ghost"}
+            alignItems={"center"}
+            justifyContent={"center"}
+            gap={1}
+            p={0}
+            flexDirection={"column"}
+            _hover={{
+              transform: "scale(1.05)",
+              color: "brand.maroon",
+              "> img": {
+                opacity: 1,
+                transition: "opacity 0.2s ease-in-out",
+              },
+            }}
+            transition={"transform 0.2s ease-in-out"}
           >
-            Dashboard
-          </Text>
-        </Button>
+            <Image
+              src="/icons/dashboard.png"
+              w={["1.25rem", "1.25rem", "1.25rem", "1.5rem"]}
+              opacity={currentPath === "/dashboard" ? 1 : 0.25}
+            ></Image>
+            <Text
+              fontSize={"0.5rem"}
+              fontWeight={"medium"}
+              color={
+                currentPath === "/dashboard" ? "brand.maroon" : "text.primary"
+              }
+            >
+              Dashboard
+            </Text>
+          </Button>
+        </Link>
         {/* Dashboard */}
 
         {/* Center */}
+        <Link to="/dashboard/qrscanner/state">
+          <Stack gap={0} pos={"relative"} mt={-10} ml={-7} p={0}>
+            <Button
+              variant={"ghost"}
+              alignItems={"center"}
+              justifyContent={"center"}
+              gap={1}
+              p={4}
+              py={"1.6rem"}
+              flexDirection={"column"}
+              _hover={{
+                transform: "scale(1.05)",
+                color: "brand.maroon",
+                "> img": {
+                  opacity: 1,
+                  transition: "opacity 0.2s ease-in-out",
+                },
+              }}
+              transition={"transform 0.2s ease-in-out"}
+              borderWidth={"3px"}
+              borderColor={"brand.maroon"}
+              rounded={"full"}
+              pos={"absolute"}
+              bgColor={"gray.100"}
+            >
+              <Image
+                src="/icons/qr.png"
+                w={["1.25rem", "1.25rem", "1.25rem", "1.5rem"]}
+                opacity={
+                  currentPath === "/dashboard/qrscanner/state" ? 1 : 0.25
+                }
+              ></Image>
+              <Text
+                fontSize={"0.5rem"}
+                fontWeight={"medium"}
+                color={
+                  currentPath === "/dashboard/qrscanner/state"
+                    ? "brand.maroon"
+                    : "text.primary"
+                }
+              >
+                Scan
+              </Text>
+            </Button>
+          </Stack>
+        </Link>
 
         {/* Right */}
-        <Button
-          variant={"ghost"}
-          alignItems={"center"}
-          justifyContent={"center"}
-          gap={1}
-          flexDirection={"column"}
-          _hover={{
-            transform: "scale(1.05)",
-            color: "brand.maroon",
-            "> img": {
-              opacity: 1,
-              transition: "opacity 0.2s ease-in-out",
-            },
-          }}
-          transition={"transform 0.2s ease-in-out"}
-        >
-          <Image
-            src="/icons/detailAndPeserta.png"
-            w={["1.25rem", "1.25rem", "1.25rem", "1.5rem"]}
-            opacity={
-              currentPath === "/dashboard/organisator" ||
-              currentPath === "/dashboard/panitia" ||
-              currentPath === "/dashboard/mahasiswa"
-                ? 1
-                : 0.25
-            }
-          ></Image>
-          <Text
-            fontSize={"0.5rem"}
-            fontWeight={"medium"}
-            color={
-              currentPath === "/dashboard/organisator" ||
-              currentPath === "/dashboard/panitia" ||
-              currentPath === "/dashboard/mahasiswa"
-                ? "brand.maroon"
-                : "text.primary"
-            }
+        <Menu>
+          <MenuButton
+            ref={statusMenuRef}
+            as={Button}
+            variant={"ghost"}
+            p={0}
+            ml={5}
+            _hover={{
+              transform: "scale(1.05)",
+            }}
+            _active={{
+              transform: "scale(1.05)",
+              color: "brand.maroon",
+              "> img": {
+                opacity: 1,
+                transition: "opacity 0.2s ease-in-out",
+              },
+            }}
+            _expanded={{
+              transform: "scale(1.05)",
+              color: "brand.maroon",
+              "> img": {
+                opacity: 1,
+                transition: "opacity 0.2s ease-in-out",
+              },
+            }}
+            onClick={() => setIsStatusMenuExpanded(!isStatusMenuExpanded)}
           >
-            Status
-          </Text>
-        </Button>
-        {/* Status */}
-        {/* Acara */}
-        <Button
-          variant={"ghost"}
-          alignItems={"center"}
-          justifyContent={"center"}
-          gap={1}
-          flexDirection={"column"}
-          _hover={{
-            transform: "scale(1.05)",
-            color: "brand.maroon",
-            "> img": {
-              opacity: 1,
-              transition: "opacity 0.2s ease-in-out",
-            },
-          }}
-          transition={"transform 0.2s ease-in-out"}
-        >
-          <Image
-            src="/icons/menu.png"
-            w={["1.25rem", "1.25rem", "1.25rem", "1.5rem"]}
-            opacity={
-              currentPath === "/dashboard/state" ||
-              currentPath === "/dashboard/malpun"
-                ? 1
-                : 0.25
-            }
-          ></Image>
-          <Text
-            fontSize={"0.5rem"}
-            fontWeight={"medium"}
-            color={
-              currentPath === "/dashboard/state" ||
-              currentPath === "/dashboard/malpun"
-                ? "brand.maroon"
-                : "text.primary"
-            }
+            <Button w={"full"} flexDirection={"column"} p={0} gap={1}>
+              <Image
+                src="/icons/detailAndPeserta.png"
+                w={["1.25rem", "1.25rem", "1.25rem", "1.5rem"]}
+                opacity={
+                  currentPath === "/dashboard/organisator" ||
+                  currentPath === "/dashboard/panitia" ||
+                  currentPath === "/dashboard/mahasiswa" ||
+                  isStatusMenuExpanded
+                    ? 1
+                    : 0.25
+                }
+              />
+              <Text
+                fontSize={"0.5rem"}
+                fontWeight={"medium"}
+                color={
+                  currentPath === "/dashboard/organisator" ||
+                  currentPath === "/dashboard/panitia" ||
+                  currentPath === "/dashboard/mahasiswa" ||
+                  isStatusMenuExpanded
+                    ? "brand.maroon"
+                    : "text.primary"
+                }
+              >
+                Status
+              </Text>
+            </Button>
+          </MenuButton>
+
+          <MenuList minW={"auto"} rounded={"2xl"}>
+            <Link to="/dashboard/panitia">
+              <MenuItem>
+                <Image
+                  src="/icons/panitia.png"
+                  w={"1rem"}
+                  mr={"0.5rem"}
+                  opacity={currentPath === "/dashboard/panitia" ? 1 : 0.25}
+                />
+                <Text
+                  fontSize={"0.55rem"}
+                  fontWeight={"medium"}
+                  color={
+                    currentPath === "/dashboard/panitia"
+                      ? "brand.maroon"
+                      : "text.primary"
+                  }
+                >
+                  Panitia
+                </Text>
+              </MenuItem>
+            </Link>
+            <Link to="/dashboard/organisator">
+              <MenuItem>
+                <Image
+                  src="/icons/organisator.png"
+                  w={"0.75rem"}
+                  mr={"0.75rem"}
+                  opacity={currentPath === "/dashboard/organisator" ? 1 : 0.25}
+                />
+                <Text
+                  fontSize={"0.55rem"}
+                  fontWeight={"medium"}
+                  color={
+                    currentPath === "/dashboard/organisator"
+                      ? "brand.maroon"
+                      : "text.primary"
+                  }
+                >
+                  Organisator
+                </Text>
+              </MenuItem>
+            </Link>
+            <Link to="/dashboard/mahasiswa">
+              <MenuItem>
+                <Image
+                  src="/icons/mahasiswa.png"
+                  w={"0.75rem"}
+                  mr={"0.75rem"}
+                  opacity={currentPath === "/dashboard/mahasiswa" ? 1 : 0.25}
+                />
+                <Text
+                  fontSize={"0.55rem"}
+                  fontWeight={"medium"}
+                  color={
+                    currentPath === "/dashboard/mahasiswa"
+                      ? "brand.maroon"
+                      : "text.primary"
+                  }
+                >
+                  Mahasiswa
+                </Text>
+              </MenuItem>
+            </Link>
+          </MenuList>
+        </Menu>
+
+        <Menu>
+          <MenuButton
+            ref={acaraMenuRef}
+            as={Button}
+            variant={"ghost"}
+            p={0}
+            _hover={{
+              transform: "scale(1.05)",
+            }}
+            _active={{
+              transform: "scale(1.05)",
+              color: "brand.maroon",
+              "> img": {
+                opacity: 1,
+                transition: "opacity 0.2s ease-in-out",
+              },
+            }}
+            _expanded={{
+              transform: "scale(1.05)",
+              color: "brand.maroon",
+              "> img": {
+                opacity: 1,
+                transition: "opacity 0.2s ease-in-out",
+              },
+            }}
+            onClick={() => setIsAcaraMenuExpanded(!isAcaraMenuExpanded)}
           >
-            Acara
-          </Text>
-        </Button>
+            <Button w={"full"} flexDirection={"column"} p={0} gap={1}>
+              <Image
+                src="/icons/menu.png"
+                w={["1.25rem", "1.25rem", "1.25rem", "1.5rem"]}
+                opacity={
+                  currentPath === "/dashboard/state" ||
+                  currentPath === "/dashboard/malpun" ||
+                  isAcaraMenuExpanded
+                    ? 1
+                    : 0.25
+                }
+              />
+              <Text
+                fontSize={"0.5rem"}
+                fontWeight={"medium"}
+                color={
+                  currentPath === "/dashboard/state" ||
+                  currentPath === "/dashboard/malpun" ||
+                  isAcaraMenuExpanded
+                    ? "brand.maroon"
+                    : "text.primary"
+                }
+              >
+                Acara
+              </Text>
+            </Button>
+          </MenuButton>
+
+          <MenuList minW={"auto"} rounded={"2xl"}>
+            <Link to="/dashboard/state">
+              <MenuItem>
+                <Image
+                  src="/icons/state.png"
+                  w={"0.75rem"}
+                  mr={"0.75rem"}
+                  opacity={currentPath === "/dashboard/state" ? 1 : 0.25}
+                />
+                <Text
+                  fontSize={"0.55rem"}
+                  fontWeight={"medium"}
+                  color={
+                    currentPath === "/dashboard/state"
+                      ? "brand.maroon"
+                      : "text.primary"
+                  }
+                >
+                  STATE
+                </Text>
+              </MenuItem>
+            </Link>
+            <Link to="/dashboard/malpun">
+              <MenuItem>
+                <Image
+                  src="/icons/malpun.png"
+                  w={"0.75rem"}
+                  mr={"0.75rem"}
+                  opacity={currentPath === "/dashboard/malpun" ? 1 : 0.25}
+                />
+                <Text
+                  fontSize={"0.55rem"}
+                  fontWeight={"medium"}
+                  color={
+                    currentPath === "/dashboard/malpun"
+                      ? "brand.maroon"
+                      : "text.primary"
+                  }
+                >
+                  MalPun
+                </Text>
+              </MenuItem>
+            </Link>
+          </MenuList>
+        </Menu>
         {/* <Text>Bottom Bar</Text> */}
       </Stack>
     </Stack>
