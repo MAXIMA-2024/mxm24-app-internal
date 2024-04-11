@@ -445,9 +445,240 @@ const DesktopLayout = () => {
 };
 
 const MobileLayout = () => {
+  const loc = useLocation();
+  const currentPath = loc.pathname;
+
+  // const [isHovered, setIsHovered] = useState(false);
+
+  // const handleMouseEnter = () => {
+  //   setIsHovered(true);
+  // };
+
+  // const handleMouseLeave = () => {
+  //   setIsHovered(false);
+  // };
+
   return (
     <Stack>
-      <Text>Mobile Layout</Text>
+      {/* Top Bar */}
+      <Stack
+        direction={"row"}
+        justifyContent={"space-between"}
+        bg="gray.100"
+        boxShadow="md"
+        zIndex={10}
+        position="fixed"
+        width={"100%"}
+        p={3}
+        px={5}
+      >
+        <Stack
+          direction={"row"}
+          justifyContent={"center"}
+          alignItems={"center"}
+        >
+          <Image
+            src="/logo.png"
+            w={["1.25rem", "1.25rem", "1.25rem", "1.5rem"]}
+            mr={["0.25rem", "0.25rem", "0.5rem", "1rem"]}
+          ></Image>
+          <Heading fontFamily={"Poppins"} fontSize={"0.8rem"}>
+            Dashboard
+          </Heading>
+        </Stack>
+        <Avatar
+          w={["1.5rem", "1.5rem", "2rem", "3rem"]}
+          mr={"0.5rem"}
+          h={"auto"}
+        >
+          <AvatarBadge
+            boxSize={["1rem", "1rem", "1rem", "1.25rem"]}
+            bg="green.500"
+          />
+        </Avatar>
+      </Stack>
+
+      {/* Content */}
+      <Text>This is Mobile Layout</Text>
+
+      {/* Bottom Bar */}
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent={"center"}
+        p={2}
+        px={4}
+        bg="gray.100"
+        boxShadow="md"
+        zIndex={10}
+        position="fixed"
+        bottom={0}
+        width="100%"
+      >
+        {/* Left */}
+        {/* Super Admin */}
+        <Button
+          variant={"ghost"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          gap={1}
+          flexDirection={"column"}
+          _hover={{
+            transform: "scale(1.05)",
+            color: "brand.maroon",
+            "> img": {
+              opacity: 1,
+              transition: "opacity 0.2s ease-in-out",
+            },
+          }}
+          transition={"transform 0.2s ease-in-out"}
+        >
+          <Image
+            src="/icons/stateSunting.png"
+            w={["1.25rem", "1.25rem", "1.25rem", "1.5rem"]}
+            ml={["0.5rem", "0.5rem", "0.5rem", "1rem"]}
+            opacity={
+              currentPath === "/dashboard/toggles" ||
+              currentPath === "/dashboard/verification"
+                ? 1
+                : 0.25
+            }
+          ></Image>
+          <Text
+            fontSize={"0.5rem"}
+            fontWeight={"medium"}
+            color={
+              currentPath === "/dashboard/toggles" ||
+              currentPath === "/dashboard/verification"
+                ? "brand.maroon"
+                : "text.primary"
+            }
+          >
+            Super Admin
+          </Text>
+        </Button>
+        {/* Super Admin */}
+        {/* Dashboard */}
+        <Button
+          variant={"ghost"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          gap={1}
+          flexDirection={"column"}
+          _hover={{
+            transform: "scale(1.05)",
+            color: "brand.maroon",
+            "> img": {
+              opacity: 1,
+              transition: "opacity 0.2s ease-in-out",
+            },
+          }}
+          transition={"transform 0.2s ease-in-out"}
+        >
+          <Image
+            src="/icons/dashboard.png"
+            w={["1.25rem", "1.25rem", "1.25rem", "1.5rem"]}
+            opacity={currentPath === "/dashboard" ? 1 : 0.25}
+          ></Image>
+          <Text
+            fontSize={"0.5rem"}
+            fontWeight={"medium"}
+            color={
+              currentPath === "/dashboard" ? "brand.maroon" : "text.primary"
+            }
+          >
+            Dashboard
+          </Text>
+        </Button>
+        {/* Dashboard */}
+
+        {/* Center */}
+
+        {/* Right */}
+        <Button
+          variant={"ghost"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          gap={1}
+          flexDirection={"column"}
+          _hover={{
+            transform: "scale(1.05)",
+            color: "brand.maroon",
+            "> img": {
+              opacity: 1,
+              transition: "opacity 0.2s ease-in-out",
+            },
+          }}
+          transition={"transform 0.2s ease-in-out"}
+        >
+          <Image
+            src="/icons/detailAndPeserta.png"
+            w={["1.25rem", "1.25rem", "1.25rem", "1.5rem"]}
+            opacity={
+              currentPath === "/dashboard/organisator" ||
+              currentPath === "/dashboard/panitia" ||
+              currentPath === "/dashboard/mahasiswa"
+                ? 1
+                : 0.25
+            }
+          ></Image>
+          <Text
+            fontSize={"0.5rem"}
+            fontWeight={"medium"}
+            color={
+              currentPath === "/dashboard/organisator" ||
+              currentPath === "/dashboard/panitia" ||
+              currentPath === "/dashboard/mahasiswa"
+                ? "brand.maroon"
+                : "text.primary"
+            }
+          >
+            Status
+          </Text>
+        </Button>
+        {/* Status */}
+        {/* Acara */}
+        <Button
+          variant={"ghost"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          gap={1}
+          flexDirection={"column"}
+          _hover={{
+            transform: "scale(1.05)",
+            color: "brand.maroon",
+            "> img": {
+              opacity: 1,
+              transition: "opacity 0.2s ease-in-out",
+            },
+          }}
+          transition={"transform 0.2s ease-in-out"}
+        >
+          <Image
+            src="/icons/menu.png"
+            w={["1.25rem", "1.25rem", "1.25rem", "1.5rem"]}
+            opacity={
+              currentPath === "/dashboard/state" ||
+              currentPath === "/dashboard/malpun"
+                ? 1
+                : 0.25
+            }
+          ></Image>
+          <Text
+            fontSize={"0.5rem"}
+            fontWeight={"medium"}
+            color={
+              currentPath === "/dashboard/state" ||
+              currentPath === "/dashboard/malpun"
+                ? "brand.maroon"
+                : "text.primary"
+            }
+          >
+            Acara
+          </Text>
+        </Button>
+        {/* <Text>Bottom Bar</Text> */}
+      </Stack>
     </Stack>
   );
 };
