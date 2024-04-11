@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { Outlet, useLocation, Link } from "react-router-dom";
 import { HiChevronDown } from "react-icons/hi";
-import { MdAccountCircle } from "react-icons/md";
+// import { MdAccountCircle } from "react-icons/md";
 import { useState } from "react";
 
 const DesktopLayout = () => {
