@@ -565,7 +565,11 @@ const MobileLayout = () => {
       <Stack
         pos={"absolute"}
         // Ganti BG Image di Sini
-        bgImage={"url('/bg/bg-dashboard.png')"}
+        bgImage={
+          currentPath === "/dashboard"
+            ? "url('/bg/bg-dashboard.png')"
+            : "url('/bg/bg-mobile-all.png')"
+        }
         bgSize={"110%"}
         bgRepeat={"no-repeat"}
         bgPos={"center"}
@@ -621,6 +625,7 @@ const MobileLayout = () => {
                 transition: "opacity 0.2s ease-in-out",
               },
             }}
+            
             onClick={() => setIsMenuExpanded(!isMenuExpanded)}
           >
             <Button

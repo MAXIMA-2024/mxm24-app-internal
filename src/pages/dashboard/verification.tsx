@@ -24,7 +24,9 @@ const Verification = () => {
 
           <BreadcrumbItem isCurrentPage>
             <Link to={"/dashboard/verification"}>
-              <BreadcrumbLink>Verification</BreadcrumbLink>
+              <BreadcrumbLink color={"brand.maroon"} fontWeight={"medium"}>
+                Verification
+              </BreadcrumbLink>
             </Link>
           </BreadcrumbItem>
         </Breadcrumb>
