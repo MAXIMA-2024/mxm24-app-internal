@@ -9,8 +9,36 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+import DataTable from "../../components/datatables";
+import MUIDataTable, { MUIDataTableColumn } from "mui-datatables";
 
 const Verification = () => {
+  const colDefs: MUIDataTableColumn[] = [
+    {
+      name: "name",
+      label: "Name",
+    },
+    {
+      name: "nim",
+      label: "NIM",
+    },
+    {
+      name: "status",
+      label: "Panitia/Organisator",
+    },
+    {
+      name: "divisi",
+      label: "Divisi/Kategori",
+    },
+  ];
+
+  const data = [
+    ["Joe James", "Test Corp", "Yonkers", "NY"],
+    ["John Walsh", "Test Corp", "Hartford", "CT"],
+    ["Bob Herm", "Test Corp", "Tampa", "FL"],
+    ["James Houston", "Test Corp", "Dallas", "TX"],
+  ];
+
   return (
     <>
       <Stack gap={7}>
@@ -21,15 +49,15 @@ const Verification = () => {
               <BreadcrumbLink>Dashboard</BreadcrumbLink>
             </Link>
           </BreadcrumbItem>
-
           <BreadcrumbItem isCurrentPage>
             <Link to={"/dashboard/verification"}>
               <BreadcrumbLink color={"brand.maroon"} fontWeight={"medium"}>
-                Verification
+                Verifikasi
               </BreadcrumbLink>
             </Link>
           </BreadcrumbItem>
         </Breadcrumb>
+
         {/* Header */}
         <Stack direction={"row"} gap={5}>
           <Heading fontFamily={"Poppins"} color={"text.primary"}>
@@ -47,18 +75,18 @@ const Verification = () => {
             </Tag>
           </Stack>
         </Stack>
+
         {/* Content */}
         <Box
           bgColor={"white"}
           w={"full"}
-          h={"full"}
+          // h={"70vh"}
           shadow={"lg"}
-          p={25}
+          // p={25}
           rounded={"xl"}
+          overflow={"auto"}
         >
-          <Text fontWeight={"medium"} color={"text.primary"} opacity={0.8}>
-            Ini adalah halaman verifikasi. 🤩
-          </Text>
+          {data && <DataTable colDefs={colDefs} data={data} />}
         </Box>
       </Stack>
     </>
