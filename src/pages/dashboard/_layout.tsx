@@ -92,8 +92,8 @@ const DesktopLayout = () => {
       bgSize={"cover"}
       bgRepeat={"no-repeat"}
       bgPos={"center"}
-      h={"100vh"}
-      w={"100vw"}
+      minH={"100vh"}
+      minW={"100vw"}
       gap={0}
       direction={"row"}
     >
@@ -531,10 +531,8 @@ const DesktopLayout = () => {
         </Stack>
       </Stack>
 
-      <Stack p={50} gap={"1rem"} w={"full"}>
-        <Stack>
-          <Outlet />
-        </Stack>
+      <Stack p={50} gap={"1rem"} flex={1}>
+        <Outlet />
       </Stack>
     </Stack>
   );
@@ -685,7 +683,6 @@ const MobileLayout = () => {
 
       {/* Content */}
       <Stack
-        pos={"absolute"}
         // Ganti BG Image di Sini
         bgImage={
           currentPath === "/dashboard"
@@ -695,16 +692,16 @@ const MobileLayout = () => {
         bgSize={"cover"}
         bgRepeat={"no-repeat"}
         bgPos={"center"}
-        h={"100vh"}
-        w={"100vw"}
+        minH={"100vh"}
+        minW={"100vw"}
         gap={0}
+        pb={"4rem"}
       >
-        <Stack p={25} pt={75} gap={"1rem"} w={"full"}>
-          <Stack>
-            <Outlet />
-          </Stack>
+        <Stack p={25} pt={75} gap={"1rem"} flex={1}>
+          <Outlet />
         </Stack>
       </Stack>
+
       {/* Bottom Bar */}
       <Stack
         direction="row"
@@ -883,7 +880,7 @@ const MobileLayout = () => {
         {/* Dashboard */}
 
         {/* Center */}
-        <Link to="/dashboard/qrscanner/state">
+        {/* <Link to="/dashboard/qrscanner/state">
           <Stack gap={0} pos={"relative"} mt={-10} ml={-7} p={0}>
             <Button
               variant={"ghost"}
@@ -932,7 +929,144 @@ const MobileLayout = () => {
               </Text>
             </Button>
           </Stack>
-        </Link>
+        </Link> */}
+
+        <Menu placement="top">
+          <MenuButton
+            ref={menuRef}
+            as={Button}
+            variant={"ghost"}
+            p={0}
+            _hover={{
+              transform: "scale(1.05)",
+            }}
+            _active={{
+              transform: "scale(1.05)",
+              color: "brand.maroon",
+              "> img": {
+                opacity: 1,
+                transition: "opacity 0.2s ease-in-out",
+              },
+            }}
+            _expanded={{
+              transform: "scale(1.05)",
+              color: "brand.maroon",
+              "> img": {
+                opacity: 1,
+                transition: "opacity 0.2s ease-in-out",
+              },
+            }}
+          >
+            <Stack
+              gap={0}
+              pos={"relative"}
+              mt={-4}
+              p={0}
+              align={"center"}
+              justify={"center"}
+            >
+              <Button
+                variant={"ghost"}
+                alignItems={"center"}
+                justifyContent={"center"}
+                gap={1}
+                p={4}
+                py={"1.6rem"}
+                flexDirection={"column"}
+                _hover={{
+                  transform: "scale(1.05)",
+                  color: "brand.maroon",
+                  "> img": {
+                    opacity: 1,
+                    transition: "opacity 0.2s ease-in-out",
+                  },
+                }}
+                transition={"transform 0.2s ease-in-out"}
+                borderWidth={"3px"}
+                borderColor={"brand.maroon"}
+                rounded={"full"}
+                pos={"absolute"}
+                bg="white"
+              >
+                <Image
+                  src="/icons/qr.png"
+                  w={["1.25rem", "1.25rem", "1.25rem", "1.5rem"]}
+                  opacity={currentPath.includes("/qrscanner/") ? 1 : 0.25}
+                ></Image>
+                <Text
+                  fontSize={"0.5rem"}
+                  fontWeight={
+                    currentPath.includes("/qrscanner/") ? "semibold" : "medium"
+                  }
+                  color={
+                    currentPath.includes("/qrscanner/")
+                      ? "brand.maroon"
+                      : "text.primary"
+                  }
+                >
+                  Scan
+                </Text>
+              </Button>
+            </Stack>
+          </MenuButton>
+
+          <MenuList minWidth={"auto"} rounded={"2xl"} mb={"1.5rem"}>
+            <Link to="/dashboard/qrscanner/state">
+              <MenuItem>
+                <Image
+                  src="/icons/qr.png"
+                  w={"1rem"}
+                  mr={"0.75rem"}
+                  opacity={
+                    currentPath === "/dashboard/qrscanner/state" ? 1 : 0.25
+                  }
+                />
+                <Text
+                  fontSize={"0.75rem"}
+                  fontWeight={
+                    currentPath === "/dashboard/qrscanner/state"
+                      ? "semibold"
+                      : "medium"
+                  }
+                  color={
+                    currentPath === "/dashboard/qrscanner/state"
+                      ? "brand.maroon"
+                      : "text.primary"
+                  }
+                >
+                  STATE
+                </Text>
+              </MenuItem>
+            </Link>
+            <Link to="/dashboard/qrscanner/malpun">
+              <MenuItem>
+                <Image
+                  src="/icons/qr.png"
+                  w={"1rem"}
+                  mr={"0.75rem"}
+                  opacity={
+                    currentPath === "/dashboard/qrscanner/malpun" ? 1 : 0.25
+                  }
+                />
+                <Text
+                  fontSize={"0.75rem"}
+                  fontWeight={
+                    currentPath === "/dashboard/qrscanner/malpun"
+                      ? "semibold"
+                      : "medium"
+                  }
+                  color={
+                    currentPath === "/dashboard/qrscanner/malpun"
+                      ? "brand.maroon"
+                      : "text.primary"
+                  }
+                >
+                  Malpun
+                </Text>
+              </MenuItem>
+            </Link>
+          </MenuList>
+        </Menu>
 
         {/* Right */}
         <Menu>
