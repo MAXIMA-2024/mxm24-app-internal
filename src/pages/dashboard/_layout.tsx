@@ -16,6 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { Outlet, useLocation, Link } from "react-router-dom";
 import { HiChevronDown } from "react-icons/hi";
+import { IoLogOutOutline } from "react-icons/io5";
 // import { MdAccountCircle } from "react-icons/md";
 import { useEffect, useRef, useState } from "react";
 
@@ -418,49 +419,74 @@ const DesktopLayout = () => {
               my={1}
             />
           </Stack>
-          <Button
-            variant={"ghost"}
-            w={"full"}
-            justifyContent={"start"}
-            p={[0, 0, 0, 2]}
-            mt={[0, 0, "0.75rem", "1rem"]}
-            cursor={"default"}
-            disabled={true}
-            _hover={{
-              pointerEvents: "none",
-              draggable: "none",
-            }}
-          >
-            <Avatar
-              w={["2rem", "2rem", "2rem", "3rem"]}
-              mr={"0.5rem"}
-              h={"auto"}
-            >
-              <AvatarBadge boxSize="1.25rem" bg="green.500" />
-            </Avatar>
-            <Stack
-              justifyContent={"center"}
-              alignItems={"start"}
-              ml={"0.5rem"}
-              gap={0}
-            >
-              <Text
-                fontSize={buttonResponsiveProps.fontSize}
-                fontWeight={"medium"}
-                color={"text.primary"}
+          <Menu>
+            <MenuButton>
+              <Button
+                variant={"ghost"}
+                w={"full"}
+                justifyContent={"start"}
+                p={[0, 0, 0, 2]}
+                mt={[0, 0, "0.75rem", "1rem"]}
+                cursor={"default"}
+                disabled={true}
+                _hover={{
+                  pointerEvents: "none",
+                  draggable: "none",
+                }}
               >
-                John Ryan R.
-              </Text>
-              <Text
-                fontSize={["0.5rem", "0.5rem", "0.5rem", "0.75rem"]}
+                <Avatar
+                  w={["2rem", "2rem", "2rem", "3rem"]}
+                  mr={"0.5rem"}
+                  h={"auto"}
+                >
+                  <AvatarBadge boxSize="1.25rem" bg="green.500" />
+                </Avatar>
+                <Stack
+                  justifyContent={"center"}
+                  alignItems={"start"}
+                  ml={"0.5rem"}
+                  gap={0}
+                >
+                  <Text
+                    fontSize={buttonResponsiveProps.fontSize}
+                    fontWeight={"medium"}
+                    color={"text.primary"}
+                  >
+                    John Ryan R.
+                  </Text>
+                  <Text
+                    fontSize={["0.5rem", "0.5rem", "0.5rem", "0.75rem"]}
+                    fontWeight={"medium"}
+                    opacity={"0.75"}
+                    color={"text.primary"}
+                  >
+                    CHARTA - Website
+                  </Text>
+                </Stack>
+              </Button>
+            </MenuButton>
+            <MenuList px={2} shadow={"lg"} borderRadius={"xl"}>
+              <Button
+                bg={"status.error"}
+                p={2}
+                py={0}
+                fontSize={["0.8rem", "0.8rem", "0.85rem", "1rem"]}
+                borderRadius={"xl"}
+                color={"white"}
                 fontWeight={"medium"}
-                opacity={"0.75"}
-                color={"text.primary"}
+                gap={2}
+                w={"full"}
+                justifyContent={"center"}
               >
-                CHARTA - Website
-              </Text>
-            </Stack>
-          </Button>
+                <IoLogOutOutline
+                  color="white"
+                  fontSize={"1.25rem"}
+                  fontWeight={"bold"}
+                />
+                Log Out
+              </Button>
+            </MenuList>
+          </Menu>
         </Stack>
       </Stack>
 
@@ -555,16 +581,65 @@ const MobileLayout = () => {
               : currentPageName}
           </Heading>
         </Stack>
-        <Avatar
-          w={["1.5rem", "1.5rem", "2rem", "3rem"]}
-          mr={"0.5rem"}
-          h={"auto"}
-        >
-          <AvatarBadge
-            boxSize={["1rem", "1rem", "1rem", "1.25rem"]}
-            bg="green.500"
-          />
-        </Avatar>
+        <Menu>
+          <MenuButton>
+            <Avatar
+              w={["1.5rem", "1.5rem", "2rem", "3rem"]}
+              mr={"0.5rem"}
+              h={"auto"}
+            >
+              <AvatarBadge
+                boxSize={["1rem", "1rem", "1rem", "1.25rem"]}
+                bg="green.500"
+              />
+            </Avatar>
+          </MenuButton>
+          <MenuList borderRadius={"xl"} shadow={"lg"}>
+            <Stack
+              justifyContent={"center"}
+              alignItems={"start"}
+              ml={"0.5rem"}
+              mr={"0.5rem"}
+              gap={0}
+            >
+              <Text
+                fontSize={["0.8rem", "0.8rem", "0.85rem", "1rem"]}
+                fontWeight={"bold"}
+                color={"text.primary"}
+              >
+                John Ryan R.
+              </Text>
+              <Text
+                fontSize={["0.6rem", "0.6rem", "0.6rem", "0.75rem"]}
+                fontWeight={"medium"}
+                opacity={"0.75"}
+                color={"text.primary"}
+              >
+                CHARTA - Website
+              </Text>
+              <Button
+                mt={2}
+                bg={"status.error"}
+                p={2}
+                py={0}
+                fontSize={["0.8rem", "0.8rem", "0.85rem", "1rem"]}
+                borderRadius={"xl"}
+                color={"white"}
+                fontWeight={"medium"}
+                gap={2}
+                w={"full"}
+                justifyContent={"center"}
+              >
+                <IoLogOutOutline
+                  color="white"
+                  fontSize={"1.25rem"}
+                  fontWeight={"bold"}
+                />
+                Log Out
+              </Button>
+            </Stack>
+          </MenuList>
+        </Menu>
       </Stack>
 
       {/* Content */}

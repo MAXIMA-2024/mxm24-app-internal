@@ -1,12 +1,14 @@
-import { Heading, Text, Box, Stack } from "@chakra-ui/react";
+import { Heading, Text, Box, Stack, Show } from "@chakra-ui/react";
 
 const Dashboard = () => {
   return (
     <>
       <Stack w={"full"} h={"full"}>
-        <Heading fontFamily={"Poppins"} color={"text.primary"}>
-          Dashboard
-        </Heading>
+        <Show above={"md"}>
+          <Heading fontFamily={"Poppins"} color={"text.primary"}>
+            Dashboard
+          </Heading>
+        </Show>
         <Box
           bgColor={"white"}
           w={"full"}
