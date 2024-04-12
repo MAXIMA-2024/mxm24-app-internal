@@ -28,7 +28,7 @@ const DataTable = ({ colDefs, data }: DataTableProps) => {
       <Prose
         p={"25px"}
         // w={["full", "80vw", "60vw", "full"]}
-        h={["55vh", "60vh", "60vh", "65vh"]}
+        h={["75vh", "75vh", "60vh", "65vh"]}
         overflow={"auto"}
       >
         <ThemeProvider theme={theme}>

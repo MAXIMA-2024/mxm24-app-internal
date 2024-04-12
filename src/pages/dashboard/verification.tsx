@@ -6,6 +6,8 @@ import {
   Heading,
   Stack,
   Tag,
+  Show,
+  Hide,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import DataTable from "../../components/datatables";
@@ -64,39 +66,40 @@ const Verification = () => {
       </style>
       <Stack gap={7}>
         {/* Breadcrumb */}
-        <Breadcrumb fontWeight="medium" fontSize="sm">
-          <BreadcrumbItem>
-            <Link to={"/dashboard"}>
-              <BreadcrumbLink>Dashboard</BreadcrumbLink>
-            </Link>
-          </BreadcrumbItem>
-          <BreadcrumbItem isCurrentPage>
-            <Link to={"/dashboard/verification"}>
-              <BreadcrumbLink color={"brand.maroon"} fontWeight={"medium"}>
-                Verifikasi
-              </BreadcrumbLink>
-            </Link>
-          </BreadcrumbItem>
-        </Breadcrumb>
+        <Show above="md">
+          <Breadcrumb fontWeight="medium" fontSize="sm">
+            <BreadcrumbItem>
+              <Link to={"/dashboard"}>
+                <BreadcrumbLink>Dashboard</BreadcrumbLink>
+              </Link>
+            </BreadcrumbItem>
+            <BreadcrumbItem isCurrentPage>
+              <Link to={"/dashboard/verification"}>
+                <BreadcrumbLink color={"brand.maroon"} fontWeight={"medium"}>
+                  Verifikasi
+                </BreadcrumbLink>
+              </Link>
+            </BreadcrumbItem>
+          </Breadcrumb>
 
-        {/* Header */}
-        <Stack direction={"row"} gap={5}>
-          <Heading fontFamily={"Poppins"} color={"text.primary"}>
-            Verifikasi
-          </Heading>
-          <Stack justifyContent={"end"} mb={2}>
-            <Tag
-              bgColor={"brand.maroon"}
-              h={25}
-              color={"white"}
-              rounded={"full"}
-              fontSize={"0.75rem"}
-            >
-              Superadmin
-            </Tag>
+          {/* Header */}
+          <Stack direction={"row"} gap={5}>
+            <Heading fontFamily={"Poppins"} color={"text.primary"}>
+              Verifikasi
+            </Heading>
+            <Stack justifyContent={"end"} mb={2}>
+              <Tag
+                bgColor={"brand.maroon"}
+                h={25}
+                color={"white"}
+                rounded={"full"}
+                fontSize={"0.75rem"}
+              >
+                Superadmin
+              </Tag>
+            </Stack>
           </Stack>
-        </Stack>
-
+        </Show>
         {/* Content */}
         <Box
           bgColor={"white"}
