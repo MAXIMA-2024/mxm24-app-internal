@@ -15,10 +15,10 @@ import {
   AvatarBadge,
   Accordion,
   AccordionButton,
-  AccordionIcon,
   AccordionItem,
   AccordionPanel,
   Box,
+  Icon,
 } from "@chakra-ui/react";
 import { Outlet, useLocation, Link } from "react-router-dom";
 import { HiChevronDown } from "react-icons/hi";
@@ -167,7 +167,9 @@ const DesktopLayout = () => {
                   ></Image>
                   <Text
                     fontSize={buttonResponsiveProps.fontSize}
-                    fontWeight={"medium"}
+                    fontWeight={
+                      currentPath === button.path ? "semibold" : "medium"
+                    }
                     color={
                       currentPath === button.path
                         ? "brand.maroon"
@@ -232,7 +234,9 @@ const DesktopLayout = () => {
                   ></Image>
                   <Text
                     fontSize={buttonResponsiveProps.fontSize}
-                    fontWeight={"medium"}
+                    fontWeight={
+                      currentPath === button.path ? "semibold" : "medium"
+                    }
                     color={
                       currentPath === button.path
                         ? "brand.maroon"
@@ -299,7 +303,13 @@ const DesktopLayout = () => {
                           />
                           <Text
                             fontSize={buttonResponsiveProps.fontSize}
-                            fontWeight={"medium"}
+                            fontWeight={
+                              currentPath === "/dashboard/qrscanner/state" ||
+                              currentPath === "/dashboard/qrscanner/malpun" ||
+                              isExpanded
+                                ? "semibold"
+                                : "medium"
+                            }
                             color={
                               currentPath === "/dashboard/qrscanner/state" ||
                               currentPath === "/dashboard/qrscanner/malpun" ||
@@ -311,6 +321,15 @@ const DesktopLayout = () => {
                           >
                             QR Scan
                           </Text>
+                          <Icon
+                            as={HiChevronDown}
+                            w={6}
+                            h={6}
+                            color={"brand.maroon"}
+                            ml={"auto"}
+                            transform={isExpanded ? "rotate(180deg)" : ""}
+                            transition={"transform 0.2s ease-in-out"}
+                          />
                         </Stack>
                       </AccordionButton>
                       <AccordionPanel
@@ -351,7 +370,11 @@ const DesktopLayout = () => {
                             />
                             <Text
                               fontSize={"0.75rem"}
-                              fontWeight={"medium"}
+                              fontWeight={
+                                currentPath === "/dashboard/qrscanner/state"
+                                  ? "semibold"
+                                  : "medium"
+                              }
                               color={
                                 currentPath === "/dashboard/qrscanner/state"
                                   ? "brand.maroon"
@@ -387,7 +410,11 @@ const DesktopLayout = () => {
                             />
                             <Text
                               fontSize={"0.75rem"}
-                              fontWeight={"medium"}
+                              fontWeight={
+                                currentPath === "/dashboard/qrscanner/malpun"
+                                  ? "semibold"
+                                  : "medium"
+                              }
                               color={
                                 currentPath === "/dashboard/qrscanner/malpun"
                                   ? "brand.maroon"
@@ -453,14 +480,24 @@ const DesktopLayout = () => {
                 >
                   <Text
                     fontSize={buttonResponsiveProps.fontSize}
-                    fontWeight={"medium"}
+                    fontWeight={
+                      currentPath === "/dashboard/qrscanner/state" ||
+                      currentPath === "/dashboard/qrscanner/malpun"
+                        ? "semibold"
+                        : "medium"
+                    }
                     color={"text.primary"}
                   >
                     John Ryan R.
                   </Text>
                   <Text
                     fontSize={["0.5rem", "0.5rem", "0.5rem", "0.75rem"]}
-                    fontWeight={"medium"}
+                    fontWeight={
+                      currentPath === "/dashboard/qrscanner/state" ||
+                      currentPath === "/dashboard/qrscanner/malpun"
+                        ? "semibold"
+                        : "medium"
+                    }
                     opacity={"0.75"}
                     color={"text.primary"}
                   >
@@ -759,7 +796,11 @@ const MobileLayout = () => {
                 />
                 <Text
                   fontSize={"0.75rem"}
-                  fontWeight={"medium"}
+                  fontWeight={
+                    currentPath === "/dashboard/verification"
+                      ? "semibold"
+                      : "medium"
+                  }
                   color={
                     currentPath === "/dashboard/verification"
                       ? "brand.maroon"
@@ -780,7 +821,9 @@ const MobileLayout = () => {
                 />
                 <Text
                   fontSize={"0.75rem"}
-                  fontWeight={"medium"}
+                  fontWeight={
+                    currentPath === "/dashboard/toggles" ? "semibold" : "medium"
+                  }
                   color={
                     currentPath === "/dashboard/toggles"
                       ? "brand.maroon"
@@ -822,7 +865,7 @@ const MobileLayout = () => {
             ></Image>
             <Text
               fontSize={"0.5rem"}
-              fontWeight={"medium"}
+              fontWeight={currentPath === "/dashboard" ? "semibold" : "medium"}
               color={
                 currentPath === "/dashboard" ? "brand.maroon" : "text.primary"
               }
@@ -868,7 +911,11 @@ const MobileLayout = () => {
               ></Image>
               <Text
                 fontSize={"0.5rem"}
-                fontWeight={"medium"}
+                fontWeight={
+                  currentPath === "/dashboard/qrscanner/state"
+                    ? "semibold"
+                    : "medium"
+                }
                 color={
                   currentPath === "/dashboard/qrscanner/state"
                     ? "brand.maroon"
@@ -931,7 +978,14 @@ const MobileLayout = () => {
               />
               <Text
                 fontSize={"0.5rem"}
-                fontWeight={"medium"}
+                fontWeight={
+                  currentPath === "/dashboard/organisator" ||
+                  currentPath === "/dashboard/panitia" ||
+                  currentPath === "/dashboard/mahasiswa" ||
+                  isStatusMenuExpanded
+                    ? "semibold"
+                    : "medium"
+                }
                 color={
                   currentPath === "/dashboard/organisator" ||
                   currentPath === "/dashboard/panitia" ||
@@ -957,7 +1011,9 @@ const MobileLayout = () => {
                 />
                 <Text
                   fontSize={"0.55rem"}
-                  fontWeight={"medium"}
+                  fontWeight={
+                    currentPath === "/dashboard/panitia" ? "semibold" : "medium"
+                  }
                   color={
                     currentPath === "/dashboard/panitia"
                       ? "brand.maroon"
@@ -978,7 +1034,11 @@ const MobileLayout = () => {
                 />
                 <Text
                   fontSize={"0.55rem"}
-                  fontWeight={"medium"}
+                  fontWeight={
+                    currentPath === "/dashboard/organisator"
+                      ? "semibold"
+                      : "medium"
+                  }
                   color={
                     currentPath === "/dashboard/organisator"
                       ? "brand.maroon"
@@ -999,7 +1059,11 @@ const MobileLayout = () => {
                 />
                 <Text
                   fontSize={"0.55rem"}
-                  fontWeight={"medium"}
+                  fontWeight={
+                    currentPath === "/dashboard/mahasiswa"
+                      ? "semibold"
+                      : "medium"
+                  }
                   color={
                     currentPath === "/dashboard/mahasiswa"
                       ? "brand.maroon"
@@ -1060,7 +1124,13 @@ const MobileLayout = () => {
               />
               <Text
                 fontSize={"0.5rem"}
-                fontWeight={"medium"}
+                fontWeight={
+                  currentPath === "/dashboard/state" ||
+                  currentPath === "/dashboard/malpun" ||
+                  isAcaraMenuExpanded
+                    ? "semibold"
+                    : "medium"
+                }
                 color={
                   currentPath === "/dashboard/state" ||
                   currentPath === "/dashboard/malpun" ||
@@ -1069,7 +1139,7 @@ const MobileLayout = () => {
                     : "text.primary"
                 }
               >
-                Acara
+                Event
               </Text>
             </Button>
           </MenuButton>
@@ -1085,7 +1155,9 @@ const MobileLayout = () => {
                 />
                 <Text
                   fontSize={"0.55rem"}
-                  fontWeight={"medium"}
+                  fontWeight={
+                    currentPath === "/dashboard/state" ? "semibold" : "medium"
+                  }
                   color={
                     currentPath === "/dashboard/state"
                       ? "brand.maroon"
@@ -1106,7 +1178,9 @@ const MobileLayout = () => {
                 />
                 <Text
                   fontSize={"0.55rem"}
-                  fontWeight={"medium"}
+                  fontWeight={
+                    currentPath === "/dashboard/malpun" ? "semibold" : "medium"
+                  }
                   color={
                     currentPath === "/dashboard/malpun"
                       ? "brand.maroon"
