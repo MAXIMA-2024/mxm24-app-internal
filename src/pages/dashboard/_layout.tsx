@@ -557,7 +557,7 @@ const MobileLayout = () => {
       <Stack
         direction={"row"}
         justifyContent={"space-between"}
-        bg="gray.100"
+        bg="white"
         boxShadow="md"
         zIndex={10}
         position="fixed"
@@ -671,7 +671,7 @@ const MobileLayout = () => {
         justifyContent={"space-between"}
         p={2}
         px={4}
-        bg="gray.100"
+        bg="white"
         boxShadow="md"
         zIndex={10}
         position="fixed"
@@ -711,6 +711,7 @@ const MobileLayout = () => {
             <Button
               w={"full"}
               flexDirection={"column"}
+              bg="white"
               p={0}
               gap={1}
               // onBlur={() => setIsMenuExpanded(false)}
@@ -792,6 +793,7 @@ const MobileLayout = () => {
         {/* Dashboard */}
         <Link to={"/dashboard"}>
           <Button
+            bg="white"
             mr={5}
             variant={"ghost"}
             alignItems={"center"}
@@ -851,7 +853,7 @@ const MobileLayout = () => {
               borderColor={"brand.maroon"}
               rounded={"full"}
               pos={"absolute"}
-              bgColor={"gray.100"}
+              bg="white"
             >
               <Image
                 src="/icons/qr.png"
@@ -904,7 +906,13 @@ const MobileLayout = () => {
             }}
             onClick={() => setIsStatusMenuExpanded(!isStatusMenuExpanded)}
           >
-            <Button w={"full"} flexDirection={"column"} p={0} gap={1}>
+            <Button
+              w={"full"}
+              flexDirection={"column"}
+              p={0}
+              gap={1}
+              bg="white"
+            >
               <Image
                 src="/icons/detailAndPeserta.png"
                 w={["1.25rem", "1.25rem", "1.25rem", "1.5rem"]}
@@ -1028,7 +1036,13 @@ const MobileLayout = () => {
             }}
             onClick={() => setIsAcaraMenuExpanded(!isAcaraMenuExpanded)}
           >
-            <Button w={"full"} flexDirection={"column"} p={0} gap={1}>
+            <Button
+              w={"full"}
+              flexDirection={"column"}
+              p={0}
+              gap={1}
+              bg="white"
+            >
               <Image
                 src="/icons/menu.png"
                 w={["1.25rem", "1.25rem", "1.25rem", "1.5rem"]}
