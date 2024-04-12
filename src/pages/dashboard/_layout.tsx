@@ -477,6 +477,10 @@ const MobileLayout = () => {
   const loc = useLocation();
   const currentPath = loc.pathname;
 
+  const currentPageName =
+    currentPath.charAt(currentPath.lastIndexOf("/") + 1).toUpperCase() +
+    currentPath.slice(currentPath.lastIndexOf("/") + 2);
+
   const [isMenuExpanded, setIsMenuExpanded] = useState(false);
   const [isStatusMenuExpanded, setIsStatusMenuExpanded] = useState(false);
   const [isAcaraMenuExpanded, setIsAcaraMenuExpanded] = useState(false);
@@ -546,7 +550,9 @@ const MobileLayout = () => {
             mr={["0.25rem", "0.25rem", "0.5rem", "1rem"]}
           ></Image>
           <Heading fontFamily={"Poppins"} fontSize={"0.8rem"}>
-            Dashboard
+            {currentPath.includes("/qrscanner/")
+              ? "QR Scan " + currentPageName
+              : currentPageName}
           </Heading>
         </Stack>
         <Avatar

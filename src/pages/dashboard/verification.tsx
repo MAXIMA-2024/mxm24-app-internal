@@ -7,7 +7,6 @@ import {
   Stack,
   Tag,
   Show,
-  Hide,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import DataTable from "../../components/datatables";
@@ -64,6 +63,7 @@ const Verification = () => {
           }
         `}
       </style>
+
       <Stack gap={7}>
         {/* Breadcrumb */}
         <Show above="md">
