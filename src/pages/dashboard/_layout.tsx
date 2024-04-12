@@ -13,6 +13,12 @@ import {
   Hide,
   Avatar,
   AvatarBadge,
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Box,
 } from "@chakra-ui/react";
 import { Outlet, useLocation, Link } from "react-router-dom";
 import { HiChevronDown } from "react-icons/hi";
@@ -23,37 +29,6 @@ import { useEffect, useRef, useState } from "react";
 const DesktopLayout = () => {
   const loc = useLocation();
   const currentPath = loc.pathname;
-
-  const [isHovered, setIsHovered] = useState(false);
-
-  const [isQrMenuExpanded, setIsQrMenuExpanded] = useState(false);
-
-  const qrDesktopRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    const handleOutsideClick = (event: MouseEvent) => {
-      if (
-        qrDesktopRef.current &&
-        !qrDesktopRef.current.contains(event.target as Node)
-      ) {
-        setIsQrMenuExpanded(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleOutsideClick);
-
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, []);
-
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-  };
 
   const specialButtons = [
     {
@@ -177,8 +152,12 @@ const DesktopLayout = () => {
                       opacity: 1,
                       transition: "opacity 0.2s ease-in-out",
                     },
+                    bgColor: "button.gray",
                   }}
                   transition={"transform 0.2s ease-in-out"}
+                  bgColor={
+                    loc.pathname === button.path ? "button.gray" : "transparent"
+                  }
                 >
                   <Image
                     src={button.icon}
@@ -234,8 +213,12 @@ const DesktopLayout = () => {
                       opacity: 1,
                       transition: "opacity 0.2s ease-in-out",
                     },
+                    bgColor: "button.gray",
                   }}
                   transition={"transform 0.2s ease-in-out"}
+                  bgColor={
+                    loc.pathname === button.path ? "button.gray" : "transparent"
+                  }
                 >
                   <Image
                     src={button.icon}
@@ -262,144 +245,165 @@ const DesktopLayout = () => {
               </Link>
             ))}
 
-            {/* Dropdown QR */}
-            <Menu>
-              <MenuButton
-                ref={qrDesktopRef}
-                as={Button}
-                variant={"ghost"}
-                p={0}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                _hover={{
-                  transform: "scale(1.05)",
-                }}
-                _active={{
-                  transform: "scale(1.05)",
-                }}
-                onClick={() => setIsQrMenuExpanded(!isQrMenuExpanded)}
+            {/* QR Button */}
+            <Box
+              _hover={{
+                transform: "scale(1.05)",
+              }}
+              transition={"transform 0.2s ease-in-out"}
+            >
+              <Accordion
+                allowToggle
+                gap={0}
+                index={loc.pathname.includes("/qrscanner/") ? 0 : undefined}
               >
-                <Button
-                  variant={"ghost"}
-                  w={"full"}
-                  justifyContent={"space-between"}
-                  p={buttonResponsiveProps.p}
-                >
-                  <Stack direction={"row"}>
-                    <Image
-                      src="/icons/qr.png"
-                      w={["1rem", "1rem", "1rem", "1.3rem"]}
-                      mr={[0, 0, 0, "0.5rem"]}
-                      opacity={
-                        currentPath === "/dashboard/qrscanner/state" ||
-                        currentPath === "/dashboard/qrscanner/malpun" ||
-                        isHovered ||
-                        isQrMenuExpanded
-                          ? 1
-                          : 0.25
-                      }
-                      transition="opacity 0.2s ease-in-out"
-                    />
-                    <Text
-                      fontSize={buttonResponsiveProps.fontSize}
-                      fontWeight={"medium"}
-                      color={
-                        currentPath === "/dashboard/qrscanner/state" ||
-                        currentPath === "/dashboard/qrscanner/malpun" ||
-                        isHovered ||
-                        isQrMenuExpanded
-                          ? "brand.maroon"
-                          : "text.primary"
-                      }
-                      transition="opacity 0.2s ease-in-out"
-                    >
-                      QR Scan
-                    </Text>
-                  </Stack>
-                  <HiChevronDown
-                    color={
-                      currentPath === "/dashboard/qrscanner/state" ||
-                      currentPath === "/dashboard/qrscanner/malpun" ||
-                      isHovered
-                        ? "#720045"
-                        : "#1E1D22"
-                    }
-                  />
-                </Button>
-              </MenuButton>
-
-              <MenuList
-                ml={[5, 5, 5, 10]}
-                mr={[0, 0, 0, "-15rem"]}
-                minWidth={"auto"}
-              >
-                <Link to="/dashboard/qrscanner/state">
-                  <MenuItem
-                    _hover={{
-                      color: "brand.maroon",
-                      "> img": {
-                        opacity: 1,
-                        transition: "opacity 0.2s ease-in-out",
-                      },
-                    }}
-                    w={"full"}
-                  >
-                    <Image
-                      src="/icons/qr.png"
-                      w={"1rem"}
-                      mr={"0.75rem"}
-                      opacity={
-                        currentPath === "/dashboard/qrscanner/state" ? 1 : 0.25
-                      }
-                    />
-                    <Text
-                      fontSize={"0.75rem"}
-                      fontWeight={"medium"}
-                      color={
-                        currentPath === "/dashboard/qrscanner/state"
-                          ? "brand.maroon"
-                          : "text.primary"
-                      }
-                    >
-                      STATE
-                    </Text>
-                  </MenuItem>
-                </Link>
-                <Link to="/dashboard/qrscanner/malpun">
-                  <MenuItem
-                    _hover={{
-                      color: "brand.maroon",
-                      "> img": {
-                        opacity: 1,
-                        transition: "opacity 0.2s ease-in-out",
-                      },
-                    }}
-                    w={"full"}
-                  >
-                    <Image
-                      src="/icons/qr.png"
-                      w={"1rem"}
-                      mr={"0.75rem"}
-                      opacity={
-                        currentPath === "/dashboard/qrscanner/malpun" ? 1 : 0.25
-                      }
-                    />
-                    <Text
-                      fontSize={"0.75rem"}
-                      fontWeight={"medium"}
-                      color={
-                        currentPath === "/dashboard/qrscanner/malpun"
-                          ? "brand.maroon"
-                          : "text.primary"
-                      }
-                    >
-                      Malpun
-                    </Text>
-                  </MenuItem>
-                </Link>
-              </MenuList>
-            </Menu>
-            {/* Dropdown QR */}
+                <AccordionItem border={"none"}>
+                  {({ isExpanded }) => (
+                    <>
+                      <AccordionButton
+                        _hover={{
+                          "> div > img": {
+                            opacity: 1,
+                            transition: "opacity 0.2s ease-in-out",
+                          },
+                          bgColor: "button.gray",
+                        }}
+                        w={"full"}
+                        bgColor={
+                          loc.pathname.includes("qrscanner") || isExpanded
+                            ? "button.gray"
+                            : "transparent"
+                        }
+                        roundedTop={"md"}
+                        roundedBottom={!isExpanded ? "md" : "none"}
+                      >
+                        <Stack
+                          direction={"row"}
+                          flex={1}
+                          align={"center"}
+                          justify={"start"}
+                          px={"0.5"}
+                        >
+                          <Image
+                            src="/icons/qr.png"
+                            w={["1rem", "1rem", "1rem", "1.3rem"]}
+                            mr={[0, 0, 0, "0.5rem"]}
+                            opacity={
+                              currentPath === "/dashboard/qrscanner/state" ||
+                              currentPath === "/dashboard/qrscanner/malpun" ||
+                              isExpanded
+                                ? 1
+                                : 0.25
+                            }
+                            transition="opacity 0.2s ease-in-out"
+                          />
+                          <Text
+                            fontSize={buttonResponsiveProps.fontSize}
+                            fontWeight={"medium"}
+                            color={
+                              currentPath === "/dashboard/qrscanner/state" ||
+                              currentPath === "/dashboard/qrscanner/malpun" ||
+                              isExpanded
+                                ? "brand.maroon"
+                                : "text.primary"
+                            }
+                            transition="opacity 0.2s ease-in-out"
+                          >
+                            QR Scan
+                          </Text>
+                        </Stack>
+                      </AccordionButton>
+                      <AccordionPanel
+                        w={"full"}
+                        bgColor={"button.gray"}
+                        _hover={{
+                          color: "brand.maroon",
+                          "> img": {
+                            opacity: 1,
+                            transition: "opacity 0.2s ease-in-out",
+                          },
+                        }}
+                        roundedBottom={"md"}
+                        transition={"transform 0.2s ease-in-out"}
+                      >
+                        <Link to="/dashboard/qrscanner/state">
+                          <Button
+                            justifyContent={"start"}
+                            variant={"ghost"}
+                            _hover={{
+                              color: "brand.maroon",
+                              "> img": {
+                                opacity: 1,
+                                transition: "opacity 0.2s ease-in-out",
+                              },
+                            }}
+                            w={"full"}
+                          >
+                            <Image
+                              src="/icons/qr.png"
+                              w={"1rem"}
+                              mr={"0.75rem"}
+                              opacity={
+                                currentPath === "/dashboard/qrscanner/state"
+                                  ? 1
+                                  : 0.25
+                              }
+                            />
+                            <Text
+                              fontSize={"0.75rem"}
+                              fontWeight={"medium"}
+                              color={
+                                currentPath === "/dashboard/qrscanner/state"
+                                  ? "brand.maroon"
+                                  : "text.primary"
+                              }
+                            >
+                              STATE
+                            </Text>
+                          </Button>
+                        </Link>
+                        <Link to="/dashboard/qrscanner/malpun">
+                          <Button
+                            justifyContent={"start"}
+                            variant={"ghost"}
+                            _hover={{
+                              color: "brand.maroon",
+                              "> img": {
+                                opacity: 1,
+                                transition: "opacity 0.2s ease-in-out",
+                              },
+                            }}
+                            w={"full"}
+                          >
+                            <Image
+                              src="/icons/qr.png"
+                              w={"1rem"}
+                              mr={"0.75rem"}
+                              opacity={
+                                currentPath === "/dashboard/qrscanner/malpun"
+                                  ? 1
+                                  : 0.25
+                              }
+                            />
+                            <Text
+                              fontSize={"0.75rem"}
+                              fontWeight={"medium"}
+                              color={
+                                currentPath === "/dashboard/qrscanner/malpun"
+                                  ? "brand.maroon"
+                                  : "text.primary"
+                              }
+                            >
+                              Malpun
+                            </Text>
+                          </Button>
+                        </Link>
+                      </AccordionPanel>
+                    </>
+                  )}
+                </AccordionItem>
+              </Accordion>
+            </Box>
           </Stack>
         </Stack>
         <Stack w={"full"}>
@@ -651,7 +655,7 @@ const MobileLayout = () => {
             ? "url('/bg/bg-dashboard.png')"
             : "url('/bg/bg-mobile-all.png')"
         }
-        bgSize={"110%"}
+        bgSize={"cover"}
         bgRepeat={"no-repeat"}
         bgPos={"center"}
         h={"100vh"}
