@@ -37,7 +37,7 @@ const DataTable = ({ colDefs, data }: DataTableProps) => {
             data={data}
             columns={colDefs}
             options={{
-              rowsPerPage: 5,
+              rowsPerPage: 10,
               rowsPerPageOptions: [5, 10, 15, 20],
               selectableRows: "none",
               elevation: 0,
