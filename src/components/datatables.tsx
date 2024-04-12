@@ -29,7 +29,7 @@ const DataTable = ({ colDefs, data }: DataTableProps) => {
         p={"25px"}
         // w={["full", "80vw", "60vw", "full"]}
         h={["55vh", "60vh", "60vh", "65vh"]}
-        className="removeLive"
+        overflow={"auto"}
       >
         <ThemeProvider theme={theme}>
           <MUIDataTable
@@ -37,7 +37,8 @@ const DataTable = ({ colDefs, data }: DataTableProps) => {
             data={data}
             columns={colDefs}
             options={{
-              rowsPerPage: 10,
+              rowsPerPage: 5,
+              rowsPerPageOptions: [5, 10, 15, 20],
               selectableRows: "none",
               elevation: 0,
               tableBodyHeight: "auto",

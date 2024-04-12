@@ -100,8 +100,8 @@ const Verification = () => {
         {/* Content */}
         <Box
           bgColor={"white"}
-          w={["full", "full", "80%", "full"]}
-          h={"full"}
+          w={"full"}
+          // h={"full"}
           shadow={"lg"}
           rounded={"xl"}
           overflow={"auto"}
