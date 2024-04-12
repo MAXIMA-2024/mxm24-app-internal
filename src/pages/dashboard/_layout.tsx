@@ -771,7 +771,13 @@ const MobileLayout = () => {
               />
               <Text
                 fontSize={"0.5rem"}
-                fontWeight={"medium"}
+                fontWeight={
+                  currentPath === "/dashboard/verification" ||
+                  currentPath === "/dashboard/toggles" ||
+                  isMenuExpanded
+                    ? "semibold"
+                    : "medium"
+                }
                 color={
                   currentPath === "/dashboard/verification" ||
                   currentPath === "/dashboard/toggles" ||
