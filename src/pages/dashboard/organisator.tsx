@@ -169,7 +169,7 @@ const Organisator = () => {
               </Link>
             </BreadcrumbItem>
             <BreadcrumbItem isCurrentPage>
-              <Link to={"/dashboard/verification"}>
+              <Link to={"/dashboard/organisator"}>
                 <BreadcrumbLink color={"brand.maroon"} fontWeight={"medium"}>
                   Organisator
                 </BreadcrumbLink>
