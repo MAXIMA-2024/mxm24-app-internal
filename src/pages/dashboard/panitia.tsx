@@ -1,37 +1,74 @@
 import {
   Stack,
-  Text,
   Heading,
-  Image,
-  Button,
-  Divider,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
   Show,
-  Hide,
-  Avatar,
-  AvatarBadge,
-  Accordion,
-  AccordionButton,
-  AccordionItem,
-  AccordionPanel,
-  Box,
-  Icon,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  Box,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Button,
 } from "@chakra-ui/react";
 
-import { Outlet, useLocation, Link } from "react-router-dom";
-import { HiChevronDown } from "react-icons/hi";
-import { IoLogOutOutline } from "react-icons/io5";
-import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { useState } from "react";
 import DataTable from "../../components/datatables";
 import { MUIDataTableColumn } from "mui-datatables";
+import { MdDeleteForever } from "react-icons/md";
+import { Button as MuiButton } from "@mui/material";
+import { Text } from "@chakra-ui/react";
 
 const Panitia = () => {
+  const allowedDeleteIds = [1, 2];
+  const mockUserIds = [1, 2]; //user id novator dan charta
+  const user = { ids: mockUserIds };
+
+  type ModalState = {
+    id?: number;
+    mode: "delete";
+  };
+
+  const [modalState, setModalState] = useState<ModalState | undefined>();
+
+  let actionColumn: MUIDataTableColumn = {
+    name: "",
+  };
+
+  if (user.ids.some((id) => allowedDeleteIds.includes(id))) {
+    actionColumn = {
+      name: "id",
+      label: "Action",
+      options: {
+        customBodyRender: (value: number) => {
+          return (
+            <Stack direction={"row"} gap={"1rem"}>
+              <MuiButton
+                variant={"contained"}
+                color={"error"}
+                sx={{
+                  borderRadius: "md",
+                  minWidth: "0",
+                  paddingX: "0.5rem",
+                  boxShadow: "none",
+                  backgroundColor: "button.success",
+                }}
+                onClick={() => setModalState({ id: value, mode: "delete" })}
+              >
+                <MdDeleteForever />
+              </MuiButton>
+            </Stack>
+          );
+        },
+      },
+    };
+  }
+
   const colDefs: MUIDataTableColumn[] = [
     {
       name: "name",
@@ -49,12 +86,7 @@ const Panitia = () => {
       name: "divisi",
       label: "Divisi/Kategori",
     },
-    {
-      name: "id",
-      label: "Action",
-      //logic button
-      //kalau selain Superadmin (BPH + Charta), Actus, Scriptum kolong actionnya hilang, nanti dibuat dua colDefs aja
-    },
+    actionColumn,
   ];
 
   const data = [
@@ -87,7 +119,7 @@ const Panitia = () => {
         `}
       </style>
 
-      <Stack gap={7} flex={1}>
+      <Stack gap={7}>
         {/* BREADCRUMB START */}
         <Show above="md">
           <Breadcrumb fontWeight="medium" fontSize="sm">
@@ -104,20 +136,58 @@ const Panitia = () => {
               </Link>
             </BreadcrumbItem>
           </Breadcrumb>
-        </Show>
-        {/* BREADCRUMB END */}
+          {/* BREADCRUMB END */}
 
-        {/* HEADER START */}
-        <Heading fontFamily={"Poppins"} color={"text.primary"}>
-          Panitia
-        </Heading>
+          {/* HEADER START */}
+          <Heading fontFamily={"Poppins"} color={"text.primary"}>
+            Panitia
+          </Heading>
+        </Show>
         {/* HEADER END */}
 
         {/* CONTENT START */}
-        <Stack bgColor={"white"} flex={1} shadow={"lg"} p={25} rounded={"xl"}>
+        <Box
+          bgColor={"white"}
+          w={"full"}
+          // h={"full"}
+          shadow={"lg"}
+          rounded={"xl"}
+          overflow={"auto"}
+        >
           {data && <DataTable colDefs={colDefs} data={data} />}
-        </Stack>
+        </Box>
+        {/* CONTENT END */}
       </Stack>
+
+      {/* MODAL START */}
+      <Modal
+        isCentered
+        isOpen={!!modalState}
+        onClose={() => setModalState(undefined)}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Delete</ModalHeader>
+          <ModalCloseButton />
+
+          <ModalBody>
+            <Text>Are you sure to delete? </Text>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button
+              colorScheme="red"
+              onClick={() => {
+                console.log("Data deleted"); //nanti implementasi dari backend
+                setModalState(undefined);
+              }}
+            >
+              Delete
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      {/* MODAL END */}
     </>
   );
 };
