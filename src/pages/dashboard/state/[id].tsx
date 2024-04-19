@@ -37,9 +37,10 @@ const Organisator = () => {
   // const { user } = useAuth();
 
   // mock data dummy
-  //   const mockUser = { role: "superadmin" };
-  //   const mockUser = { role: "panitia" };
+  // const mockUser = { role: "superadmin" };
   const mockUser = { role: "organisator" };
+  // const mockUser = { role: "panitia" };
+
   const user = mockUser;
 
   const [role, setRole] = useState<
@@ -60,7 +61,7 @@ const Organisator = () => {
 
   type ModalState = {
     id?: number;
-    mode: "create" | "delete"; // enum
+    mode: "edit"; ///hanya bisa edit aja dengan ketentuan [superadmin: hari, kuota, lokasi] dan [organisator: nama, deskripsi, logo, foto kegiatan]
   };
 
   const [modalState, setModalState] = useState<ModalState | undefined>();
@@ -69,6 +70,7 @@ const Organisator = () => {
     name: "",
   }; // init empty object
 
+  //ini nanti ga ada, karena page yang daftar state ada di index.tsx
   if (role === "superadmin" || role === "panitia") {
     actionColumn = {
       name: "id",
@@ -217,8 +219,15 @@ const Organisator = () => {
                   <BreadcrumbLink>Dashboard</BreadcrumbLink>
                 </Link>
               </BreadcrumbItem>
+              <BreadcrumbItem>
+                <Link to={"/dashboard/state"}>
+                  <BreadcrumbLink color={"brand.maroon"} fontWeight={"medium"}>
+                    Daftar State
+                  </BreadcrumbLink>
+                </Link>
+              </BreadcrumbItem>
               <BreadcrumbItem isCurrentPage>
-                <Link to={"/dashboard/state/daftarstate"}>
+                <Link to={"/dashboard/state/:id"}>
                   <BreadcrumbLink color={"brand.maroon"} fontWeight={"medium"}>
                     Detail dan Peserta
                   </BreadcrumbLink>

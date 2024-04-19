@@ -18,6 +18,7 @@ import {
   FormLabel,
   FormErrorMessage,
   Input,
+  Tag,
 } from "@chakra-ui/react";
 
 import { Link } from "react-router-dom";
@@ -162,9 +163,22 @@ const StatePanitia = () => {
             align={"center"}
             borderRadius={"2rem"}
           >
-            <Heading fontFamily={"Poppins"} color={"text.primary"}>
-              Daftar State
-            </Heading>
+            <Stack direction={"row"} align={"center"} spacing={5}>
+              <Heading fontFamily={"Poppins"} color={"text.primary"}>
+                Daftar State
+              </Heading>
+              {user.ids.some((id) => allowedEditIds.includes(id)) && (
+                <Tag
+                  bgColor={"brand.maroon"}
+                  h={25}
+                  color={"white"}
+                  rounded={"full"}
+                  fontSize={"0.75rem"}
+                >
+                  Superadmin
+                </Tag>
+              )}
+            </Stack>
 
             {/* add button */}
             {user.ids.some((id) => allowedEditIds.includes(id)) && (
