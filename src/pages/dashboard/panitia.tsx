@@ -119,7 +119,7 @@ const Panitia = () => {
         `}
       </style>
 
-      <Stack gap={7}>
+      <Stack gap={7} flex={1}>
         {/* BREADCRUMB START */}
         <Show above="md">
           <Breadcrumb fontWeight="medium" fontSize="sm">
@@ -148,11 +148,12 @@ const Panitia = () => {
         {/* CONTENT START */}
         <Box
           bgColor={"white"}
-          w={"full"}
+          // w={"full"}
           // h={"full"}
           shadow={"lg"}
           rounded={"xl"}
           overflow={"auto"}
+          flex={1}
         >
           {data && <DataTable colDefs={colDefs} data={data} />}
         </Box>
