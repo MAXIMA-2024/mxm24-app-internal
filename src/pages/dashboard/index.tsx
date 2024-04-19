@@ -1,4 +1,4 @@
-import { Heading, Text, Stack, Show } from "@chakra-ui/react";
+import { Heading, Text, Stack, Show, Image } from "@chakra-ui/react";
 
 const Dashboard = () => {
   return (
@@ -13,6 +13,42 @@ const Dashboard = () => {
           <Text fontWeight={"medium"} color={"text.primary"} opacity={0.8}>
             Selamat datang, <strong>John Ryan R.</strong> 🤩
           </Text>
+          {/* TAB CARDS START */}
+          <Stack direction={"column"} spacing={2}>
+            <Text fontWeight={"medium"} color={"text.primary"} opacity={0.8}>
+              Tab
+            </Text>
+            {/* CARD 1 START */}
+            <Stack direction={"row"} spacing={6}>
+              <Stack
+                bgColor="orange"
+                w={"250px"}
+                h={"120px"}
+                borderRadius={15}
+                p={4}
+                flexDirection={"column"}
+                spacing={3}
+              >
+                <Stack
+                  direction={"row"}
+                  spacing={2}
+                  justifyContent={"space-between"}
+                >
+                  <Text fontWeight={"medium"} fontSize={"xl"}>
+                    Panitia
+                  </Text>
+
+                  <Image src={iconPanitia}></Image>
+                </Stack>
+
+                <Text fontWeight={"bold"} fontSize={"3xl"}>
+                  249
+                </Text>
+              </Stack>
+            </Stack>{" "}
+            {/* CARD 1 END */}
+          </Stack>
+          {/* TAB CARDS END */}
         </Stack>
       </Stack>
     </>
