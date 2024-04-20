@@ -11,6 +11,7 @@ import {
 import { Link } from "react-router-dom";
 import DataTable from "../../components/datatables";
 import { MUIDataTableColumn } from "mui-datatables";
+import Switch from "@mui/material/Switch";
 
 const Verification = () => {
   const colDefs: MUIDataTableColumn[] = [
@@ -29,6 +30,22 @@ const Verification = () => {
     {
       name: "divisi",
       label: "Divisi/Kategori",
+    },
+    {
+      name: "status",
+      label: "Verifikasi",
+      options: {
+        customBodyRender: (value) => {
+          return (
+            <Switch
+              checked={value}
+              // onChange={(e) => updateValue(e.target.checked)}
+              color="primary"
+              inputProps={{ "aria-label": "primary checkbox" }}
+            />
+          );
+        },
+      },
     },
   ];
 
