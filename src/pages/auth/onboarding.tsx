@@ -10,8 +10,6 @@ import {
   Show,
   useToast,
   Step,
-  StepDescription,
-  StepIcon,
   StepIndicator,
   StepNumber,
   StepSeparator,
@@ -21,9 +19,6 @@ import {
   useSteps,
   Box,
   Input,
-  useRadio,
-  RadioGroup,
-  Radio,
   FormLabel,
   Select,
   useRadioGroup,
@@ -31,7 +26,8 @@ import {
   FormErrorMessage,
   Link,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
+// import { useEffect } from "react";
+import { motion } from "framer-motion";
 
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -230,31 +226,68 @@ const OnboardingPage = () => {
       bgRepeat={"no-repeat"}
       bgSize={"cover"}
       position={"relative"}
+      overflow={"hidden"}
     >
       <Hide below="md">
         <Image
+          as={motion.img}
           src="/bg/curtains1.png"
           h={"100%"}
           w={"16rem"}
           left={0}
           position={"absolute"}
+          variants={{
+            initial: {
+              opacity: 0,
+              x: -150,
+            },
+            enter: {
+              opacity: 1,
+              x: [-100, 0, -10],
+              transition: {
+                duration: 1,
+                delay: 0.5,
+                easings: "backOut",
+              },
+            },
+          }}
+          initial={"initial"}
+          animate={"enter"}
         />
       </Hide>
       <Stack
         direction={"column"}
         w={"100%"}
         h={"full"}
-        mb={["6rem", "6rem", "0", "0", "0"]}
+        mb={["3rem", "6rem", "0", "0", "0"]}
         align={"center"}
         justify={"center"}
       >
         <Show below="md">
           <Image
+            as={motion.img}
             src="/bg/curtainsMobile.png"
             w={"100%"}
             position={"absolute"}
             top={0}
             objectFit={"cover"}
+            variants={{
+              initial: {
+                opacity: 0,
+                y: -150,
+              },
+              enter: {
+                opacity: 1,
+                y: [-150, 0, -5],
+                transition: {
+                  duration: 1,
+                  delay: 0.5,
+                  easings: "backOut",
+                },
+              },
+            }}
+            initial={"initial"}
+            animate={"enter"}
           />
         </Show>
 
@@ -268,6 +301,7 @@ const OnboardingPage = () => {
           px={[0, 0, 0, "6rem", "6rem"]}
         >
           <Stack
+            as={motion.div}
             direction={"column"}
             align={"center"}
             justify={"center"}
@@ -278,8 +312,25 @@ const OnboardingPage = () => {
             objectFit={"cover"}
             bgRepeat={"no-repeat"}
             position={"relative"}
-            zIndex={999}
+            zIndex={10}
             bgColor={"white"}
+            variants={{
+              initial: {
+                opacity: 0,
+                y: 150,
+              },
+              enter: {
+                opacity: 1,
+                y: [100, 0, 10],
+                transition: {
+                  duration: 1,
+                  delay: 0.5,
+                  easings: "backOut",
+                },
+              },
+            }}
+            initial={"initial"}
+            animate={"enter"}
           >
             {/* <Hide below="md">
         <Image src="/bg/broDesk.png" left={-160} position={"absolute"} />
@@ -297,6 +348,16 @@ const OnboardingPage = () => {
                 top={"10rem"}
                 left={"-7.775rem"}
                 w={"9rem"}
+                as={motion.img}
+                animate={{
+                  y: [0, 2, 0],
+                  transition: {
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                    easings: "easeInOut",
+                  },
+                }}
               />
               <Image
                 src="/dashboard/ximaDesktop.png"
@@ -305,6 +366,16 @@ const OnboardingPage = () => {
                 bottom={0}
                 right={"-7.5rem"}
                 w={"10rem"}
+                as={motion.img}
+                animate={{
+                  y: [0, -2, 0],
+                  transition: {
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                    easings: "easeInOut",
+                  },
+                }}
               />
             </Show>
 
@@ -313,7 +384,7 @@ const OnboardingPage = () => {
                 src="/dashboard/maxiMobile.png"
                 position={"absolute"}
                 top={[
-                  "-6.3rem",
+                  "-6.4rem",
                   "-8.835rem",
                   "-8.835rem",
                   "-6.3rem",
@@ -322,6 +393,16 @@ const OnboardingPage = () => {
                 bottom={0}
                 left={["1.25rem", "3.5rem", "11rem", "1.25rem", "1.25rem"]}
                 w={["8rem", "11rem", "11rem", "8rem", "8rem"]}
+                as={motion.img}
+                animate={{
+                  rotate: [0, -1.5, 0],
+                  transition: {
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                    easings: "easeInOut",
+                  },
+                }}
               />
               <Image
                 src="/dashboard/ximaMobile.png"
@@ -330,6 +411,16 @@ const OnboardingPage = () => {
                 bottom={0}
                 right={["2rem", "6rem", "12rem", "2rem", "2rem"]}
                 w={["5.5rem", "7rem", "7rem", "5.5rem", "5.5rem"]}
+                as={motion.img}
+                animate={{
+                  rotate: [0, 1.5, 0],
+                  transition: {
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                    easings: "easeInOut",
+                  },
+                }}
               />
             </Show>
 
@@ -575,7 +666,10 @@ const OnboardingPage = () => {
 
               {activeStep === 3 && (
                 <Stack direction={"column"} justify={"center"} align={"center"}>
-                  <Text fontSize={["3xl", "3xl", "4xl", "4xl", "4xl"]}>
+                  <Text
+                    fontSize={["3xl", "3xl", "4xl", "4xl", "4xl"]}
+                    fontWeight={"medium"}
+                  >
                     SELAMAT
                   </Text>
                   <Text my={"-0.25rem"}>Akunmu berhasil dibuat</Text>
@@ -619,11 +713,29 @@ const OnboardingPage = () => {
       </Stack>
       <Hide below="md">
         <Image
+          as={motion.img}
           src="/bg/curtains2.png"
           h={"100%"}
           w={"16rem"}
           right={0}
           position={"absolute"}
+          variants={{
+            initial: {
+              opacity: 0,
+              x: 150,
+            },
+            enter: {
+              opacity: 1,
+              x: [100, 0, 10],
+              transition: {
+                duration: 1,
+                delay: 0.5,
+                easings: "backOut",
+              },
+            },
+          }}
+          initial={"initial"}
+          animate={"enter"}
         />
       </Hide>
     </Stack>

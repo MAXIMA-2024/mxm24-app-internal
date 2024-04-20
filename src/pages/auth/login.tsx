@@ -3,6 +3,7 @@ import { useNavigate } from "@/router";
 import { Button, Stack, Image, Text, Hide, Show } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const LoginPage = () => {
   const auth = useAuth();
@@ -39,11 +40,29 @@ const LoginPage = () => {
     >
       <Hide below="md">
         <Image
+          as={motion.img}
           src="/bg/curtains1.png"
           h={"100%"}
           w={"16rem"}
           left={0}
           position={"absolute"}
+          variants={{
+            initial: {
+              opacity: 0,
+              x: -150,
+            },
+            enter: {
+              opacity: 1,
+              x: [-100, 0, -10],
+              transition: {
+                duration: 1,
+                delay: 0.5,
+                easings: "backOut",
+              },
+            },
+          }}
+          initial={"initial"}
+          animate={"enter"}
         />
       </Hide>
       <Stack
@@ -55,11 +74,29 @@ const LoginPage = () => {
       >
         <Show below="md">
           <Image
+            as={motion.img}
             src="/bg/curtainsMobile.png"
             w={"100%"}
             position={"absolute"}
             top={0}
             objectFit={"cover"}
+            variants={{
+              initial: {
+                opacity: 0,
+                y: -150,
+              },
+              enter: {
+                opacity: 1,
+                y: [-150, 0, -5],
+                transition: {
+                  duration: 1,
+                  delay: 0.5,
+                  easings: "backOut",
+                },
+              },
+            }}
+            initial={"initial"}
+            animate={"enter"}
           />
         </Show>
         <Stack
@@ -72,6 +109,7 @@ const LoginPage = () => {
           px={[0, 0, 0, "6rem", "6rem"]}
         >
           <Stack
+            as={motion.div}
             direction={"column"}
             align={"center"}
             justify={"center"}
@@ -83,8 +121,25 @@ const LoginPage = () => {
             objectFit={"cover"}
             bgRepeat={"no-repeat"}
             position={"relative"}
-            zIndex={999}
+            zIndex={10}
             bgColor={"white"}
+            variants={{
+              initial: {
+                opacity: 0,
+                y: 150,
+              },
+              enter: {
+                opacity: 1,
+                y: [100, 0, 10],
+                transition: {
+                  duration: 1,
+                  delay: 0.5,
+                  easings: "backOut",
+                },
+              },
+            }}
+            initial={"initial"}
+            animate={"enter"}
           >
             {/* <Hide below="md">
             <Image src="/bg/broDesk.png" left={-160} position={"absolute"} />
@@ -127,11 +182,29 @@ const LoginPage = () => {
       </Stack>
       <Hide below="md">
         <Image
+          as={motion.img}
           src="/bg/curtains2.png"
           h={"100%"}
           w={"16rem"}
           right={0}
           position={"absolute"}
+          variants={{
+            initial: {
+              opacity: 0,
+              x: 150,
+            },
+            enter: {
+              opacity: 1,
+              x: [100, 0, 10],
+              transition: {
+                duration: 1,
+                delay: 0.5,
+                easings: "backOut",
+              },
+            },
+          }}
+          initial={"initial"}
+          animate={"enter"}
         />
       </Hide>
     </Stack>

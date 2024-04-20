@@ -35,6 +35,7 @@ const RoleRadio = (props: RoleRadio) => {
         shadow={"xl"}
         border={"2px"}
         borderColor={"gray.200"}
+        transition={"all 0.3s ease"}
       >
         {role === "panitia" && (
           <>
