@@ -1,5 +1,5 @@
-import { Heading, Text, Stack, Show, Image } from "@chakra-ui/react";
-
+import { Heading, Text, Stack, Show} from "@chakra-ui/react";
+import Image from "../../../public/icons/iconPanitia.png";
 const Dashboard = () => {
   return (
     <>
@@ -13,7 +13,7 @@ const Dashboard = () => {
           <Text fontWeight={"medium"} color={"text.primary"} opacity={0.8}>
             Selamat datang, <strong>John Ryan R.</strong> 🤩
           </Text>
-          {/* TAB CARDS START */}
+          ```{/* TAB CARDS START */}
           <Stack direction={"column"} spacing={2}>
             <Text fontWeight={"medium"} color={"text.primary"} opacity={0.8}>
               Tab
@@ -38,7 +38,7 @@ const Dashboard = () => {
                     Panitia
                   </Text>
 
-                  <Image src={iconPanitia}></Image>
+                  <Image src="/icons/iconPanitia.png" alt="Icon Panitia" />
                 </Stack>
 
                 <Text fontWeight={"bold"} fontSize={"3xl"}>
@@ -48,7 +48,7 @@ const Dashboard = () => {
             </Stack>{" "}
             {/* CARD 1 END */}
           </Stack>
-          {/* TAB CARDS END */}
+          {/* TAB CARDS END */}```
         </Stack>
       </Stack>
     </>
