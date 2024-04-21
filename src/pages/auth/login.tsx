@@ -24,47 +24,7 @@ const LoginPage = () => {
   }, [auth]);
 
   return (
-    // styling nya nanti disni ya
-    <Stack
-      gap={0}
-      direction={"row"}
-      w={"100vw"}
-      h={"100vh"}
-      align={"center"}
-      justify={"center"}
-      bgImage={"url('/bg/bg.png')"}
-      bgRepeat={"no-repeat"}
-      objectFit={"fill"}
-      objectPosition={"center"}
-      position={"relative"}
-    >
-      <Hide below="md">
-        <Image
-          as={motion.img}
-          src="/bg/curtains1.png"
-          h={"100%"}
-          w={"16rem"}
-          left={0}
-          position={"absolute"}
-          variants={{
-            initial: {
-              opacity: 0,
-              x: -150,
-            },
-            enter: {
-              opacity: 1,
-              x: [-100, 0, -10],
-              transition: {
-                duration: 1,
-                delay: 0.5,
-                easings: "backOut",
-              },
-            },
-          }}
-          initial={"initial"}
-          animate={"enter"}
-        />
-      </Hide>
+    <>
       <Stack
         direction={"column"}
         w={"100%"}
@@ -72,33 +32,6 @@ const LoginPage = () => {
         align={"center"}
         justify={"center"}
       >
-        <Show below="md">
-          <Image
-            as={motion.img}
-            src="/bg/curtainsMobile.png"
-            w={"100%"}
-            position={"absolute"}
-            top={0}
-            objectFit={"cover"}
-            variants={{
-              initial: {
-                opacity: 0,
-                y: -150,
-              },
-              enter: {
-                opacity: 1,
-                y: [-150, 0, -5],
-                transition: {
-                  duration: 1,
-                  delay: 0.5,
-                  easings: "backOut",
-                },
-              },
-            }}
-            initial={"initial"}
-            animate={"enter"}
-          />
-        </Show>
         <Stack
           direction={"row"}
           position={"absolute"}
@@ -133,7 +66,7 @@ const LoginPage = () => {
                 y: [100, 0, 10],
                 transition: {
                   duration: 1,
-                  delay: 0.5,
+                  delay: 1.5,
                   easings: "backOut",
                 },
               },
@@ -141,9 +74,6 @@ const LoginPage = () => {
             initial={"initial"}
             animate={"enter"}
           >
-            {/* <Hide below="md">
-            <Image src="/bg/broDesk.png" left={-160} position={"absolute"} />
-          </Hide> */}
             <Image
               src="/bg/logo.png"
               w={["60px", "90px", "90px", "90px", "90px"]}
@@ -169,45 +99,10 @@ const LoginPage = () => {
             >
               <Text textColor={"white"}>Log in with SSO</Text>
             </Button>
-            {/* <Hide below="md">
-            <Image
-              src="/bg/galDesk.png"
-              right={-160}
-              position={"absolute"}
-              zIndex={-2}
-            />
-          </Hide> */}
           </Stack>
         </Stack>
       </Stack>
-      <Hide below="md">
-        <Image
-          as={motion.img}
-          src="/bg/curtains2.png"
-          h={"100%"}
-          w={"16rem"}
-          right={0}
-          position={"absolute"}
-          variants={{
-            initial: {
-              opacity: 0,
-              x: 150,
-            },
-            enter: {
-              opacity: 1,
-              x: [100, 0, 10],
-              transition: {
-                duration: 1,
-                delay: 0.5,
-                easings: "backOut",
-              },
-            },
-          }}
-          initial={"initial"}
-          animate={"enter"}
-        />
-      </Hide>
-    </Stack>
+    </>
   );
 };
 

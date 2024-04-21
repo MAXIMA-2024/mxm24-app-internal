@@ -6,7 +6,6 @@ import {
   Button,
   Stack,
   Image,
-  Hide,
   Show,
   useToast,
   Step,
@@ -28,6 +27,7 @@ import {
 } from "@chakra-ui/react";
 // import { useEffect } from "react";
 import { motion } from "framer-motion";
+import { Link as RouterLink } from "react-router-dom";
 
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -215,530 +215,361 @@ const OnboardingPage = () => {
   });
 
   return (
-    <Stack
-      gap={0}
-      direction={"row"}
-      minW={"100vw"}
-      minH={"100vh"}
-      align={["end", "end", "center", "center", "center"]}
-      justify={"center"}
-      bgImage={"url('/bg/bg.png')"}
-      bgRepeat={"no-repeat"}
-      bgSize={"cover"}
-      position={"relative"}
-      overflow={"hidden"}
-    >
-      <Hide below="md">
-        <Image
-          as={motion.img}
-          src="/bg/curtains1.png"
-          h={"100%"}
-          w={"16rem"}
-          left={0}
-          position={"absolute"}
+    <>
+      <Stack
+        direction={"row"}
+        align={"end"}
+        justify={"center"}
+        w={"full"}
+        h={"min-content"}
+        px={[0, 0, 0, "6rem", "6rem"]}
+        mb={[activeStep === 0 ? "8rem" : "1.25rem", "4rem", "0", "0", "0"]}
+      >
+        <Stack
+          as={motion.div}
+          direction={"column"}
+          align={"center"}
+          justify={"center"}
+          w={["95%", "95%", "95%", "36rem", "48rem"]}
+          pt={"2rem"}
+          rounded={"2rem"}
+          bgPos={"center"}
+          objectFit={"cover"}
+          bgRepeat={"no-repeat"}
+          position={"relative"}
+          zIndex={10}
+          bgColor={"white"}
           variants={{
             initial: {
               opacity: 0,
-              x: -150,
+              y: 150,
             },
             enter: {
               opacity: 1,
-              x: [-100, 0, -10],
+              y: [100, 0, 10],
               transition: {
                 duration: 1,
-                delay: 0.5,
+                delay: 1.5,
                 easings: "backOut",
               },
             },
           }}
           initial={"initial"}
           animate={"enter"}
-        />
-      </Hide>
-      <Stack
-        direction={"column"}
-        w={"100%"}
-        h={"full"}
-        mb={["3rem", "6rem", "0", "0", "0"]}
-        align={"center"}
-        justify={"center"}
-      >
-        <Show below="md">
-          <Image
-            as={motion.img}
-            src="/bg/curtainsMobile.png"
-            w={"100%"}
-            position={"absolute"}
-            top={0}
-            objectFit={"cover"}
-            variants={{
-              initial: {
-                opacity: 0,
-                y: -150,
-              },
-              enter: {
-                opacity: 1,
-                y: [-150, 0, -5],
-                transition: {
-                  duration: 1,
-                  delay: 0.5,
-                  easings: "backOut",
-                },
-              },
-            }}
-            initial={"initial"}
-            animate={"enter"}
-          />
-        </Show>
-
-        <Stack
-          id="69"
-          direction={"row"}
-          align={"end"}
-          justify={"center"}
-          w={"full"}
-          h={"min-content"}
-          px={[0, 0, 0, "6rem", "6rem"]}
         >
-          <Stack
-            as={motion.div}
-            direction={"column"}
-            align={"center"}
-            justify={"center"}
-            w={["95%", "95%", "95%", "36rem", "48rem"]}
-            pt={"2rem"}
-            rounded={"2rem"}
-            bgPos={"center"}
-            objectFit={"cover"}
-            bgRepeat={"no-repeat"}
-            position={"relative"}
-            zIndex={10}
-            bgColor={"white"}
-            variants={{
-              initial: {
-                opacity: 0,
-                y: 150,
-              },
-              enter: {
-                opacity: 1,
-                y: [100, 0, 10],
-                transition: {
-                  duration: 1,
-                  delay: 0.5,
-                  easings: "backOut",
-                },
-              },
-            }}
-            initial={"initial"}
-            animate={"enter"}
-          >
-            {/* <Hide below="md">
-        <Image src="/bg/broDesk.png" left={-160} position={"absolute"} />
-      </Hide> */}
+          <Image
+            src="/bg/logo.png"
+            w={["60px", "90px", "90px", "90px", "90px"]}
+            h={["72px", "110px", "110px", "110px", "110px"]}
+            mb={"2rem"}
+          />
+          <Show breakpoint="(min-width: 1024px)">
             <Image
-              src="/bg/logo.png"
-              w={["60px", "90px", "90px", "90px", "90px"]}
-              h={["72px", "110px", "110px", "110px", "110px"]}
-              mb={"2rem"}
+              src="/dashboard/maxiDesktop.png"
+              position={"absolute"}
+              top={"10rem"}
+              left={"-7.775rem"}
+              w={"9rem"}
+              as={motion.img}
+              animate={{
+                y: [0, 2, 0],
+                transition: {
+                  duration: 2,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                  easings: "easeInOut",
+                },
+              }}
             />
-            <Show breakpoint="(min-width: 1024px)">
-              <Image
-                src="/dashboard/maxiDesktop.png"
-                position={"absolute"}
-                top={"10rem"}
-                left={"-7.775rem"}
-                w={"9rem"}
-                as={motion.img}
-                animate={{
-                  y: [0, 2, 0],
-                  transition: {
-                    duration: 2,
-                    repeat: Infinity,
-                    repeatType: "reverse",
-                    easings: "easeInOut",
-                  },
-                }}
-              />
-              <Image
-                src="/dashboard/ximaDesktop.png"
-                position={"absolute"}
-                top={"10rem"}
-                bottom={0}
-                right={"-7.5rem"}
-                w={"10rem"}
-                as={motion.img}
-                animate={{
-                  y: [0, -2, 0],
-                  transition: {
-                    duration: 2,
-                    repeat: Infinity,
-                    repeatType: "reverse",
-                    easings: "easeInOut",
-                  },
-                }}
-              />
-            </Show>
+            <Image
+              src="/dashboard/ximaDesktop.png"
+              position={"absolute"}
+              top={"10rem"}
+              bottom={0}
+              right={"-7.5rem"}
+              w={"10rem"}
+              as={motion.img}
+              animate={{
+                y: [0, -2, 0],
+                transition: {
+                  duration: 2,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                  easings: "easeInOut",
+                },
+              }}
+            />
+          </Show>
 
-            <Show breakpoint="(max-width: 1023px)">
-              <Image
-                src="/dashboard/maxiMobile.png"
-                position={"absolute"}
-                top={[
-                  "-6.4rem",
-                  "-8.835rem",
-                  "-8.835rem",
-                  "-6.3rem",
-                  "-6.3rem",
-                ]}
-                bottom={0}
-                left={["1.25rem", "3.5rem", "11rem", "1.25rem", "1.25rem"]}
-                w={["8rem", "11rem", "11rem", "8rem", "8rem"]}
-                as={motion.img}
-                animate={{
-                  rotate: [0, -1.5, 0],
-                  transition: {
-                    duration: 2,
-                    repeat: Infinity,
-                    repeatType: "reverse",
-                    easings: "easeInOut",
-                  },
-                }}
-              />
-              <Image
-                src="/dashboard/ximaMobile.png"
-                position={"absolute"}
-                top={["-6.3rem", "-8rem", "-8rem", "-6.3rem", "-6.3rem"]}
-                bottom={0}
-                right={["2rem", "6rem", "12rem", "2rem", "2rem"]}
-                w={["5.5rem", "7rem", "7rem", "5.5rem", "5.5rem"]}
-                as={motion.img}
-                animate={{
-                  rotate: [0, 1.5, 0],
-                  transition: {
-                    duration: 2,
-                    repeat: Infinity,
-                    repeatType: "reverse",
-                    easings: "easeInOut",
-                  },
-                }}
-              />
-            </Show>
+          <Show breakpoint="(max-width: 1023px)">
+            <Image
+              src="/dashboard/maxiMobile.png"
+              position={"absolute"}
+              top={["-6.4rem", "-8.835rem", "-8.835rem", "-6.3rem", "-6.3rem"]}
+              bottom={0}
+              left={["1.25rem", "3.5rem", "11rem", "1.25rem", "1.25rem"]}
+              w={["8rem", "11rem", "11rem", "8rem", "8rem"]}
+              as={motion.img}
+              animate={{
+                rotate: [0, -1.5, 0],
+                transition: {
+                  duration: 2,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                  easings: "easeInOut",
+                },
+              }}
+            />
+            <Image
+              src="/dashboard/ximaMobile.png"
+              position={"absolute"}
+              top={["-6.3rem", "-8rem", "-8rem", "-6.3rem", "-6.3rem"]}
+              bottom={0}
+              right={["2rem", "6rem", "12rem", "2rem", "2rem"]}
+              w={["5.5rem", "7rem", "7rem", "5.5rem", "5.5rem"]}
+              as={motion.img}
+              animate={{
+                rotate: [0, 1.5, 0],
+                transition: {
+                  duration: 2,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                  easings: "easeInOut",
+                },
+              }}
+            />
+          </Show>
 
-            <Stepper
-              index={activeStep}
-              px={"1rem"}
-              py={"1rem"}
-              w={"90%"}
-              mx={"4rem"}
-              size={["sm", "sm", "md", "md", "md"]}
-              // transform={[
-              //   "scale(0.5)",
-              //   "scale(0.75)",
-              //   "scale(1)",
-              //   "scale(1)",
-              //   "scale(1)",
-              // ]}
-              border={"2px"}
-              borderColor={"gray.500"}
-              borderRadius={"xl"}
-              borderWidth={"thin"}
-              colorScheme="brand.orange"
-              flexDirection={"column"}
-            >
-              {steps.map((step, index) => (
-                <Step key={index} style={{ padding: 0 }}>
+          <Stepper
+            index={activeStep}
+            px={"1rem"}
+            py={"1rem"}
+            w={"90%"}
+            mx={"4rem"}
+            size={["sm", "sm", "md", "md", "md"]}
+            // transform={[
+            //   "scale(0.5)",
+            //   "scale(0.75)",
+            //   "scale(1)",
+            //   "scale(1)",
+            //   "scale(1)",
+            // ]}
+            border={"2px"}
+            borderColor={"gray.500"}
+            borderRadius={"xl"}
+            borderWidth={"thin"}
+            colorScheme="brand.orange"
+            flexDirection={"column"}
+          >
+            {steps.map((step, index) => (
+              <Step key={index} style={{ padding: 0 }}>
+                <Stack
+                  direction={["column", "column", "row", "row", "row"]}
+                  w={["3rem", "4rem", "8rem", "8rem", "8rem"]}
+                  align={"center"}
+                  justify={"center"}
+                >
+                  <StepIndicator>
+                    <StepStatus
+                      complete={<StepNumber />}
+                      incomplete={<StepNumber />}
+                      active={<StepNumber />}
+                    />
+                  </StepIndicator>
+
+                  <Box flexShrink="0" fontSize={"2xl"}>
+                    <StepTitle>
+                      <Text fontSize={["xs", "sm", "sm", "sm", "md"]}>
+                        {step.title}
+                      </Text>
+                    </StepTitle>
+                  </Box>
+                </Stack>
+
+                <StepSeparator />
+              </Step>
+            ))}
+          </Stepper>
+
+          <Stack
+            as={"form"}
+            onSubmit={handleSubmit((data) => {
+              console.log(data);
+              setActiveStep(3);
+            })}
+            // flex={1}
+            w={"full"}
+            p={"2rem"}
+            align={"center"}
+            direction={"column"}
+          >
+            {activeStep === 0 && (
+              <Stack direction={"column"} justify={"center"} align={"center"}>
+                <FormControl isInvalid={!!errors.role}>
                   <Stack
-                    direction={["column", "column", "row", "row", "row"]}
-                    w={["3rem", "4rem", "8rem", "8rem", "8rem"]}
+                    {...getRootProps()}
+                    direction={"row"}
                     align={"center"}
                     justify={"center"}
                   >
-                    <StepIndicator>
-                      <StepStatus
-                        complete={<StepNumber />}
-                        incomplete={<StepNumber />}
-                        active={<StepNumber />}
-                      />
-                    </StepIndicator>
-
-                    <Box flexShrink="0" fontSize={"2xl"}>
-                      <StepTitle>
-                        <Text fontSize={["xs", "sm", "sm", "sm", "md"]}>
-                          {step.title}
-                        </Text>
-                      </StepTitle>
-                    </Box>
+                    {role.map((value) => {
+                      const radio = getRadioProps({ value });
+                      return (
+                        <RoleRadio
+                          key={value}
+                          {...radio}
+                          role={value as "panitia" | "organisator"}
+                        />
+                      );
+                    })}
                   </Stack>
 
-                  <StepSeparator />
-                </Step>
-              ))}
-            </Stepper>
+                  <FormErrorMessage>
+                    {errors.role && errors.role.message}
+                  </FormErrorMessage>
+                </FormControl>
 
-            {/* <Show breakpoint="(max-width: 767px)">
-              <Stepper
-                index={activeStep}
-                px={"1rem"}
-                py={"1rem"}
-                w={"95%"}
-                h={"8rem"}
-                mx={"2rem"}
-                size={["sm", "sm", "md", "md", "md"]}
-                orientation="vertical"
-                // transform={[
-                //   "scale(0.5)",
-                //   "scale(0.75)",
-                //   "scale(1)",
-                //   "scale(1)",
-                //   "scale(1)",
-                // ]}
-                colorScheme="brand.orange"
-              >
-                {steps.map((step, index) => (
-                  <Step key={index}>
-                    <StepIndicator alignContent={"center"}>
-                      <StepStatus
-                        complete={<StepNumber />}
-                        incomplete={<StepNumber />}
-                        active={<StepNumber />}
-                      />
-                    </StepIndicator>
+                <Button
+                  bgColor={"#185C99"}
+                  w={["75%", "16rem", "24rem", "24rem", "32rem"]}
+                  py={"1.75rem"}
+                  onClick={() => {
+                    trigger("role").then((valid) => {
+                      if (valid) {
+                        setActiveStep(1);
+                      }
+                    });
+                  }}
+                >
+                  <Text textColor={"white"}>Next</Text>
+                </Button>
+              </Stack>
+            )}
 
-                    <Box flexShrink="0" fontSize={"2xl"}>
-                      <StepTitle content="center">
-                        <Text fontSize={["xs", "sm", "sm", "sm", "md"]}>
-                          {step.title}
-                        </Text>
-                      </StepTitle>
-                    </Box>
-
-                    <StepSeparator />
-                  </Step>
-                ))}
-              </Stepper>
-            </Show> */}
-
-            <Stack
-              as={"form"}
-              onSubmit={handleSubmit((data) => {
-                console.log(data);
-                setActiveStep(3);
-              })}
-              // flex={1}
-              w={"full"}
-              p={"2rem"}
-              align={"center"}
-              direction={"column"}
-            >
-              {activeStep === 0 && (
-                <Stack direction={"column"} justify={"center"} align={"center"}>
-                  <FormControl isInvalid={!!errors.role}>
-                    <Stack
-                      {...getRootProps()}
-                      direction={"row"}
-                      align={"center"}
-                      justify={"center"}
-                    >
-                      {role.map((value) => {
-                        const radio = getRadioProps({ value });
-                        return (
-                          <RoleRadio
-                            key={value}
-                            {...radio}
-                            role={value as "panitia" | "organisator"}
-                          />
-                        );
-                      })}
-                    </Stack>
-
-                    <FormErrorMessage>
-                      {errors.role && errors.role.message}
-                    </FormErrorMessage>
-                  </FormControl>
-
-                  <Button
-                    bgColor={"#185C99"}
-                    w={["75%", "16rem", "24rem", "24rem", "32rem"]}
-                    py={"1.75rem"}
-                    onClick={() => {
-                      trigger("role").then((valid) => {
-                        if (valid) {
-                          setActiveStep(1);
-                        }
-                      });
-                    }}
-                  >
-                    <Text textColor={"white"}>Next</Text>
-                  </Button>
-                </Stack>
-              )}
-
-              {activeStep === 1 && (
-                <>
+            {activeStep === 1 && (
+              <>
+                <Input
+                  {...register("data.isVerified", { value: false })}
+                  type="hidden"
+                ></Input>
+                <FormControl isInvalid={!!errors.data?.email}>
+                  <FormLabel fontWeight={"semibold"}>Email Student</FormLabel>
                   <Input
-                    {...register("data.isVerified", { value: false })}
-                    type="hidden"
-                  ></Input>
-                  <FormControl isInvalid={!!errors.data?.email}>
-                    <FormLabel fontWeight={"semibold"}>Email Student</FormLabel>
-                    <Input
-                      {...register("data.email", {
-                        value: "student@student.umn.ac.id",
-                      })}
-                      disabled
-                    />
+                    {...register("data.email", {
+                      value: "student@student.umn.ac.id",
+                    })}
+                    disabled
+                  />
+                  <FormErrorMessage>
+                    {errors.data?.email && errors.data?.email.message}
+                  </FormErrorMessage>
+                </FormControl>
+
+                <FormControl isInvalid={!!errors.data?.nim}>
+                  <FormLabel fontWeight={"semibold"}>NIM</FormLabel>
+                  <Input {...register("data.nim")} />
+                  <FormErrorMessage>
+                    {errors.data?.nim && errors.data?.nim.message}
+                  </FormErrorMessage>
+                </FormControl>
+
+                <FormControl isInvalid={!!errors.data?.name}>
+                  <FormLabel fontWeight={"semibold"}>Nama Lengkap</FormLabel>
+                  <Input {...register("data.name")} />
+                  <FormErrorMessage>
+                    {errors.data?.name && errors.data?.name.message}
+                  </FormErrorMessage>
+                </FormControl>
+
+                {/* SELECTION buat  */}
+                {getValues("role") === "panitia" && (
+                  // @ts-expect-error divisiId nggak kedetek oleh typescript tapi udah pasti ada
+                  <FormControl isInvalid={!!errors.data?.divisiId}>
+                    <FormLabel fontWeight={"semibold"}>Divisi</FormLabel>
+                    <Select {...register("data.divisiId")}>
+                      {dummyDivisiPanitia.map((divisi) => (
+                        <option key={divisi.id} value={divisi.id}>
+                          {divisi.name}
+                        </option>
+                      ))}
+                    </Select>
+
                     <FormErrorMessage>
-                      {errors.data?.email && errors.data?.email.message}
-                    </FormErrorMessage>
-                  </FormControl>
-
-                  <FormControl isInvalid={!!errors.data?.nim}>
-                    <FormLabel fontWeight={"semibold"}>NIM</FormLabel>
-                    <Input {...register("data.nim")} />
-                    <FormErrorMessage>
-                      {errors.data?.nim && errors.data?.nim.message}
-                    </FormErrorMessage>
-                  </FormControl>
-
-                  <FormControl isInvalid={!!errors.data?.name}>
-                    <FormLabel fontWeight={"semibold"}>Nama Lengkap</FormLabel>
-                    <Input {...register("data.name")} />
-                    <FormErrorMessage>
-                      {errors.data?.name && errors.data?.name.message}
-                    </FormErrorMessage>
-                  </FormControl>
-
-                  {/* SELECTION buat  */}
-                  {getValues("role") === "panitia" && (
-                    // @ts-expect-error divisiId nggak kedetek oleh typescript tapi udah pasti ada
-                    <FormControl isInvalid={!!errors.data?.divisiId}>
-                      <FormLabel fontWeight={"semibold"}>Divisi</FormLabel>
-                      <Select {...register("data.divisiId")}>
-                        {dummyDivisiPanitia.map((divisi) => (
-                          <option key={divisi.id} value={divisi.id}>
-                            {divisi.name}
-                          </option>
-                        ))}
-                      </Select>
-
-                      <FormErrorMessage>
-                        {
+                      {
+                        // @ts-expect-error divisiId nggak kedetek oleh typescript tapi udah pasti ada
+                        errors.data?.divisiId &&
                           // @ts-expect-error divisiId nggak kedetek oleh typescript tapi udah pasti ada
-                          errors.data?.divisiId &&
-                            // @ts-expect-error divisiId nggak kedetek oleh typescript tapi udah pasti ada
-                            errors.data?.divisiId?.message
-                        }
-                      </FormErrorMessage>
-                    </FormControl>
-                  )}
+                          errors.data?.divisiId?.message
+                      }
+                    </FormErrorMessage>
+                  </FormControl>
+                )}
 
-                  {getValues("role") === "organisator" && (
-                    // @ts-expect-error stateId nggak kedetek oleh typescript tapi udah pasti ada
-                    <FormControl isInvalid={!!errors.data?.stateId}>
-                      <FormLabel fontWeight={"semibold"}>Organisator</FormLabel>
-                      <Select {...register("data.stateId")}>
-                        {dummySTATE.map((state) => (
-                          <option key={state.id} value={state.id}>
-                            {state.name}
-                          </option>
-                        ))}
-                      </Select>
+                {getValues("role") === "organisator" && (
+                  // @ts-expect-error stateId nggak kedetek oleh typescript tapi udah pasti ada
+                  <FormControl isInvalid={!!errors.data?.stateId}>
+                    <FormLabel fontWeight={"semibold"}>Organisator</FormLabel>
+                    <Select {...register("data.stateId")}>
+                      {dummySTATE.map((state) => (
+                        <option key={state.id} value={state.id}>
+                          {state.name}
+                        </option>
+                      ))}
+                    </Select>
 
-                      <FormErrorMessage>
-                        {
-                          // @ts-expect-error stateId nggak kedetek oleh typescript tapi udah pasti ada
-                          errors.data?.stateId && errors.data?.stateId?.message
-                        }
-                      </FormErrorMessage>
-                    </FormControl>
-                  )}
-                  <Button
-                    bgColor={"#185C99"}
-                    w={["75%", "16rem", "24rem", "24rem", "32rem"]}
-                    mt={"2rem"}
-                    py={"1.75rem"}
-                    type="submit"
-                  >
-                    <Text textColor={"white"}>Save</Text>
-                  </Button>
-                </>
-              )}
+                    <FormErrorMessage>
+                      {
+                        // @ts-expect-error stateId nggak kedetek oleh typescript tapi udah pasti ada
+                        errors.data?.stateId && errors.data?.stateId?.message
+                      }
+                    </FormErrorMessage>
+                  </FormControl>
+                )}
+                <Button
+                  bgColor={"#185C99"}
+                  w={["75%", "16rem", "24rem", "24rem", "32rem"]}
+                  mt={"2rem"}
+                  py={"1.75rem"}
+                  type="submit"
+                >
+                  <Text textColor={"white"}>Save</Text>
+                </Button>
+              </>
+            )}
 
-              {activeStep === 3 && (
-                <Stack direction={"column"} justify={"center"} align={"center"}>
-                  <Text
-                    fontSize={["3xl", "3xl", "4xl", "4xl", "4xl"]}
-                    fontWeight={"medium"}
-                  >
-                    SELAMAT
-                  </Text>
-                  <Text my={"-0.25rem"}>Akunmu berhasil dibuat</Text>
-                  <Text fontSize={["xs", "sm", "md", "md", "md"]}>
-                    Tunggu verifikasi dari BPH dan Charta ya
-                  </Text>
+            {activeStep === 3 && (
+              <Stack direction={"column"} justify={"center"} align={"center"}>
+                <Text
+                  fontSize={["3xl", "3xl", "4xl", "4xl", "4xl"]}
+                  fontWeight={"medium"}
+                >
+                  SELAMAT
+                </Text>
+                <Text my={"-0.25rem"}>Akunmu berhasil dibuat</Text>
+                <Text fontSize={["xs", "sm", "md", "md", "md"]}>
+                  Tunggu verifikasi dari BPH dan Charta ya
+                </Text>
 
-                  <Image src="/dashboard/congrats.png" my={"1rem"} />
+                <Image src="/dashboard/congrats.png" my={"1rem"} />
 
-                  <Button
-                    bgColor={"#185C99"}
-                    w={["75%", "16rem", "24rem", "24rem", "32rem"]}
-                    py={"1.75rem"}
-                    onClick={() => {
-                      trigger("role").then((valid) => {
-                        if (valid) {
-                          setActiveStep(1);
-                        }
-                      });
-                    }}
-                  >
-                    <Text textColor={"white"}>Go to Dashboard</Text>
-                  </Button>
-                </Stack>
-              )}
-              <Text>
-                Wrong account? <Link textColor={"#185C99"}>Logout</Link>
-              </Text>
-            </Stack>
-
-            {/* <Hide below="md">
-        <Image
-          src="/bg/galDesk.png"
-          right={-160}
-          position={"absolute"}
-          zIndex={-2}
-        />
-      </Hide> */}
+                <Button
+                  as={RouterLink}
+                  to={"/dashboard"}
+                  bgColor={"#185C99"}
+                  w={["75%", "16rem", "24rem", "24rem", "32rem"]}
+                  py={"1.75rem"}
+                >
+                  <Text textColor={"white"}>Go to Dashboard</Text>
+                </Button>
+              </Stack>
+            )}
+            <Text>
+              Wrong account? <Link textColor={"#185C99"}>Logout</Link>
+            </Text>
           </Stack>
         </Stack>
       </Stack>
-      <Hide below="md">
-        <Image
-          as={motion.img}
-          src="/bg/curtains2.png"
-          h={"100%"}
-          w={"16rem"}
-          right={0}
-          position={"absolute"}
-          variants={{
-            initial: {
-              opacity: 0,
-              x: 150,
-            },
-            enter: {
-              opacity: 1,
-              x: [100, 0, 10],
-              transition: {
-                duration: 1,
-                delay: 0.5,
-                easings: "backOut",
-              },
-            },
-          }}
-          initial={"initial"}
-          animate={"enter"}
-        />
-      </Hide>
-    </Stack>
+    </>
   );
 };
 
