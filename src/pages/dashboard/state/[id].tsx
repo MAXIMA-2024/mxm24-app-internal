@@ -11,7 +11,14 @@ import {
   Divider,
   // Modal,
 } from "@chakra-ui/react";
-import { MdDeleteForever, MdInfo } from "react-icons/md";
+import {
+  MdCalendarToday,
+  MdDeleteForever,
+  MdInfo,
+  MdLocationOn,
+  MdPeople,
+} from "react-icons/md";
+import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import DataTable from "../../../components/datatables";
 import DataTable2 from "../../../components/datatables2";
@@ -61,7 +68,7 @@ const Organisator = () => {
 
   type ModalState = {
     id?: number;
-    mode: "edit"; ///hanya bisa edit aja dengan ketentuan [superadmin: hari, kuota, lokasi] dan [organisator: nama, deskripsi, logo, foto kegiatan]
+    mode: "edit" | "delete"; ///hanya bisa edit aja dengan ketentuan [superadmin: hari, kuota, lokasi] dan [organisator: nama, deskripsi, logo, foto kegiatan]
   };
 
   const [modalState, setModalState] = useState<ModalState | undefined>();
@@ -116,28 +123,46 @@ const Organisator = () => {
   const colDefs: MUIDataTableColumn[] = [
     {
       name: "namastate",
-      label: "Nama STATE",
+      label: "Nama",
     },
     {
-      name: "kuota",
-      label: "Kuota",
+      name: "nim",
+      label: "NIM",
+    },
+    {
+      name: "email",
+      label: "Email",
+    },
+    {
+      name: "kehadiran",
+      label: "kehadiran",
     },
     actionColumn,
   ];
 
   const data = [
-    ["Joe James", "12/345"],
-    ["John Walsh", "12/346"],
-    ["Bob Herm", "12/347"],
-    ["James Houston", "12/348"],
-    ["Joe James", "12/349"],
-    ["John Walsh", "12/350"],
-    ["Bob Herm", "12/351"],
-    ["James Houston", "12/352"],
-    ["Joe James", "12/353"],
-    ["John Walsh", "12/354"],
-    ["Bob Herm", "12/355"],
-    ["James Houston", "12/356"],
+    ["Joe James", "12345", "joe@student.umn.ac.id", <BsCheckCircleFill />],
+    [
+      "John Walsh",
+      "12346",
+      "johnnydepp@student.umn.ac.id",
+      <BsCheckCircleFill />,
+    ],
+    ["Bob Herm", "12347", "bob@student.umn.ac.id", <BsXCircleFill />],
+    [
+      "James Houston",
+      "12348",
+      "jamesHouston@student.umn.ac.id",
+      <BsXCircleFill />,
+    ],
+    ["Joe James", "12349", "joejoe@student.umn.ac.id", <BsXCircleFill />],
+    ["John Walsh", "12350", "john@student.umn.ac.id", <BsXCircleFill />],
+    ["Bob Herm", "12351", "bobby@student.umn.ac.id", <BsXCircleFill />],
+    ["James Houston", "12352", "jemes@student.umn.ac.id", <BsXCircleFill />],
+    ["Joe James", "12353", "joeee@student.umn.ac.id", <BsXCircleFill />],
+    ["John Walsh", "12354", "james@student.umn.ac.id", <BsXCircleFill />],
+    ["Bob Herm", "12355", "bobby@student.umn.ac.id", <BsXCircleFill />],
+    ["James Houston", "12356", "jhh@student.umn.ac.id", <BsXCircleFill />],
   ];
 
   return (
@@ -157,119 +182,75 @@ const Organisator = () => {
           `}
       </style>
 
-      {/* page superadmin */}
-      {(role === "superadmin" || role === "panitia") && (
-        <Stack gap={7} flex={1}>
-          {/* Breadcrumb */}
-          <Show above="md">
-            <Breadcrumb fontWeight="medium" fontSize="sm">
-              <BreadcrumbItem>
-                <Link to={"/dashboard"}>
-                  <BreadcrumbLink>Dashboard</BreadcrumbLink>
-                </Link>
-              </BreadcrumbItem>
-              <BreadcrumbItem isCurrentPage>
-                <Link to={"/dashboard/state/daftarstate"}>
-                  <BreadcrumbLink color={"brand.maroon"} fontWeight={"medium"}>
-                    Daftar STATE
-                  </BreadcrumbLink>
-                </Link>
-              </BreadcrumbItem>
-            </Breadcrumb>
+      <Stack gap={7} flex={1}>
+        {/* Breadcrumb */}
+        <Show above="md">
+          <Breadcrumb fontWeight="medium" fontSize="sm">
+            <BreadcrumbItem>
+              <Link to={"/dashboard"}>
+                <BreadcrumbLink>Dashboard</BreadcrumbLink>
+              </Link>
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+              <Link to={"/dashboard/state"}>
+                <BreadcrumbLink color={"brand.maroon"} fontWeight={"medium"}>
+                  Daftar State
+                </BreadcrumbLink>
+              </Link>
+            </BreadcrumbItem>
+            <BreadcrumbItem isCurrentPage>
+              <Link to={"/dashboard/state/:id"}>
+                <BreadcrumbLink color={"brand.maroon"} fontWeight={"medium"}>
+                  Detail dan Peserta
+                </BreadcrumbLink>
+              </Link>
+            </BreadcrumbItem>
+          </Breadcrumb>
 
-            {/* Header */}
-            <Stack direction={"row"} gap={5}>
-              <Heading fontFamily={"Poppins"} color={"text.primary"}>
-                Daftar STATE
-              </Heading>
-              <Tag
-                bgColor={"brand.maroon"}
-                h={25}
-                color={"white"}
-                rounded={"full"}
-                fontSize={"0.75rem"}
-              >
-                Superadmin
-              </Tag>
-            </Stack>
-          </Show>
-          {/* Content */}
-          <Stack
-            bgColor={"white"}
-            w={"full"}
-            // h={"full"}
-            shadow={"lg"}
-            rounded={"xl"}
-            overflow={"auto"}
-            flex={1}
-          >
-            {data && <DataTable colDefs={colDefs} data={data} />}
+          {/* Header */}
+          <Stack direction={"row"} gap={5}>
+            <Heading fontFamily={"Poppins"} color={"text.primary"}>
+              Detail dan Peserta
+            </Heading>
           </Stack>
-        </Stack>
-      )}
-
-      {/* page organisator biasa */}
-      {role === "organisator" && (
-        <Stack gap={7} flex={1}>
-          {/* Breadcrumb */}
-          <Show above="md">
-            <Breadcrumb fontWeight="medium" fontSize="sm">
-              <BreadcrumbItem>
-                <Link to={"/dashboard"}>
-                  <BreadcrumbLink>Dashboard</BreadcrumbLink>
-                </Link>
-              </BreadcrumbItem>
-              <BreadcrumbItem>
-                <Link to={"/dashboard/state"}>
-                  <BreadcrumbLink color={"brand.maroon"} fontWeight={"medium"}>
-                    Daftar State
-                  </BreadcrumbLink>
-                </Link>
-              </BreadcrumbItem>
-              <BreadcrumbItem isCurrentPage>
-                <Link to={"/dashboard/state/:id"}>
-                  <BreadcrumbLink color={"brand.maroon"} fontWeight={"medium"}>
-                    Detail dan Peserta
-                  </BreadcrumbLink>
-                </Link>
-              </BreadcrumbItem>
-            </Breadcrumb>
-
-            {/* Header */}
-            <Stack direction={"row"} gap={5}>
-              <Heading fontFamily={"Poppins"} color={"text.primary"}>
-                Detail dan Peserta
-              </Heading>
-            </Stack>
-          </Show>
-          {/* Content */}
+        </Show>
+        {/* Content */}
+        <Stack
+          bgColor={"white"}
+          w={"full"}
+          // h={"full"}
+          shadow={"lg"}
+          rounded={"xl"}
+          overflow={"auto"}
+          flex={1}
+        >
           <Stack
-            bgColor={"white"}
-            w={"full"}
-            // h={"full"}
-            shadow={"lg"}
-            rounded={"xl"}
-            overflow={"auto"}
-            flex={1}
+            mt={7}
+            direction="row"
+            spacing={2}
+            gap={10}
+            justifyContent="center"
           >
-            <Stack
-              mt={7}
-              direction="row"
-              divider={<Divider orientation="vertical" />}
-              spacing={2}
-              gap={10}
-              justifyContent="center"
-            >
-              <Stack maxW="379px">
-                <img src="" alt="placeholderimage" />
-              </Stack>
-              <Stack maxW="379px">
+            <Stack maxW="379px">
+              <img src="/icons/imgplaceholder.png" alt="placeholderimage" />
+            </Stack>
+            <Stack divider={<Divider orientation="vertical" />} direction="row">
+              <Stack maxW="379px" mr={7}>
                 <Heading size="lg">UKM 1</Heading>
-                <Text>Hari ke-1 (Kamis, 20 Agustus 2023)</Text>
-                <Text>40/100</Text>
-                <Text>Lecture Hall</Text>
+                <Stack direction="row">
+                  <MdCalendarToday />
+                  <Text>Hari ke-1 (Kamis, 20 Agustus 2023)</Text>
+                </Stack>
+                <Stack direction="row">
+                  <MdPeople />
+                  <Text>40/100</Text>
+                </Stack>
+                <Stack direction="row">
+                  <MdLocationOn />
+                  <Text>Lecture Hall</Text>
+                </Stack>
               </Stack>
-              <Stack maxW="379px">
+              <Stack maxW="379px" ml={7}>
                 <Heading size="md">Deskripsi</Heading>
                 <Text fontSize="sm">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam
@@ -280,11 +261,11 @@ const Organisator = () => {
                 </Text>
               </Stack>
             </Stack>
-
-            {data && <DataTable2 colDefs={colDefs} data={data} />}
           </Stack>
+
+          {data && <DataTable2 colDefs={colDefs} data={data} />}
         </Stack>
-      )}
+      </Stack>
     </>
   );
 };
