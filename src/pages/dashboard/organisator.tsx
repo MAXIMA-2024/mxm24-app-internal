@@ -93,7 +93,6 @@ const Organisator = () => {
                     minWidth: "0",
                     paddingX: "0.5rem",
                     boxShadow: "none",
-                    backgroundColor: "button.success",
                   }}
                   onClick={() => setModalState({ id: value, mode: "delete" })}
                 >
