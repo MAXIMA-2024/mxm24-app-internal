@@ -10,7 +10,12 @@ const GlobalLayout = () => {
   const auth = useAuth();
 
   return (
-    <Stack minW={"100vw"} minH={"100vh"} fontFamily={"Poppins"}>
+    <Stack
+      minW={"100vw"}
+      minH={"100vh"}
+      fontFamily={"Poppins"}
+      overflow={"hidden"}
+    >
       <SWRConfig
         value={{
           fetcher,
@@ -55,6 +60,8 @@ const GlobalLayout = () => {
               initial={"initial"}
               animate={"enter"}
               exit={"exit"}
+              overflowX={"hidden"}
+              overflowY={"hidden"}
             >
               <Hide below="md">
                 <Image
@@ -91,6 +98,7 @@ const GlobalLayout = () => {
                   initial={"initial"}
                   animate={"enter"}
                   exit={"exit"}
+                  overflow={"hidden"}
                 />
               </Hide>
               <Show below="md">
@@ -128,6 +136,7 @@ const GlobalLayout = () => {
                   initial={"initial"}
                   animate={"enter"}
                   exit={"exit"}
+                  overflow={"hidden"}
                 />
               </Show>
               <Hide below="md">
@@ -165,6 +174,7 @@ const GlobalLayout = () => {
                   initial={"initial"}
                   animate={"enter"}
                   exit={"exit"}
+                  overflow={"hidden"}
                 />
               </Hide>
 
@@ -179,12 +189,15 @@ const GlobalLayout = () => {
               >
                 <Image src="/logo.png" w={"6rem"} />
                 <Stack
-                  direction={"row"}
-                  gap={"0.5rem"}
+                  // direction={"row"}
+                  gap={"1rem"}
                   color={"text.secondary"}
+                  align={"center"}
                 >
+                  <Text fontWeight={"semibold"} fontSize={"1.5rem"}>
+                    Loading your contents...
+                  </Text>
                   <Spinner />
-                  <Text>Loading...</Text>
                 </Stack>
               </Stack>
             </Stack>
