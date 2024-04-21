@@ -86,12 +86,20 @@ const DesktopLayout = () => {
     imageSize: ["0.75rem", "0.75rem", "0.85rem", "1rem"],
   };
 
+  const bgImage = currentPath.includes("state")
+    ? "/bg/bg-desktop-state.png"
+    : currentPath === "/dashboard/malpun"
+    ? "/bg/bg-desktop-malpun.png"
+    : currentPath.includes("qrscanner")
+    ? "/bg/bg-desktop-all.png"
+    : "/bg/bg-desktop-brick.png";
+
   return (
     <Stack
-      bgImage={"url('/bg/bg-desktop-all.png')"}
+      bgImage={`url('${bgImage}')`}
       bgSize={"cover"}
       bgRepeat={"no-repeat"}
-      bgPos={"center"}
+      bgPos={"right"}
       minH={"100vh"}
       minW={"100vw"}
       gap={0}
@@ -590,6 +598,17 @@ const MobileLayout = () => {
     };
   }, []);
 
+  const bgImageMobile =
+    currentPath.includes("organisator") || currentPath.includes("mahasiswa")
+      ? "/bg/bg-mobile-peserta-organisator.png"
+      : currentPath === "/dashboard/malpun"
+      ? "/bg/bg-desktop-malpun.png"
+      : currentPath.includes("qrscanner")
+      ? "/bg/bg-mobile-all.png"
+      : currentPath.includes("state")
+      ? "/bg/bg-mobile-state.png"
+      : "/bg/bg-mobile-bricks.png";
+
   return (
     <Stack>
       {/* Top Bar */}
@@ -684,11 +703,7 @@ const MobileLayout = () => {
       {/* Content */}
       <Stack
         // Ganti BG Image di Sini
-        bgImage={
-          currentPath === "/dashboard"
-            ? "url('/bg/bg-dashboard.png')"
-            : "url('/bg/bg-mobile-all.png')"
-        }
+        bgImage={`url('${bgImageMobile}')`}
         bgSize={"cover"}
         bgRepeat={"no-repeat"}
         bgPos={"center"}
