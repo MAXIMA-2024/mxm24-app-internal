@@ -183,6 +183,7 @@ const GlobalLayout = () => {
                 bgColor={"white"}
                 rounded={"2rem"}
                 p={"4rem"}
+                m={"2rem"}
                 justify={"center"}
                 align={"center"}
                 gap={"2rem"}
@@ -194,10 +195,19 @@ const GlobalLayout = () => {
                   color={"text.secondary"}
                   align={"center"}
                 >
-                  <Text fontWeight={"semibold"} fontSize={"1.5rem"}>
+                  <Text
+                    fontWeight={"semibold"}
+                    fontSize={["1rem", "1rem", "1rem", "1.5rem"]}
+                    textAlign={"center"}
+                  >
                     Loading your contents...
                   </Text>
-                  <Spinner />
+                  <Spinner
+                    size={["md", "md", "lg", "lg"]}
+                    thickness="4px"
+                    speed="0.65s"
+                    emptyColor="gray.200"
+                  />
                 </Stack>
               </Stack>
             </Stack>
