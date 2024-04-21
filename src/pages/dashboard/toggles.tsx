@@ -26,6 +26,8 @@ import { Link } from "react-router-dom";
 import DataTable from "../../components/datatables";
 import { MUIDataTableColumn } from "mui-datatables";
 import Switch from "@mui/material/Switch";
+import { MdDeleteForever } from "react-icons/md";
+import MuiButton from "@mui/material/Button";
 import { useState } from "react";
 import React from "react";
 import { z } from "zod";
@@ -110,6 +112,33 @@ const Toggles = () => {
               color="primary"
               inputProps={{ "aria-label": "primary checkbox" }}
             />
+          );
+        },
+      },
+    },
+    {
+      name: "id",
+      label: "Action",
+      options: {
+        customBodyRender: (value: number) => {
+          return (
+            <MuiButton
+              variant={"contained"}
+              color={"error"}
+              sx={{
+                borderRadius: "md",
+                minWidth: "0",
+                paddingX: "0.5rem",
+                boxShadow: "none",
+                backgroundColor: "button.success",
+              }}
+              // onClick={() => setModalState({ id: value, mode: "delete" })}
+              onClick={() => {
+                console.log(value);
+              }}
+            >
+              <MdDeleteForever />
+            </MuiButton>
           );
         },
       },
