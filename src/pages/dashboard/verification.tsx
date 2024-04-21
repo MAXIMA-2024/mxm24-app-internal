@@ -149,8 +149,9 @@ const Verification = () => {
         {/* Content */}
         <Box
           bgColor={"white"}
-          w={"full"}
+          // w={"full"}
           // h={"full"}
+          flex={1}
           shadow={"lg"}
           rounded={"xl"}
           overflow={"auto"}
