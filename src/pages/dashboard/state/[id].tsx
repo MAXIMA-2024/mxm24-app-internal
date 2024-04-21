@@ -9,23 +9,41 @@ import {
   Show,
   Text,
   Divider,
+  Button,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   // Modal,
+  useBreakpointValue,
+  StackDirection,
 } from "@chakra-ui/react";
 import {
   MdCalendarToday,
-  MdDeleteForever,
-  MdInfo,
+  MdEdit,
   MdLocationOn,
   MdPeople,
 } from "react-icons/md";
-import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
+import {
+  BsArrowLeftShort,
+  BsCheckCircleFill,
+  BsXCircleFill,
+} from "react-icons/bs";
 import { Link } from "react-router-dom";
-import DataTable from "../../../components/datatables";
+// import DataTable from "../../../components/datatables";
 import DataTable2 from "../../../components/datatables2";
 //import datatables tamnbahan untuk page yang index.tsx
 import { MUIDataTableColumn } from "mui-datatables";
 import { useEffect, useState } from "react";
 import { Button as MuiButton } from "@mui/material";
+import base from "node_modules/@emotion/styled/dist/declarations/types/base";
 // import useAuth from "@/hooks/useAuth";
 
 const isSuperadmin = (user: { role: string }) => {
@@ -44,8 +62,8 @@ const Organisator = () => {
   // const { user } = useAuth();
 
   // mock data dummy
-  // const mockUser = { role: "superadmin" };
-  const mockUser = { role: "organisator" };
+  const mockUser = { role: "superadmin" };
+  // const mockUser = { role: "organisator" };
   // const mockUser = { role: "panitia" };
 
   const user = mockUser;
@@ -73,52 +91,11 @@ const Organisator = () => {
 
   const [modalState, setModalState] = useState<ModalState | undefined>();
 
-  let actionColumn: MUIDataTableColumn = {
-    name: "",
-  }; // init empty object
-
-  //ini nanti ga ada, karena page yang daftar state ada di index.tsx
-  if (role === "superadmin" || role === "panitia") {
-    actionColumn = {
-      name: "id",
-      label: "Action",
-      options: {
-        customBodyRender: (value: number) => {
-          return (
-            <Stack direction={"row"} gap={"1rem"}>
-              {(role === "superadmin" || role === "panitia") && (
-                <>
-                  <Link to={`/details/${value}`}>
-                    <MuiButton
-                      variant={"contained"}
-                      color={"primary"}
-                      sx={{ borderRadius: "4rem" }}
-                    >
-                      <MdInfo />
-                      Detail
-                    </MuiButton>
-                  </Link>
-                  <MuiButton
-                    variant={"contained"}
-                    color={"error"}
-                    sx={{
-                      borderRadius: "md",
-                      minWidth: "0",
-                      paddingX: "0.5rem",
-                      boxShadow: "none",
-                    }}
-                    onClick={() => setModalState({ id: value, mode: "delete" })}
-                  >
-                    <MdDeleteForever />
-                  </MuiButton>
-                </>
-              )}
-            </Stack>
-          );
-        },
-      },
-    };
-  }
+  // BREAKPOINT
+  const headerDirection = useBreakpointValue({
+    base: "column",
+    md: "row",
+  }) as StackDirection;
 
   const colDefs: MUIDataTableColumn[] = [
     {
@@ -137,7 +114,6 @@ const Organisator = () => {
       name: "kehadiran",
       label: "kehadiran",
     },
-    actionColumn,
   ];
 
   const data = [
@@ -186,32 +162,88 @@ const Organisator = () => {
         {/* Breadcrumb */}
         <Show above="md">
           <Breadcrumb fontWeight="medium" fontSize="sm">
-            <BreadcrumbItem>
-              <Link to={"/dashboard"}>
-                <BreadcrumbLink>Dashboard</BreadcrumbLink>
-              </Link>
-            </BreadcrumbItem>
-            <BreadcrumbItem>
-              <Link to={"/dashboard/state"}>
-                <BreadcrumbLink color={"brand.maroon"} fontWeight={"medium"}>
-                  Daftar State
-                </BreadcrumbLink>
-              </Link>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <Link to={"/dashboard/state/:id"}>
-                <BreadcrumbLink color={"brand.maroon"} fontWeight={"medium"}>
-                  Detail dan Peserta
-                </BreadcrumbLink>
-              </Link>
-            </BreadcrumbItem>
+            {role === "organisator" && (
+              <>
+                <BreadcrumbItem>
+                  <Link to={"/dashboard"}>
+                    <Stack
+                      direction={"row"}
+                      justifyContent={"center"}
+                      alignContent={"center"}
+                    >
+                      <BsArrowLeftShort />
+                      <BreadcrumbLink>Back To Dashboard</BreadcrumbLink>
+                    </Stack>
+                  </Link>
+                </BreadcrumbItem>
+              </>
+            )}
+            {(role === "superadmin" || role === "panitia") && (
+              <>
+                <Breadcrumb fontWeight="medium" fontSize="sm">
+                  <BreadcrumbItem>
+                    <Link to={"/dashboard"}>
+                      <BreadcrumbLink>Dashboard</BreadcrumbLink>
+                    </Link>
+                  </BreadcrumbItem>
+                  <BreadcrumbItem>
+                    <Link to={"/dashboard/state"}>
+                      <BreadcrumbLink>Daftar State</BreadcrumbLink>
+                    </Link>
+                  </BreadcrumbItem>
+                  <BreadcrumbItem isCurrentPage>
+                    <Link to={"/dashboard/state/[id]"}>
+                      <BreadcrumbLink
+                        color={"brand.maroon"}
+                        fontWeight={"medium"}
+                      >
+                        Detail dan Peserta
+                      </BreadcrumbLink>
+                    </Link>
+                  </BreadcrumbItem>
+                </Breadcrumb>
+              </>
+            )}
           </Breadcrumb>
 
           {/* Header */}
-          <Stack direction={"row"} gap={5}>
-            <Heading fontFamily={"Poppins"} color={"text.primary"}>
-              Detail dan Peserta
-            </Heading>
+          <Stack
+            direction={"row"}
+            gap={5}
+            justifyContent={"space-between"}
+            align={"center"}
+            borderRadius={"2rem"}
+          >
+            <Stack direction={"row"} align={"center"} spacing={5}>
+              <Heading fontFamily={"Poppins"} color={"text.primary"}>
+                Detail dan Peserta
+              </Heading>
+              {role === "superadmin" && (
+                <Tag
+                  bgColor={"brand.maroon"}
+                  h={25}
+                  color={"white"}
+                  rounded={"full"}
+                  fontSize={"0.75rem"}
+                >
+                  Superadmin
+                </Tag>
+              )}
+            </Stack>
+
+            {/* sunting button */}
+            {(role === "superadmin" || role === "organisator") && (
+              <Button
+                leftIcon={<MdEdit />}
+                colorScheme="blue"
+                bgColor={"button.primary"}
+                borderRadius={"full"}
+                color={"white"}
+                onClick={() => setModalState({ mode: "edit" })}
+              >
+                <Text color={"white"}> Sunting</Text>
+              </Button>
+            )}
           </Stack>
         </Show>
         {/* Content */}
@@ -226,7 +258,8 @@ const Organisator = () => {
         >
           <Stack
             mt={7}
-            direction="row"
+            mx={7}
+            direction={headerDirection}
             spacing={2}
             gap={10}
             justifyContent="center"
@@ -234,7 +267,11 @@ const Organisator = () => {
             <Stack maxW="379px">
               <img src="/icons/imgplaceholder.png" alt="placeholderimage" />
             </Stack>
-            <Stack divider={<Divider orientation="vertical" />} direction="row">
+            <Stack
+              divider={<Divider orientation="vertical" />}
+              direction={headerDirection}
+              my={7}
+            >
               <Stack maxW="379px" mr={7}>
                 <Heading size="lg">UKM 1</Heading>
                 <Stack direction="row">
@@ -266,6 +303,163 @@ const Organisator = () => {
           {data && <DataTable2 colDefs={colDefs} data={data} />}
         </Stack>
       </Stack>
+      {/* HEADER END */}
+
+      {/* MODAL START */}
+      <Modal
+        isCentered
+        isOpen={!!modalState}
+        onClose={() => setModalState(undefined)}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader fontWeight={"bold"}>
+            {modalState?.mode === "delete" ? "Delete" : "Sunting"}
+          </ModalHeader>
+          <ModalCloseButton />
+
+          <ModalBody>
+            {modalState?.mode === "delete" && (
+              <Text>Are you sure to delete? </Text>
+            )}
+
+            {modalState?.mode === "edit" && (
+              <form>
+                <Stack spacing={4}>
+                  {/* NAMA ORGANISASI START */}
+                  <FormControl>
+                    <FormLabel>Nama</FormLabel>
+
+                    <Input
+                      placeholder="Nama Organisasi"
+                      // {...register("")}
+                      type="text"
+                    />
+
+                    <FormErrorMessage></FormErrorMessage>
+                  </FormControl>
+                  {/* NAMA ORGANISASI END */}
+
+                  {/* LOGO ORGANISASI START */}
+                  <FormControl>
+                    <FormLabel>Logo</FormLabel>
+
+                    <Input
+                      placeholder="Logo Organisasi"
+                      // {...register("")}
+                      type="file"
+                    />
+
+                    <FormErrorMessage></FormErrorMessage>
+                  </FormControl>
+                  {/* LOGO ORGANISASI END */}
+
+                  {/* FOTO KEGIATAN START */}
+                  <FormControl>
+                    <FormLabel>Foto Kegiatan</FormLabel>
+
+                    <Input
+                      placeholder="Logo Organisasi"
+                      // {...register("")}
+                      type="file"
+                    />
+
+                    <FormErrorMessage></FormErrorMessage>
+                  </FormControl>
+                  {/* FOTO KEGIATAN END */}
+
+                  {/* DESKRIPSI START */}
+                  <FormControl>
+                    <FormLabel>Deskripsi</FormLabel>
+
+                    <Input
+                      placeholder="Deskripsi"
+                      // {...register("")}
+                      type="text"
+                    />
+
+                    <FormErrorMessage></FormErrorMessage>
+                  </FormControl>
+                  {/* DESKRIPSI END */}
+
+                  {role === "superadmin" && (
+                    <>
+                      {/* HARI START */}
+                      <FormControl>
+                        <FormLabel>Hari</FormLabel>
+
+                        <Input
+                          placeholder="Hari"
+                          // {...register("")}
+                          type="date"
+                        />
+
+                        <FormErrorMessage></FormErrorMessage>
+                      </FormControl>
+                      {/* HARI END */}
+
+                      {/* KUOTA START */}
+                      <FormControl>
+                        <FormLabel>Kuota</FormLabel>
+
+                        <Input
+                          placeholder="Kuota"
+                          // {...register("")}
+                          type="number"
+                        />
+
+                        <FormErrorMessage></FormErrorMessage>
+                      </FormControl>
+                      {/* KUOTA END */}
+
+                      {/* LOKASI START */}
+                      <FormControl>
+                        <FormLabel>Lokasi</FormLabel>
+
+                        <Input
+                          placeholder="Lokasi"
+                          // {...register("")}
+                          type="text"
+                        />
+
+                        <FormErrorMessage></FormErrorMessage>
+                      </FormControl>
+                      {/* LOKASI END */}
+                    </>
+                  )}
+                </Stack>
+              </form>
+            )}
+          </ModalBody>
+
+          <ModalFooter>
+            {modalState?.mode === "delete" && (
+              <Button
+                colorScheme="red"
+                onClick={() => {
+                  console.log("Data deleted"); //nanti implementasi dari backend
+                  setModalState(undefined);
+                }}
+              >
+                Delete
+              </Button>
+            )}
+
+            {modalState?.mode === "edit" && (
+              <Button
+                colorScheme="blue"
+                onClick={() => {
+                  console.log("Data added");
+                  setModalState(undefined);
+                }}
+              >
+                Done
+              </Button>
+            )}
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      {/* MODAL END */}
     </>
   );
 };
