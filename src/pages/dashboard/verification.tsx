@@ -110,7 +110,7 @@ const Verification = () => {
         `}
       </style>
 
-      <Stack gap={7}>
+      <Stack gap={7} flex={1}>
         {/* Breadcrumb */}
         <Show above="md">
           <Breadcrumb fontWeight="medium" fontSize="sm">
