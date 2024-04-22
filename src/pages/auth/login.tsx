@@ -1,6 +1,6 @@
 import useAuth from "@/hooks/useAuth";
 import { useNavigate } from "@/router";
-import { Button, Stack, Image, Text, Hide, Show } from "@chakra-ui/react";
+import { Button, Stack, Image, Text, Show } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";

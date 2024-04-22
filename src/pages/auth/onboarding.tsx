@@ -25,13 +25,15 @@ import {
   FormErrorMessage,
   Link,
 } from "@chakra-ui/react";
-// import { useEffect } from "react";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link as RouterLink } from "react-router-dom";
 
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import useApi, { useToastErrorHandler } from "@/hooks/useApi";
+import useSWR from "swr";
 
 const panitiaSchema = z.object({
   name: z
@@ -106,58 +108,22 @@ const onboardingFormSchema = z.union([
 
 type OnboardingForm = z.infer<typeof onboardingFormSchema>;
 
-const dummyDivisiPanitia = [
-  {
-    id: 1,
-    name: "BPH",
-  },
-  {
-    id: 2,
-    name: "Dekorasi",
-  },
-  {
-    id: 3,
-    name: "Dokumentasi",
-  },
-  {
-    id: 4,
-    name: "Konsumsi",
-  },
-  {
-    id: 5,
-    name: "Konten Kreatif",
-  },
-];
-
-const dummySTATE = [
-  {
-    id: 1,
-    name: "QORIE",
-  },
-  {
-    id: 2,
-    name: "Robotic UMN",
-  },
-  {
-    id: 3,
-    name: "UMN Programming Club",
-  },
-  {
-    id: 4,
-    name: "SPECTRE",
-  },
-  {
-    id: 5,
-    name: "POPSICLE",
-  },
-];
-
 const role = ["panitia", "organisator"];
 
+type Enum = {
+  id: number;
+  name: string;
+};
+
 const OnboardingPage = () => {
+  const divisi = useSWR<Enum[]>("/panitia/enum/divisiPanitia");
+  const organisator = useSWR<Enum[]>("/state/enum/organisator");
+
   const auth = useAuth();
   const nav = useNavigate();
   const toast = useToast();
+  const api = useApi();
+  const errorHandler = useToastErrorHandler();
 
   const {
     register,
@@ -177,31 +143,31 @@ const OnboardingPage = () => {
 
   // Note: comment useEffect ini buat disable handling auth
   // (biar slicing gampang)
-  // useEffect(() => {
-  //   if (auth.status === "unauthenticated") {
-  //     toast({
-  //       title: "Error",
-  //       description: "You need to login first",
-  //       status: "error",
-  //       isClosable: true,
-  //     });
-  //     nav("/auth/login");
-  //     return;
-  //   }
+  useEffect(() => {
+    if (auth.status === "unauthenticated") {
+      // toast({
+      //   title: "Error",
+      //   description: "You need to login first",
+      //   status: "error",
+      //   isClosable: true,
+      // });
+      nav("/auth/login");
+      return;
+    }
 
-  //   if (auth.status === "authenticated" && auth.user?.role !== "unknown") {
-  //     toast({
-  //       title: "Error",
-  //       description: "You already have an account",
-  //       status: "error",
-  //       isClosable: true,
-  //     });
-  //     nav("/dashboard");
-  //     return;
-  //   }
+    if (auth.status === "authenticated" && auth.user?.role !== "unknown") {
+      toast({
+        title: "Error",
+        description: "You already have an account",
+        status: "error",
+        isClosable: true,
+      });
+      nav("/dashboard");
+      return;
+    }
 
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [auth]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth]);
 
   const steps = [
     { title: "Role" },
@@ -395,8 +361,10 @@ const OnboardingPage = () => {
           <Stack
             as={"form"}
             onSubmit={handleSubmit((data) => {
-              console.log(data);
-              setActiveStep(3);
+              api
+                .post("/auth/onboarding", data)
+                .then(() => setActiveStep(3))
+                .catch(errorHandler);
             })}
             // flex={1}
             w={"full"}
@@ -457,7 +425,10 @@ const OnboardingPage = () => {
                   <FormLabel fontWeight={"semibold"}>Email Student</FormLabel>
                   <Input
                     {...register("data.email", {
-                      value: "student@student.umn.ac.id",
+                      value:
+                        auth.user?.role === "unknown"
+                          ? auth.user.data.email
+                          : "",
                     })}
                     disabled
                   />
@@ -487,13 +458,15 @@ const OnboardingPage = () => {
                   // @ts-expect-error divisiId nggak kedetek oleh typescript tapi udah pasti ada
                   <FormControl isInvalid={!!errors.data?.divisiId}>
                     <FormLabel fontWeight={"semibold"}>Divisi</FormLabel>
-                    <Select {...register("data.divisiId")}>
-                      {dummyDivisiPanitia.map((divisi) => (
-                        <option key={divisi.id} value={divisi.id}>
-                          {divisi.name}
-                        </option>
-                      ))}
-                    </Select>
+                    {divisi.data && (
+                      <Select {...register("data.divisiId")}>
+                        {divisi.data.map((divisi) => (
+                          <option key={divisi.id} value={divisi.id}>
+                            {divisi.name}
+                          </option>
+                        ))}
+                      </Select>
+                    )}
 
                     <FormErrorMessage>
                       {
@@ -510,13 +483,15 @@ const OnboardingPage = () => {
                   // @ts-expect-error stateId nggak kedetek oleh typescript tapi udah pasti ada
                   <FormControl isInvalid={!!errors.data?.stateId}>
                     <FormLabel fontWeight={"semibold"}>Organisator</FormLabel>
-                    <Select {...register("data.stateId")}>
-                      {dummySTATE.map((state) => (
-                        <option key={state.id} value={state.id}>
-                          {state.name}
-                        </option>
-                      ))}
-                    </Select>
+                    {organisator.data && (
+                      <Select {...register("data.stateId")}>
+                        {organisator.data.map((state) => (
+                          <option key={state.id} value={state.id}>
+                            {state.name}
+                          </option>
+                        ))}
+                      </Select>
+                    )}
 
                     <FormErrorMessage>
                       {
@@ -565,7 +540,10 @@ const OnboardingPage = () => {
               </Stack>
             )}
             <Text>
-              Wrong account? <Link textColor={"#185C99"}>Logout</Link>
+              Wrong account?{" "}
+              <Link onClick={auth.logout} textColor={"#185C99"}>
+                Logout
+              </Link>
             </Text>
           </Stack>
         </Stack>

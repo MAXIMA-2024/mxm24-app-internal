@@ -42,7 +42,17 @@ const useApi = () => {
       async (error: AxiosError<ResponseModel>) => {
         if (error.response?.status === 401) {
           try {
-            await auth.refresh();
+            // await auth.refresh();
+
+            await axios.get<
+              ResponseModel<{
+                role: "mahasiswa" | "panitia" | "organisator" | "unknown";
+                email: string;
+              }>
+            >(baseUrl + "/auth/refresh", {
+              withCredentials: true,
+            });
+
             return instance.request(error.config!);
           } catch (e) {
             auth.logout();
@@ -95,7 +105,9 @@ export const useFetcher = () => {
 
   return (url: string) => {
     return api
-      .get(url)
+      .get(url, {
+        withCredentials: true,
+      })
       .then((res) => res.data.data)
       .catch(toastErrorHandler);
   };

@@ -26,20 +26,29 @@ const SSOCallback = () => {
       return nav("/auth/login");
     }
 
-    if (auth.status === "authenticated") {
-      if (auth.user?.role === "unknown") {
-        return nav("/auth/onboarding");
-      }
-
-      return nav("/dashboard");
-    }
-
-    if (auth.status === "unauthenticated" && ticket) {
-      return auth.callBack(ticket);
-    }
+    auth
+      .callBack(ticket)
+      .then(() => {
+        toast({
+          title: "Success",
+          description: "Successfully logged in!",
+          status: "success",
+          isClosable: true,
+        });
+        nav("/dashboard");
+      })
+      .catch(() => {
+        toast({
+          title: "Error",
+          description: "Failed to login with SSO",
+          status: "error",
+          isClosable: true,
+        });
+        nav("/auth/login");
+      });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loc.search, auth]);
+  }, []);
 
   return (
     <Stack

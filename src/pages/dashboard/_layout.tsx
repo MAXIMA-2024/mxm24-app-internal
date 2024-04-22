@@ -19,16 +19,21 @@ import {
   AccordionPanel,
   Box,
   Icon,
+  useToast,
 } from "@chakra-ui/react";
 import { Outlet, useLocation, Link } from "react-router-dom";
 import { HiChevronDown } from "react-icons/hi";
 import { IoLogOutOutline } from "react-icons/io5";
 // import { MdAccountCircle } from "react-icons/md";
 import { useEffect, useRef, useState } from "react";
+import useAuth from "@/hooks/useAuth";
+import { useNavigate } from "@/router";
+import useSWR from "swr";
 
 const DesktopLayout = () => {
   const loc = useLocation();
   const currentPath = loc.pathname;
+  const auth = useAuth();
 
   const specialButtons = [
     {
@@ -488,28 +493,21 @@ const DesktopLayout = () => {
                 >
                   <Text
                     fontSize={buttonResponsiveProps.fontSize}
-                    fontWeight={
-                      currentPath === "/dashboard/qrscanner/state" ||
-                      currentPath === "/dashboard/qrscanner/malpun"
-                        ? "semibold"
-                        : "medium"
-                    }
+                    fontWeight={"medium"}
                     color={"text.primary"}
                   >
-                    John Ryan R.
+                    {auth.user?.role !== "unknown" && auth.user?.data.name}
                   </Text>
                   <Text
                     fontSize={["0.5rem", "0.5rem", "0.5rem", "0.75rem"]}
-                    fontWeight={
-                      currentPath === "/dashboard/qrscanner/state" ||
-                      currentPath === "/dashboard/qrscanner/malpun"
-                        ? "semibold"
-                        : "medium"
-                    }
+                    fontWeight={"medium"}
                     opacity={"0.75"}
                     color={"text.primary"}
                   >
-                    CHARTA - Website
+                    {auth.user?.role === "panitia" &&
+                      auth.user.data.divisi.name}
+                    {auth.user?.role === "organisator" &&
+                      auth.user.data.state.name}
                   </Text>
                 </Stack>
               </Button>
@@ -526,6 +524,7 @@ const DesktopLayout = () => {
                 gap={2}
                 w={"full"}
                 justifyContent={"center"}
+                onClick={auth.logout}
               >
                 <IoLogOutOutline
                   color="white"
@@ -549,6 +548,7 @@ const DesktopLayout = () => {
 const MobileLayout = () => {
   const loc = useLocation();
   const currentPath = loc.pathname;
+  const auth = useAuth();
 
   const currentPageName =
     currentPath.charAt(currentPath.lastIndexOf("/") + 1).toUpperCase() +
@@ -665,7 +665,7 @@ const MobileLayout = () => {
                 fontWeight={"bold"}
                 color={"text.primary"}
               >
-                John Ryan R.
+                {auth.user?.role !== "unknown" && auth.user?.data.name}
               </Text>
               <Text
                 fontSize={["0.6rem", "0.6rem", "0.6rem", "0.75rem"]}
@@ -673,7 +673,8 @@ const MobileLayout = () => {
                 opacity={"0.75"}
                 color={"text.primary"}
               >
-                CHARTA - Website
+                {auth.user?.role === "panitia" && auth.user.data.divisi.name}
+                {auth.user?.role === "organisator" && auth.user.data.state.name}
               </Text>
               <Button
                 mt={2}
@@ -687,6 +688,7 @@ const MobileLayout = () => {
                 gap={2}
                 w={"full"}
                 justifyContent={"center"}
+                onClick={auth.logout}
               >
                 <IoLogOutOutline
                   color="white"
@@ -1355,6 +1357,43 @@ const MobileLayout = () => {
 };
 
 const DashboardLayout = () => {
+  const auth = useAuth();
+  const toast = useToast();
+  const nav = useNavigate();
+
+  useEffect(() => {
+    if (auth.status === "unauthenticated") {
+      // toast({
+      //   title: "Unauthorized",
+      //   description: "You need to login first",
+      // });
+
+      nav("/auth/login");
+      return;
+    }
+
+    if (auth.status === "authenticated") {
+      if (auth.user?.role === "unknown") {
+        nav("/auth/onboarding");
+        return;
+      }
+
+      if (
+        (auth.user?.role === "panitia" || auth.user?.role === "organisator") &&
+        !auth.user.data.isVerified
+      ) {
+        toast({
+          title: "Akun belum diverifikasi",
+          description:
+            "Akunmu belum diverifikasi oleh SUPERADMIN, silahkan coba beberapa saat lagi",
+        });
+        auth.logout();
+      }
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth]);
+
   return (
     <>
       <Show above="md">

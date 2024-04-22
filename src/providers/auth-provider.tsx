@@ -1,22 +1,34 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
-import useApi, {
+import {
   type ResponseModel,
   useToastErrorHandler,
   baseUrl,
 } from "@/hooks/useApi";
-import axios from "axios";
-import { useToast } from "@chakra-ui/react";
+import axios, { AxiosError } from "axios";
+// import { useToast } from "@chakra-ui/react";
 
 type Panitia = {
   name: string;
   nim: string;
   divisiId: number;
+  email: string;
+  isVerified: boolean;
+  divisi: {
+    id: number;
+    name: string;
+  };
 };
 
 type Organisator = {
   name: string;
   nim: string;
+  email: string;
   stateId: number;
+  isVerified: boolean;
+  state: {
+    id: number;
+    name: string;
+  };
 };
 
 type Mahasiswa = {
@@ -44,21 +56,24 @@ type User =
     }
   | {
       role: "unknown";
+      data: {
+        email: string;
+      };
     };
 
 type AuthContext = {
   status: "loading" | "unauthenticated" | "authenticated";
   user: User | null;
-  callBack: (ticket: string) => void;
-  refresh: () => Promise<void>;
+  callBack: (ticket: string) => Promise<void>;
+  // refresh: () => Promise<void>;
   logout: () => void;
 };
 
 export const AuthContext = createContext<AuthContext>({
   status: "loading",
   user: null,
-  callBack: () => {},
-  refresh: async () => {},
+  callBack: async () => {},
+  // refresh: async () => {},
   logout: () => {},
 });
 
@@ -68,80 +83,19 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     "loading" | "unauthenticated" | "authenticated"
   >("loading");
 
-  const api = useApi();
-  const toast = useToast();
   const errorHandler = useToastErrorHandler();
 
-  useEffect(() => {
-    api
-      .get<ResponseModel<User>>("/auth/profile", {
-        withCredentials: true,
-      })
-      .then((res) => {
-        setUser(res.data.data);
-        setStatus("authenticated");
-      })
-      .catch(() => {
-        setStatus("unauthenticated");
-      });
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const callBack = (ticket: string) => {
-    axios
-      .post<
-        ResponseModel<{
-          role: "mahasiswa" | "panitia" | "organisator" | "unknown";
-          email: string;
-        }>
-      >(
-        baseUrl + "/auth/sso",
-        {
-          ticket,
-          issuer:
-            (import.meta.env.VITE_FRONTEND_URL ?? "http://localhost:5173") +
-            "/auth/sso",
-        },
-        { withCredentials: true }
-      )
-      .then(() => {
-        axios
-          .get<ResponseModel<User>>(baseUrl + "/auth/profile", {
-            withCredentials: true,
-          })
-          .then((res) => {
-            console.log(res.data.data);
-            setUser(res.data.data);
-            setStatus("authenticated");
-            toast({
-              title: "Success",
-              description: "Successfully logged in!",
-              status: "success",
-              isClosable: true,
-            });
-          })
-          .catch(() => {
-            console.log("error, cookie ga kebaca");
-            // errorHandler(err);
-            setStatus("unauthenticated");
-          });
-      })
-      .catch((err) => {
-        errorHandler(err);
-        setStatus("unauthenticated");
-      });
-  };
-
-  const refresh = async () => {
-    await axios.get<
-      ResponseModel<{
-        role: "mahasiswa" | "panitia" | "organisator" | "unknown";
-        email: string;
-      }>
-    >(baseUrl + "/auth/refresh", {
-      withCredentials: true,
-    });
+  const callBack = async (ticket: string) => {
+    await axios.post<ResponseModel>(
+      baseUrl + "/auth/sso",
+      {
+        ticket,
+        issuer:
+          (import.meta.env.VITE_FRONTEND_URL ?? "http://localhost:5173") +
+          "/auth/sso",
+      },
+      { withCredentials: true }
+    );
 
     const user = await axios.get<ResponseModel<User>>(
       baseUrl + "/auth/profile",
@@ -152,6 +106,12 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     setUser(user.data.data);
     setStatus("authenticated");
+    // toast({
+    //   title: "Success",
+    //   description: "Successfully logged in!",
+    //   status: "success",
+    //   isClosable: true,
+    // });
   };
 
   const logout = () => {
@@ -162,15 +122,55 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       .then(() => {
         setUser(null);
         setStatus("unauthenticated");
-        toast({
-          title: "Success",
-          description: "Successfully logged out!",
-          status: "success",
-          isClosable: true,
-        });
+        // toast({
+        //   title: "Success",
+        //   description: "Successfully logged out!",
+        //   status: "success",
+        //   isClosable: true,
+        // });
       })
       .catch((err) => errorHandler(err));
   };
+
+  useEffect(() => {
+    axios
+      .get<ResponseModel<User>>(baseUrl + "/auth/profile", {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setUser(res.data.data);
+        setStatus("authenticated");
+      })
+      .catch((err: AxiosError) => {
+        if (err.response?.status === 401) {
+          axios
+            .get<ResponseModel>(baseUrl + "/auth/refresh", {
+              withCredentials: true,
+            })
+            .then(() => {
+              axios
+                .get<ResponseModel<User>>(baseUrl + "/auth/profile", {
+                  withCredentials: true,
+                })
+                .then((res) => {
+                  setUser(res.data.data);
+                  setStatus("authenticated");
+                })
+                .catch(() => {
+                  setStatus("unauthenticated");
+                });
+            })
+            .catch(() => {
+              logout();
+              setStatus("unauthenticated");
+            });
+        }
+
+        setStatus("unauthenticated");
+      });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <AuthContext.Provider
@@ -178,7 +178,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
         status,
         user,
         callBack,
-        refresh,
+        // refresh,
         logout,
       }}
     >

@@ -16,7 +16,6 @@ import {
   ModalBody,
   ModalCloseButton,
   Button,
-  useDisclosure,
   useToast,
   FormControl,
   FormErrorMessage,
@@ -29,12 +28,14 @@ import { MUIDataTableColumn } from "mui-datatables";
 import Switch from "@mui/material/Switch";
 import { MdDeleteForever } from "react-icons/md";
 import MuiButton from "@mui/material/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
 import { z } from "zod";
 // import { useToastErrorHandler } from "@/hooks/useApi";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import useAuth from "@/hooks/useAuth";
+import { useNavigate } from "@/router";
 interface Toggle {
   id: string;
   status: boolean;
@@ -63,7 +64,42 @@ const togglesSchema = z.object({
 
 const Toggles = () => {
   // const errorHandler = useToastErrorHandler();
+  const auth = useAuth();
+  const nav = useNavigate();
   const toast = useToast();
+
+  useEffect(() => {
+    if (auth.user?.role !== "panitia") {
+      toast({
+        title: "Unauthorized",
+        description: "Anda tidak diizinkan mengakses page ini",
+        status: "error",
+      });
+
+      nav("/dashboard");
+      return;
+    }
+
+    const allowList = [
+      1, // BPH
+      2, // CHARTA
+    ];
+
+    if (
+      auth.user.role === "panitia" &&
+      !allowList.includes(auth.user.data.divisiId)
+    ) {
+      toast({
+        title: "Unauthorized",
+        description: "Divisi anda tidak diizinkan mengakses page ini",
+        status: "error",
+      });
+
+      nav("/dashboard");
+      return;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth]);
 
   const {
     handleSubmit,
