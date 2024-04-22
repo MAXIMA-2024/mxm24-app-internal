@@ -12,6 +12,7 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
+  useToast,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -154,6 +155,8 @@ const Organisator = () => {
     ["James Houston", "12356", "Dallas@student.ac.id", "TX"],
   ];
 
+  const toast = useToast();
+
   return (
     <>
       <style>
@@ -171,7 +174,7 @@ const Organisator = () => {
           `}
       </style>
 
-      <Stack gap={7}>
+      <Stack gap={7} flex={1}>
         {/* Breadcrumb */}
         <Show above="md">
           <Breadcrumb fontWeight="medium" fontSize="sm">
@@ -199,11 +202,12 @@ const Organisator = () => {
         {/* Content */}
         <Box
           bgColor={"white"}
-          w={"full"}
+          // w={"full"}
           // h={"full"}
           shadow={"lg"}
           rounded={"xl"}
           overflow={"auto"}
+          flex={1}
         >
           {data && <DataTable colDefs={colDefs} data={data} />}
         </Box>
@@ -233,7 +237,13 @@ const Organisator = () => {
               <Button
                 colorScheme="red"
                 onClick={() => {
-                  console.log("Data deleted"); //nanti implementasi dari backend
+                  console.log("Data deleted");
+                  //nanti implementasi dari backend
+                  toast({
+                    title: "Deleted",
+                    description: `Data ${modalState.id} has been deleted`,
+                    status: "error",
+                  });
                   setModalState(undefined);
                 }}
               >
