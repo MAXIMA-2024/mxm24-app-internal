@@ -218,17 +218,6 @@ const Organisator = () => {
               <Heading fontFamily={"Poppins"} color={"text.primary"}>
                 Detail dan Peserta
               </Heading>
-              {role === "superadmin" && (
-                <Tag
-                  bgColor={"brand.maroon"}
-                  h={25}
-                  color={"white"}
-                  rounded={"full"}
-                  fontSize={"0.75rem"}
-                >
-                  Superadmin
-                </Tag>
-              )}
             </Stack>
 
             {/* sunting button */}
