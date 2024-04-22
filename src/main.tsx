@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { Routes } from "@generouted/react-router";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { withProse } from "@nikolovlazar/chakra-ui-prose";
+import AuthProvider from "@/providers/auth-provider";
 
 import "@fontsource/poppins/200.css";
 import "@fontsource/poppins/300.css";
@@ -14,6 +15,9 @@ import "@fontsource/poppins/900.css";
 
 const theme = extendTheme(
   {
+    shadows: {
+      bottomOutline: "0 0 5px 3px rgba(0, 0, 0, 0.1)",
+    },
     fonts: {
       Poppins: `'Poppins', sans-serif`,
     },
@@ -54,7 +58,9 @@ const theme = extendTheme(
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
-      <Routes />
+      <AuthProvider>
+        <Routes />
+      </AuthProvider>
     </ChakraProvider>
   </React.StrictMode>
 );
