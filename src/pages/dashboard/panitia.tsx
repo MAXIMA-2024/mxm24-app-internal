@@ -14,6 +14,7 @@ import {
   ModalBody,
   ModalCloseButton,
   Button,
+  useToast,
 } from "@chakra-ui/react";
 
 import { Link } from "react-router-dom";
@@ -28,6 +29,8 @@ const Panitia = () => {
   const allowedDeleteIds = [1, 2];
   const mockUserIds = [1, 2]; //user id novator dan charta
   const user = { ids: mockUserIds };
+
+  const toast = useToast();
 
   type ModalState = {
     id?: number;
@@ -172,14 +175,20 @@ const Panitia = () => {
           <ModalCloseButton />
 
           <ModalBody>
-            <Text>Are you sure to delete? </Text>
+            <Text>Are you sure to delete ?</Text>
           </ModalBody>
 
           <ModalFooter>
             <Button
               colorScheme="red"
               onClick={() => {
-                console.log("Data deleted"); //nanti implementasi dari backend
+                console.log("Data deleted");
+                //nanti implementasi dari backend
+                toast({
+                  title: "Deleted",
+                  description: `${modalState?.id} has been deleted`,
+                  status: "error",
+                });
                 setModalState(undefined);
               }}
             >
