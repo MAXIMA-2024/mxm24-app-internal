@@ -21,9 +21,9 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  // Modal,
   useBreakpointValue,
   StackDirection,
+  useToast,
 } from "@chakra-ui/react";
 import {
   MdCalendarToday,
@@ -44,7 +44,10 @@ import { MUIDataTableColumn } from "mui-datatables";
 import { useEffect, useState } from "react";
 import { Button as MuiButton } from "@mui/material";
 import base from "node_modules/@emotion/styled/dist/declarations/types/base";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
 // import useAuth from "@/hooks/useAuth";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const isSuperadmin = (user: { role: string }) => {
   return user.role === "superadmin";
@@ -57,6 +60,42 @@ const isPanitia = (user: { role: string }) => {
 const isOrganisator = (user: { role: string }) => {
   return user.role === "organisator";
 };
+
+type StateData = {
+  nama_kegiatan: string;
+  hari: Date;
+  kuota: number;
+  lokasi: string;
+  deskripsi: string;
+  // logo: File;
+  // foto_kegiatan: File;
+};
+
+type StateDataFillable = Pick<
+  StateData,
+  "nama_kegiatan" | "hari" | "kuota" | "lokasi" | "deskripsi"
+  // | "logo"
+  // | "foto_kegiatan"
+>;
+
+const editButtonSchema = z.object({
+  nama_kegiatan: z
+    .string({ required_error: "Nama kegiatan harus diisi" })
+    .min(1, "Nama kegiatan harus diisi")
+    .max(255, "Nama kegiatan maksimal 255 karakter"),
+  hari: z.date({ required_error: "Hari harus diisi" }),
+  kuota: z.number({ required_error: "Kuota harus diisi" }),
+  lokasi: z
+    .string({ required_error: "Lokasi harus diisi" })
+    .min(1, "Lokasi harus diisi")
+    .max(255, "Lokasi maksimal 255 karakter"),
+  deskripsi: z
+    .string({ required_error: "Deskripsi harus diisi" })
+    .min(1, "Deskripsi harus diisi")
+    .max(255, "Deskripsi maksimal 255 karakter"),
+  // logo: z.string({ required_error: "Logo harus diisi" }),
+  // foto_kegiatan: z.string({ required_error: "Foto kegiatan harus diisi" }),
+});
 
 const Organisator = () => {
   // const { user } = useAuth();
@@ -84,12 +123,22 @@ const Organisator = () => {
     }
   }, [user]);
 
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<StateDataFillable>({
+    resolver: zodResolver(editButtonSchema),
+  });
+
   type ModalState = {
     id?: number;
     mode: "edit" | "delete"; ///hanya bisa edit aja dengan ketentuan [superadmin: hari, kuota, lokasi] dan [organisator: nama, deskripsi, logo, foto kegiatan]
   };
 
   const [modalState, setModalState] = useState<ModalState | undefined>();
+
+  const toast = useToast();
 
   // BREAKPOINT
   const headerDirection = useBreakpointValue({
@@ -313,19 +362,36 @@ const Organisator = () => {
             )}
 
             {modalState?.mode === "edit" && (
-              <form>
+              <form
+                id="edit-data"
+                onSubmit={handleSubmit((data) => {
+                  if (Object.keys(errors).length === 0) {
+                    console.log(data);
+                    toast({
+                      title: "Edited",
+                      description: `Kegiatan ${data.nama_kegiatan} has been edited`,
+                      status: "success",
+                    });
+                    setModalState(undefined);
+                  } else {
+                    console.error("Form errors:", errors);
+                  }
+                })}
+              >
                 <Stack spacing={4}>
                   {/* NAMA ORGANISASI START */}
-                  <FormControl>
+                  <FormControl isInvalid={!!errors.nama_kegiatan}>
                     <FormLabel>Nama</FormLabel>
 
                     <Input
                       placeholder="Nama Organisasi"
-                      // {...register("")}
+                      {...register("nama_kegiatan")}
                       type="text"
                     />
 
-                    <FormErrorMessage></FormErrorMessage>
+                    <FormErrorMessage>
+                      {errors.nama_kegiatan && errors.nama_kegiatan.message}
+                    </FormErrorMessage>
                   </FormControl>
                   {/* NAMA ORGANISASI END */}
 
@@ -358,60 +424,72 @@ const Organisator = () => {
                   {/* FOTO KEGIATAN END */}
 
                   {/* DESKRIPSI START */}
-                  <FormControl>
+                  <FormControl isInvalid={!!errors.deskripsi}>
                     <FormLabel>Deskripsi</FormLabel>
 
                     <Input
                       placeholder="Deskripsi"
-                      // {...register("")}
+                      {...register("deskripsi")}
                       type="text"
                     />
 
-                    <FormErrorMessage></FormErrorMessage>
+                    <FormErrorMessage>
+                      {errors.deskripsi && errors.deskripsi.message}
+                    </FormErrorMessage>
                   </FormControl>
                   {/* DESKRIPSI END */}
 
                   {role === "superadmin" && (
                     <>
                       {/* HARI START */}
-                      <FormControl>
+                      <FormControl isInvalid={!!errors.hari}>
                         <FormLabel>Hari</FormLabel>
 
                         <Input
                           placeholder="Hari"
-                          // {...register("")}
+                          {...register("hari", {
+                            valueAsDate: true,
+                          })}
                           type="date"
                         />
 
-                        <FormErrorMessage></FormErrorMessage>
+                        <FormErrorMessage>
+                          {errors.hari && errors.hari.message}
+                        </FormErrorMessage>
                       </FormControl>
                       {/* HARI END */}
 
                       {/* KUOTA START */}
-                      <FormControl>
+                      <FormControl isInvalid={!!errors.kuota}>
                         <FormLabel>Kuota</FormLabel>
 
                         <Input
                           placeholder="Kuota"
-                          // {...register("")}
+                          {...register("kuota", {
+                            valueAsNumber: true,
+                          })}
                           type="number"
                         />
 
-                        <FormErrorMessage></FormErrorMessage>
+                        <FormErrorMessage>
+                          {errors.kuota && errors.kuota.message}
+                        </FormErrorMessage>
                       </FormControl>
                       {/* KUOTA END */}
 
                       {/* LOKASI START */}
-                      <FormControl>
+                      <FormControl isInvalid={!!errors.lokasi}>
                         <FormLabel>Lokasi</FormLabel>
 
                         <Input
                           placeholder="Lokasi"
-                          // {...register("")}
+                          {...register("lokasi")}
                           type="text"
                         />
 
-                        <FormErrorMessage></FormErrorMessage>
+                        <FormErrorMessage>
+                          {errors.lokasi && errors.lokasi.message}
+                        </FormErrorMessage>
                       </FormControl>
                       {/* LOKASI END */}
                     </>
@@ -437,10 +515,12 @@ const Organisator = () => {
             {modalState?.mode === "edit" && (
               <Button
                 colorScheme="blue"
-                onClick={() => {
-                  console.log("Data added");
-                  setModalState(undefined);
-                }}
+                type="submit"
+                form="edit-data"
+                // onClick={() => {
+                //   console.log("Data added");
+                //   setModalState(undefined);
+                // }}
               >
                 Done
               </Button>
