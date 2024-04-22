@@ -42,7 +42,13 @@ const SSOCallback = () => {
   }, [loc.search, auth]);
 
   return (
-    <Stack flex={1} align={"center"} justify={"center"}>
+    <Stack
+      align={"center"}
+      justify={"center"}
+      bgColor={"white"}
+      rounded={"2rem"}
+      p={"4rem"}
+    >
       {/* styling disini */}
       <Spinner size={"xl"} />
       <Text>Logging in...</Text>
