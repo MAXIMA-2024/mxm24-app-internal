@@ -7,6 +7,19 @@ import {
   Stack,
   Tag,
   Show,
+  Button,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Text,
   // Modal,
 } from "@chakra-ui/react";
 import { MdDeleteForever } from "react-icons/md";
@@ -195,6 +208,42 @@ const Organisator = () => {
           {data && <DataTable colDefs={colDefs} data={data} />}
         </Box>
       </Stack>
+
+      {/* MODAL START */}
+      <Modal
+        isCentered
+        isOpen={!!modalState}
+        onClose={() => setModalState(undefined)}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader fontWeight={"bold"}>
+            {modalState?.mode === "delete" ? "Delete" : "Sunting"}
+          </ModalHeader>
+          <ModalCloseButton />
+
+          <ModalBody>
+            {modalState?.mode === "delete" && (
+              <Text>Are you sure to delete? </Text>
+            )}
+          </ModalBody>
+
+          <ModalFooter>
+            {modalState?.mode === "delete" && (
+              <Button
+                colorScheme="red"
+                onClick={() => {
+                  console.log("Data deleted"); //nanti implementasi dari backend
+                  setModalState(undefined);
+                }}
+              >
+                Delete
+              </Button>
+            )}
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      {/* MODAL END */}
     </>
   );
 };
