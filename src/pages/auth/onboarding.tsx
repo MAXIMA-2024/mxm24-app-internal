@@ -232,6 +232,7 @@ const OnboardingPage = () => {
           justify={"center"}
           w={["95%", "95%", "95%", "36rem", "48rem"]}
           pt={"2rem"}
+          my={"2rem"}
           rounded={"2rem"}
           bgPos={"center"}
           objectFit={"cover"}
