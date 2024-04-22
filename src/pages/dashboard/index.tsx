@@ -1,20 +1,12 @@
-import { Heading, Text, Stack, Show } from "@chakra-ui/react";
+import { Heading, Text } from "@chakra-ui/react";
 
 const Dashboard = () => {
   return (
     <>
-      <Stack flex={1}>
-        <Show above={"md"}>
-          <Heading fontFamily={"Poppins"} color={"text.primary"}>
-            Dashboard
-          </Heading>
-        </Show>
-        <Stack bgColor={"white"} flex={1} shadow={"lg"} p={25} rounded={"xl"}>
-          <Text fontWeight={"medium"} color={"text.primary"} opacity={0.8}>
-            Selamat datang, <strong>John Ryan R.</strong> 🤩
-          </Text>
-        </Stack>
-      </Stack>
+      <Heading fontFamily={"Poppins"} color={"status.success"}>
+        Helo World
+      </Heading>
+      <Text>Halo Dunia!</Text>
     </>
   );
 };
