@@ -86,12 +86,12 @@ const DesktopLayout = () => {
     imageSize: ["0.75rem", "0.75rem", "0.85rem", "1rem"],
   };
 
-  const bgImage = currentPath.includes("state")
-    ? "/bg/bg-desktop-state.png"
+  const bgImage = currentPath.includes("qrscanner")
+    ? "/bg/bg-desktop-all.png"
     : currentPath === "/dashboard/malpun"
     ? "/bg/bg-desktop-malpun.png"
-    : currentPath.includes("qrscanner")
-    ? "/bg/bg-desktop-all.png"
+    : currentPath.includes("state")
+    ? "/bg/bg-desktop-state.png"
     : "/bg/bg-desktop-brick.png";
 
   return (
