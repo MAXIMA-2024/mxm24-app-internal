@@ -6,6 +6,8 @@ import iconMalPun from "/icons/iconMalPun.png";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import React, { Component, useState } from "react";
+import Chart from "react-apexcharts";
 
 const Dashboard = () => {
   const cardsData = [
@@ -29,13 +31,44 @@ const Dashboard = () => {
     autoplaySpeed: 2000,
   };
 
+  const [chartData, setChartData] = useState({
+    options: {
+      chart: {
+        id: "basic-bar",
+      },
+      xaxis: {
+        categories: ["Panitia", "Mahasiswa", "State", "MalPun"],
+      },
+      plotOptions: {
+        bar: {
+          distributed: "true",
+          dataLabels: {
+            // position: "bottom",
+          },
+        },
+      },
+      dataLabels: {
+        enabled: true,
+
+        style: {
+          fontSize: "1rem",
+          colors: ["#1b2625"],
+        },
+      },
+      colors: ["#f8a400", "#f8f082", "#f0ac4d", "#fcebc6"],
+    },
+    series: [
+      {
+        name: "Jumlah Peserta",
+        data: [30, 40, 45, 50],
+      },
+    ],
+  });
+
   return (
     <>
       <style>
-        {`.slider{
-          // margin: 10px;
-
-        }
+        {`
         `}
       </style>
       <Stack flex={1} spacing={6}>
@@ -151,8 +184,18 @@ const Dashboard = () => {
               >
                 <strong>Mahasiswa / Peserta STATE</strong>
               </Text>
+
+              <Stack flex={1}>
+                <Chart
+                  options={chartData.options}
+                  series={chartData.series}
+                  type="bar"
+                  width="100%"
+                  height="100%"
+                />
+              </Stack>
             </Stack>
-          </Stack>{" "}
+          </Stack>
           {/* GRAFIK END */}
         </Stack>
       </Stack>
