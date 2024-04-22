@@ -161,33 +161,38 @@ const Organisator = () => {
     },
     {
       name: "kehadiran",
-      label: "kehadiran",
+      label: "Kehadiran",
     },
   ];
 
+  const BsCheckCircleFilled = () => (
+    <BsCheckCircleFill color="green" size={20} />
+  );
+  const BsXCircleFilled = () => <BsXCircleFill color="red" size={20} />;
+
   const data = [
-    ["Joe James", "12345", "joe@student.umn.ac.id", <BsCheckCircleFill />],
+    ["Joe James", "12345", "joe@student.umn.ac.id", <BsCheckCircleFilled />],
     [
       "John Walsh",
       "12346",
       "johnnydepp@student.umn.ac.id",
-      <BsCheckCircleFill />,
+      <BsCheckCircleFilled />,
     ],
-    ["Bob Herm", "12347", "bob@student.umn.ac.id", <BsXCircleFill />],
+    ["Bob Herm", "12347", "bob@student.umn.ac.id", <BsXCircleFilled />],
     [
       "James Houston",
       "12348",
       "jamesHouston@student.umn.ac.id",
-      <BsXCircleFill />,
+      <BsXCircleFilled />,
     ],
-    ["Joe James", "12349", "joejoe@student.umn.ac.id", <BsXCircleFill />],
-    ["John Walsh", "12350", "john@student.umn.ac.id", <BsXCircleFill />],
-    ["Bob Herm", "12351", "bobby@student.umn.ac.id", <BsXCircleFill />],
-    ["James Houston", "12352", "jemes@student.umn.ac.id", <BsXCircleFill />],
-    ["Joe James", "12353", "joeee@student.umn.ac.id", <BsXCircleFill />],
-    ["John Walsh", "12354", "james@student.umn.ac.id", <BsXCircleFill />],
-    ["Bob Herm", "12355", "bobby@student.umn.ac.id", <BsXCircleFill />],
-    ["James Houston", "12356", "jhh@student.umn.ac.id", <BsXCircleFill />],
+    ["Joe James", "12349", "joejoe@student.umn.ac.id", <BsXCircleFilled />],
+    ["John Walsh", "12350", "john@student.umn.ac.id", <BsXCircleFilled />],
+    ["Bob Herm", "12351", "bobby@student.umn.ac.id", <BsXCircleFilled />],
+    ["James Houston", "12352", "jemes@student.umn.ac.id", <BsXCircleFilled />],
+    ["Joe James", "12353", "joeee@student.umn.ac.id", <BsXCircleFilled />],
+    ["John Walsh", "12354", "james@student.umn.ac.id", <BsXCircleFilled />],
+    ["Bob Herm", "12355", "bobby@student.umn.ac.id", <BsXCircleFilled />],
+    ["James Houston", "12356", "jhh@student.umn.ac.id", <BsXCircleFilled />],
   ];
 
   return (
@@ -287,7 +292,7 @@ const Organisator = () => {
         {/* Content */}
         <Stack
           bgColor={"white"}
-          w={"full"}
+          // w={"full"}
           // h={"full"}
           shadow={"lg"}
           rounded={"xl"}
@@ -295,6 +300,8 @@ const Organisator = () => {
           flex={1}
         >
           <Stack
+            // w={"full"}
+            flex={1}
             mt={7}
             mx={7}
             direction={headerDirection}
