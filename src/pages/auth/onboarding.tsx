@@ -265,7 +265,7 @@ const OnboardingPage = () => {
           />
           <Show breakpoint="(min-width: 1024px)">
             <Image
-              src="/dashboard/maxiDesktop.png"
+              src="/bg/maxiDesktop.png"
               position={"absolute"}
               top={"10rem"}
               left={"-7.775rem"}
@@ -282,7 +282,7 @@ const OnboardingPage = () => {
               }}
             />
             <Image
-              src="/dashboard/ximaDesktop.png"
+              src="/bg/ximaDesktop.png"
               position={"absolute"}
               top={"10rem"}
               bottom={0}
@@ -303,7 +303,7 @@ const OnboardingPage = () => {
 
           <Show breakpoint="(max-width: 1023px)">
             <Image
-              src="/dashboard/maxiMobile.png"
+              src="/bg/maxiMobile.png"
               position={"absolute"}
               top={["-6.4rem", "-8.835rem", "-8.835rem", "-6.3rem", "-6.3rem"]}
               bottom={0}
@@ -321,7 +321,7 @@ const OnboardingPage = () => {
               }}
             />
             <Image
-              src="/dashboard/ximaMobile.png"
+              src="/bg/ximaMobile.png"
               position={"absolute"}
               top={["-6.3rem", "-8rem", "-8rem", "-6.3rem", "-6.3rem"]}
               bottom={0}

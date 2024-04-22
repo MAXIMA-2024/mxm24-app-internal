@@ -74,6 +74,89 @@ const LoginPage = () => {
             initial={"initial"}
             animate={"enter"}
           >
+            <Show breakpoint="(min-width: 1024px)">
+              <Image
+                src="/bg/maxiDesktop.png"
+                position={"absolute"}
+                top={"4rem"}
+                left={"-7.775rem"}
+                w={"9rem"}
+                as={motion.img}
+                animate={{
+                  y: [0, 2, 0],
+                  transition: {
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                    easings: "easeInOut",
+                  },
+                }}
+              />
+              <Image
+                src="/bg/ximaDesktop.png"
+                position={"absolute"}
+                top={"8.25rem"}
+                bottom={0}
+                right={"-7.5rem"}
+                w={"10rem"}
+                as={motion.img}
+                animate={{
+                  y: [0, -2, 0],
+                  transition: {
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                    easings: "easeInOut",
+                  },
+                }}
+              />
+            </Show>
+
+            <Show breakpoint="(max-width: 1023px)">
+              <Image
+                src="/bg/maxiMobile.png"
+                position={"absolute"}
+                top={[
+                  "-6.4rem",
+                  "-8.835rem",
+                  "-8.835rem",
+                  "-6.3rem",
+                  "-6.3rem",
+                ]}
+                bottom={0}
+                left={["1.25rem", "2rem", "7rem", "5rem", "1.25rem"]}
+                w={["8rem", "11rem", "11rem", "8rem", "8rem"]}
+                as={motion.img}
+                animate={{
+                  rotate: [0, -1.5, 0],
+                  transition: {
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                    easings: "easeInOut",
+                  },
+                }}
+              />
+              <Image
+                src="/bg/ximaMobile.png"
+                position={"absolute"}
+                top={["-6.3rem", "-8rem", "-8rem", "-6.3rem", "-6.3rem"]}
+                bottom={0}
+                right={["2rem", "4rem", "9rem", "6rem", "2rem"]}
+                w={["5.5rem", "7rem", "7rem", "5.5rem", "5.5rem"]}
+                as={motion.img}
+                animate={{
+                  rotate: [0, 1.5, 0],
+                  transition: {
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                    easings: "easeInOut",
+                  },
+                }}
+              />
+            </Show>
+
             <Image
               src="/bg/logo.png"
               w={["60px", "90px", "90px", "90px", "90px"]}
