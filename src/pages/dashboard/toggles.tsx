@@ -7,6 +7,7 @@ import {
   Stack,
   Tag,
   Show,
+  Text,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -45,6 +46,11 @@ type Toggles = {
   status: boolean;
 };
 
+type ModalToggles = {
+  id?: number;
+  mode: "create" | "delete";
+};
+
 type TogglesFillable = Pick<Toggles, "nama_kegiatan">;
 
 const togglesSchema = z.object({
@@ -68,7 +74,7 @@ const Toggles = () => {
   });
 
   // toggles useState
-  // const [modalToggles, setModalToggles] = useState<ModalToggles | undefined>();
+  const [modalToggles, setModalToggles] = useState<ModalToggles | undefined>();
 
   // Modal Blur Overlay
   const OverlayOne = () => (
@@ -132,10 +138,10 @@ const Toggles = () => {
                 boxShadow: "none",
                 backgroundColor: "button.success",
               }}
-              // onClick={() => setModalState({ id: value, mode: "delete" })}
-              onClick={() => {
-                console.log(value);
-              }}
+              onClick={() => setModalToggles({ id: value, mode: "delete" })}
+              // onClick={() => {
+              //   console.log(value);
+              // }}
             >
               <MdDeleteForever />
             </MuiButton>
@@ -201,7 +207,8 @@ const Toggles = () => {
             <Button
               onClick={() => {
                 setOverlay(<OverlayOne />);
-                onOpen();
+                // onOpen();
+                setModalToggles({ mode: "create" });
               }}
               colorScheme="blue"
             >
@@ -222,45 +229,58 @@ const Toggles = () => {
           {toggleData && <DataTable colDefs={colDefs} data={toggleData} />}
         </Box>
       </Stack>
-      <Modal isCentered isOpen={isOpen} onClose={onClose}>
+      <Modal
+        isCentered
+        isOpen={!!modalToggles}
+        onClose={() => setModalToggles(undefined)}
+      >
         {overlay}
         <ModalContent>
-          <ModalHeader>Add Toggles</ModalHeader>
+          <ModalHeader>
+            {modalToggles?.mode === "create" ? "Add" : "Delete"} Toggles
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <form
-              id="add-toggles"
-              onSubmit={handleSubmit((data) => {
-                if (Object.keys(errors).length === 0) {
-                  console.log(data);
-                  toast({
-                    title: "Created",
-                    description: `Kegiatan ${data.nama_kegiatan} has been created`,
-                    status: "success",
-                  });
-                  onClose();
-                  // API call logic here
-                } else {
-                  console.error("Form errors:", errors);
-                }
-                // api
-                //   .post("/barang", data)
-                //   .then(() => {
-                //     toast({
-                //       title: "Created",
-                //       description: `Barang ${data.kode_sku} has been created`,
-                //       status: "success",
-                //     });
-                //   })
-                //   .catch(errorHandler)
-                //   .finally(() => {
-                //     mutate();
-                //     setModalState(undefined);
-                //   });
-              })}
-            >
-              {/* kode_sku */}
-              {/* <FormControl isInvalid={!!errors.kode_sku}>
+            {modalToggles?.mode === "delete" && (
+              <Text>
+                Are you sure you want to delete {`${Toggles.name}`} toggle?
+              </Text>
+            )}
+
+            {modalToggles?.mode === "create" && (
+              <form
+                id="add-toggles"
+                onSubmit={handleSubmit((data) => {
+                  if (Object.keys(errors).length === 0) {
+                    console.log(data);
+                    toast({
+                      title: "Created",
+                      description: `Kegiatan ${data.nama_kegiatan} has been created`,
+                      status: "success",
+                    });
+                    onClose();
+                    // API call logic here
+                  } else {
+                    console.error("Form errors:", errors);
+                  }
+                  // api
+                  //   .post("/barang", data)
+                  //   .then(() => {
+                  //     toast({
+                  //       title: "Created",
+                  //       description: `Barang ${data.kode_sku} has been created`,
+                  //       status: "success",
+                  //     });
+                  //   })
+                  //   .catch(errorHandler)
+                  //   .finally(() => {
+                  //     mutate();
+                  //     setModalState(undefined);
+                  //   });
+                })}
+              >
+                {/* kode_sku */}
+                {/* <FormControl isInvalid={!!errors.kode_sku}>
                 <FormLabel>Kode SKU</FormLabel>
                 <Input
                   placeholder="Kode SKU"
@@ -272,21 +292,21 @@ const Toggles = () => {
                 </FormErrorMessage>
               </FormControl> */}
 
-              {/* nama_kegiatan */}
-              <FormControl isInvalid={!!errors.nama_kegiatan}>
-                <FormLabel>Nama Kegiatan</FormLabel>
-                <Input
-                  placeholder="Nama Kegiatan"
-                  {...register("nama_kegiatan")}
-                  type="text"
-                />
-                <FormErrorMessage>
-                  {errors.nama_kegiatan && errors.nama_kegiatan.message}
-                </FormErrorMessage>
-              </FormControl>
+                {/* nama_kegiatan */}
+                <FormControl isInvalid={!!errors.nama_kegiatan}>
+                  <FormLabel>Nama Kegiatan</FormLabel>
+                  <Input
+                    placeholder="Nama Kegiatan"
+                    {...register("nama_kegiatan")}
+                    type="text"
+                  />
+                  <FormErrorMessage>
+                    {errors.nama_kegiatan && errors.nama_kegiatan.message}
+                  </FormErrorMessage>
+                </FormControl>
 
-              {/* qty */}
-              {/* <FormControl isInvalid={!!errors.qty}>
+                {/* qty */}
+                {/* <FormControl isInvalid={!!errors.qty}>
                 <FormLabel>Quantity</FormLabel>
                 <Input
                   placeholder="Quantity"
@@ -300,8 +320,8 @@ const Toggles = () => {
                 </FormErrorMessage>
               </FormControl> */}
 
-              {/* harga */}
-              {/* <FormControl isInvalid={!!errors.harga}>
+                {/* harga */}
+                {/* <FormControl isInvalid={!!errors.harga}>
                 <FormLabel>Harga</FormLabel>
                 <Input
                   placeholder="Harga (dalam Rupiah)"
@@ -314,13 +334,28 @@ const Toggles = () => {
                   {errors.harga && errors.harga.message}
                 </FormErrorMessage>
               </FormControl> */}
-            </form>
+              </form>
+            )}
           </ModalBody>
           <ModalFooter>
             {/* <Button onClick={onClose}>Close</Button> */}
-            <Button colorScheme="blue" type="submit" form="add-toggles">
-              Add
-            </Button>
+            {modalToggles?.mode === "create" && (
+              <Button colorScheme="blue" type="submit" form="add-toggles">
+                Add
+              </Button>
+            )}
+            {modalToggles?.mode === "delete" && (
+              <Button
+                colorScheme="red"
+                onClick={() => {
+                  console.log(modalToggles?.id);
+                  // onClose();
+                  setModalToggles(undefined);
+                }}
+              >
+                Delete
+              </Button>
+            )}
           </ModalFooter>
         </ModalContent>
       </Modal>
