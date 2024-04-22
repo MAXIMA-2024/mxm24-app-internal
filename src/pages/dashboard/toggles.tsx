@@ -81,7 +81,7 @@ const Toggles = () => {
     <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
   );
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  // const { isOpen, onOpen, onClose } = useDisclosure();
   const [overlay, setOverlay] = React.useState(<OverlayOne />);
 
   const [toggleData, setToggleData] = useState<Toggle[]>([
@@ -243,7 +243,8 @@ const Toggles = () => {
           <ModalBody>
             {modalToggles?.mode === "delete" && (
               <Text>
-                Are you sure you want to delete {`${Toggles.name}`} toggle?
+                Are you sure you want to delete <b>{`${modalToggles.id}`}</b>{" "}
+                toggle?
               </Text>
             )}
 
@@ -258,7 +259,8 @@ const Toggles = () => {
                       description: `Kegiatan ${data.nama_kegiatan} has been created`,
                       status: "success",
                     });
-                    onClose();
+                    // onClose();
+                    setModalToggles(undefined);
                     // API call logic here
                   } else {
                     console.error("Form errors:", errors);
