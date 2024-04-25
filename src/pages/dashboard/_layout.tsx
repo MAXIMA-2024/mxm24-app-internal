@@ -149,6 +149,7 @@ const DesktopLayout = () => {
             w={"full"}
             mt={["1rem", "1rem", "1rem", "2rem"]}
             gap={["0.5rem", "0.5rem", "0.5rem", "0.75rem"]}
+            // overflowY={"auto"}
           >
             {/* Special Buttons */}
             {specialButtons.map((button, index) => (
@@ -490,11 +491,15 @@ const DesktopLayout = () => {
                   alignItems={"start"}
                   ml={"0.5rem"}
                   gap={0}
+                  overflow={"hidden"}
                 >
                   <Text
                     fontSize={buttonResponsiveProps.fontSize}
-                    fontWeight={"medium"}
+                    fontWeight={"semibold"}
                     color={"text.primary"}
+                    noOfLines={1}
+                    isTruncated={true}
+                    textOverflow={"ellipsis"}
                   >
                     {auth.user?.role !== "unknown" && auth.user?.data.name}
                   </Text>
@@ -1272,7 +1277,7 @@ const MobileLayout = () => {
                 src="/icons/menu.png"
                 w={["1.25rem", "1.25rem", "1.25rem", "1.5rem"]}
                 opacity={
-                  currentPath === "/dashboard/state" ||
+                  currentPath.includes("state") ||
                   currentPath === "/dashboard/malpun" ||
                   isAcaraMenuExpanded
                     ? 1
@@ -1282,14 +1287,14 @@ const MobileLayout = () => {
               <Text
                 fontSize={"0.5rem"}
                 fontWeight={
-                  currentPath === "/dashboard/state" ||
+                  currentPath.includes("state") ||
                   currentPath === "/dashboard/malpun" ||
                   isAcaraMenuExpanded
                     ? "semibold"
                     : "medium"
                 }
                 color={
-                  currentPath === "/dashboard/state" ||
+                  currentPath.includes("state") ||
                   currentPath === "/dashboard/malpun" ||
                   isAcaraMenuExpanded
                     ? "brand.maroon"
@@ -1308,15 +1313,15 @@ const MobileLayout = () => {
                   src="/icons/state.png"
                   w={"0.75rem"}
                   mr={"0.75rem"}
-                  opacity={currentPath === "/dashboard/state" ? 1 : 0.25}
+                  opacity={currentPath.includes("state") ? 1 : 0.25}
                 />
                 <Text
                   fontSize={"0.55rem"}
                   fontWeight={
-                    currentPath === "/dashboard/state" ? "semibold" : "medium"
+                    currentPath.includes("state") ? "semibold" : "medium"
                   }
                   color={
-                    currentPath === "/dashboard/state"
+                    currentPath.includes("state")
                       ? "brand.maroon"
                       : "text.primary"
                   }
