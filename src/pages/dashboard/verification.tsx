@@ -253,7 +253,8 @@ const Verification = () => {
         isOpen={!!modalState}
         onClose={() => setModalState(undefined)}
       >
-        <ModalOverlay />
+        <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
+
         <ModalContent>
           <ModalHeader>Delete</ModalHeader>
           <ModalCloseButton />
