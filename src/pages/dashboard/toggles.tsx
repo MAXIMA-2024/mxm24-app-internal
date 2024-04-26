@@ -114,14 +114,6 @@ const Toggles = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
 
-  // Modal Blur Overlay
-  const OverlayOne = () => (
-    <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
-  );
-
-  // const { isOpen, onOpen, onClose } = useDisclosure();
-  const [overlay, setOverlay] = React.useState(<OverlayOne />);
-
   const colDefs: MUIDataTableColumn[] = [
     {
       name: "name",
@@ -243,8 +235,6 @@ const Toggles = () => {
             </Stack>
             <Button
               onClick={() => {
-                setOverlay(<OverlayOne />);
-                // onOpen();
                 setModalToggles({ mode: "create" });
               }}
               colorScheme="blue"
@@ -277,7 +267,7 @@ const Toggles = () => {
         isOpen={!!modalToggles}
         onClose={() => setModalToggles(undefined)}
       >
-        {overlay}
+        <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
         <ModalContent>
           <ModalHeader>
             {modalToggles?.mode === "create" ? "Add" : "Delete"} Toggles
@@ -339,7 +329,7 @@ const Toggles = () => {
                     .then(() => {
                       toast({
                         title: "Berhasil",
-                        description: `Toggle ${modalToggles.id}berhasil dihapus`,
+                        description: `Toggle berhasil dihapus`,
                         status: "success",
                         isClosable: true,
                       });
