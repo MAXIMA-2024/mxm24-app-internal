@@ -21,6 +21,7 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
+  Spinner,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import DataTable from "../../components/datatables";
@@ -31,20 +32,18 @@ import MuiButton from "@mui/material/Button";
 import { useEffect, useState } from "react";
 import React from "react";
 import { z } from "zod";
-// import { useToastErrorHandler } from "@/hooks/useApi";
+//import { useToastErrorHandler } from "@/hooks/useApi";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useAuth from "@/hooks/useAuth";
 import { useNavigate } from "@/router";
-interface Toggle {
-  id: string;
-  status: boolean;
-}
+import useApi, { useToastErrorHandler } from "@/hooks/useApi";
+import useSWR from "swr";
 
 type Toggles = {
   id: number;
-  nama_kegiatan: string;
-  status: boolean;
+  name: string;
+  toggle: boolean;
 };
 
 type ModalToggles = {
@@ -52,10 +51,10 @@ type ModalToggles = {
   mode: "create" | "delete";
 };
 
-type TogglesFillable = Pick<Toggles, "nama_kegiatan">;
+type TogglesFillable = Pick<Toggles, "name">;
 
 const togglesSchema = z.object({
-  nama_kegiatan: z
+  name: z
     .string({ required_error: "Nama kegiatan harus diisi" })
     .min(1, "Nama kegiatan harus diisi")
     .max(255, "Nama barang maksimal 255 karakter"),
@@ -67,11 +66,25 @@ const Toggles = () => {
   const auth = useAuth();
   const nav = useNavigate();
   const toast = useToast();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<TogglesFillable>({
+    resolver: zodResolver(togglesSchema),
+  });
+
+  const api = useApi();
+  const errorHandler = useToastErrorHandler();
+
+  const toggleData = useSWR<Toggles[]>("/toggle");
+
+  const [modalToggles, setModalToggles] = useState<ModalToggles | undefined>();
 
   useEffect(() => {
     if (auth.user?.role !== "panitia") {
       toast({
-        title: "Unauthorized",
+        title: "Akses Ditolak",
         description: "Anda tidak diizinkan mengakses page ini",
         status: "error",
       });
@@ -90,7 +103,7 @@ const Toggles = () => {
       !allowList.includes(auth.user.data.divisiId)
     ) {
       toast({
-        title: "Unauthorized",
+        title: "Akses ditolak",
         description: "Divisi anda tidak diizinkan mengakses page ini",
         status: "error",
       });
@@ -101,17 +114,6 @@ const Toggles = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
 
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-  } = useForm<TogglesFillable>({
-    resolver: zodResolver(togglesSchema),
-  });
-
-  // toggles useState
-  const [modalToggles, setModalToggles] = useState<ModalToggles | undefined>();
-
   // Modal Blur Overlay
   const OverlayOne = () => (
     <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
@@ -120,36 +122,35 @@ const Toggles = () => {
   // const { isOpen, onOpen, onClose } = useDisclosure();
   const [overlay, setOverlay] = React.useState(<OverlayOne />);
 
-  const [toggleData, setToggleData] = useState<Toggle[]>([
-    { id: "Register", status: true },
-    { id: "HoME", status: false },
-    { id: "STATE", status: false },
-    { id: "Malam Puncak", status: false },
-  ]);
-
-  const updateValue = (id: string, checked: boolean) => {
-    const updatedToggleData = toggleData.map((item) =>
-      item.id === id ? { ...item, status: checked } : item
-    );
-    setToggleData(updatedToggleData);
-  };
-
   const colDefs: MUIDataTableColumn[] = [
     {
-      name: "id",
+      name: "name",
       label: "Toggle",
     },
     {
-      name: "status",
+      name: "toggle",
       label: "Status",
       options: {
         customBodyRender: (value: boolean, tableMeta) => {
           const { rowIndex } = tableMeta;
+          const data = toggleData.data?.[rowIndex];
+
           return (
             <Switch
               checked={value}
-              onChange={(e) =>
-                updateValue(toggleData[rowIndex].id, e.target.checked)
+              onChange={() =>
+                api
+                  .put(`/toggle/${data?.id}`)
+                  .then(() => {
+                    toast({
+                      title: "Berhasil",
+                      description: `Toggle ${data?.name} berhasil di update`,
+                      status: "success",
+                      isClosable: true,
+                    });
+                  })
+                  .catch(errorHandler)
+                  .finally(() => toggleData.mutate())
               }
               color="primary"
               inputProps={{ "aria-label": "primary checkbox" }}
@@ -262,7 +263,13 @@ const Toggles = () => {
           rounded={"xl"}
           overflow={"auto"}
         >
-          {toggleData && <DataTable colDefs={colDefs} data={toggleData} />}
+          {toggleData.data ? (
+            <DataTable colDefs={colDefs} data={toggleData.data} />
+          ) : (
+            <Stack flex={1} align={"center"} justify={"center"}>
+              <Spinner />
+            </Stack>
+          )}
         </Box>
       </Stack>
       <Modal
@@ -278,100 +285,41 @@ const Toggles = () => {
           <ModalCloseButton />
           <ModalBody>
             {modalToggles?.mode === "delete" && (
-              <Text>
-                Are you sure you want to delete <b>{`${modalToggles.id}`}</b>{" "}
-                toggle?
-              </Text>
+              <Text>Are you sure you want to delete this toggle?</Text>
             )}
 
             {modalToggles?.mode === "create" && (
               <form
                 id="add-toggles"
                 onSubmit={handleSubmit((data) => {
-                  if (Object.keys(errors).length === 0) {
-                    console.log(data);
-                    toast({
-                      title: "Created",
-                      description: `Kegiatan ${data.nama_kegiatan} has been created`,
-                      status: "success",
+                  api
+                    .post("/toggle", data)
+                    .then(() => {
+                      toast({
+                        title: "Berhasil",
+                        description: `Toggle ${data.name} berhasil ditambahkan`,
+                        status: "success",
+                        isClosable: true,
+                      });
+                    })
+                    .catch(errorHandler)
+                    .finally(() => {
+                      toggleData.mutate();
+                      setModalToggles(undefined);
                     });
-                    // onClose();
-                    setModalToggles(undefined);
-                    // API call logic here
-                  } else {
-                    console.error("Form errors:", errors);
-                  }
-                  // api
-                  //   .post("/barang", data)
-                  //   .then(() => {
-                  //     toast({
-                  //       title: "Created",
-                  //       description: `Barang ${data.kode_sku} has been created`,
-                  //       status: "success",
-                  //     });
-                  //   })
-                  //   .catch(errorHandler)
-                  //   .finally(() => {
-                  //     mutate();
-                  //     setModalState(undefined);
-                  //   });
                 })}
               >
-                {/* kode_sku */}
-                {/* <FormControl isInvalid={!!errors.kode_sku}>
-                <FormLabel>Kode SKU</FormLabel>
-                <Input
-                  placeholder="Kode SKU"
-                  {...register("kode_sku")}
-                  type="text"
-                />
-                <FormErrorMessage>
-                  {errors.kode_sku && errors.kode_sku.message}
-                </FormErrorMessage>
-              </FormControl> */}
-
-                {/* nama_kegiatan */}
-                <FormControl isInvalid={!!errors.nama_kegiatan}>
-                  <FormLabel>Nama Kegiatan</FormLabel>
+                <FormControl isInvalid={!!errors.name}>
+                  <FormLabel>Nama Toggle</FormLabel>
                   <Input
-                    placeholder="Nama Kegiatan"
-                    {...register("nama_kegiatan")}
+                    placeholder="Nama Toggle"
+                    {...register("name")}
                     type="text"
                   />
                   <FormErrorMessage>
-                    {errors.nama_kegiatan && errors.nama_kegiatan.message}
+                    {errors.name && errors.name.message}
                   </FormErrorMessage>
                 </FormControl>
-
-                {/* qty */}
-                {/* <FormControl isInvalid={!!errors.qty}>
-                <FormLabel>Quantity</FormLabel>
-                <Input
-                  placeholder="Quantity"
-                  {...register("qty", {
-                    valueAsNumber: true,
-                  })}
-                  type="number"
-                />
-                <FormErrorMessage>
-                  {errors.qty && errors.qty.message}
-                </FormErrorMessage>
-              </FormControl> */}
-
-                {/* harga */}
-                {/* <FormControl isInvalid={!!errors.harga}>
-                <FormLabel>Harga</FormLabel>
-                <Input
-                  placeholder="Harga (dalam Rupiah)"
-                  {...register("harga", {
-                    valueAsNumber: true,
-                  })}
-                  type="number"
-                />
-                <FormErrorMessage>
-                  {errors.harga && errors.harga.message}
-                </FormErrorMessage>
-              </FormControl> */}
               </form>
             )}
           </ModalBody>
@@ -386,9 +334,20 @@ const Toggles = () => {
               <Button
                 colorScheme="red"
                 onClick={() => {
-                  console.log(modalToggles?.id);
-                  // onClose();
-                  setModalToggles(undefined);
+                  api
+                    .delete(`/toggle/${modalToggles.id}`)
+                    .then(() => {
+                      toast({
+                        title: "Berhasil",
+                        description: `Toggle ${modalToggles.id}berhasil dihapus`,
+                        status: "success",
+                        isClosable: true,
+                      });
+                    })
+                    .finally(() => {
+                      toggleData.mutate();
+                      setModalToggles(undefined);
+                    });
                 }}
               >
                 Delete
