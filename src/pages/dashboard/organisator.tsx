@@ -5,13 +5,13 @@ import {
   BreadcrumbLink,
   Heading,
   Stack,
-  Tag,
+  // Tag,
   Show,
   Button,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
+  // FormControl,
+  // FormErrorMessage,
+  // FormLabel,
+  // Input,
   useToast,
   Modal,
   ModalBody,
@@ -21,6 +21,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
+  Spinner,
   // Modal,
 } from "@chakra-ui/react";
 import { MdDeleteForever } from "react-icons/md";
@@ -29,47 +30,53 @@ import DataTable from "../../components/datatables";
 import { MUIDataTableColumn } from "mui-datatables";
 import { useEffect, useState } from "react";
 import { Button as MuiButton } from "@mui/material";
-// import useAuth from "@/hooks/useAuth";
+import useAuth from "@/hooks/useAuth";
+import { useNavigate } from "@/router";
+import useSWR from "swr";
+import useApi, { ResponseModel, useToastErrorHandler } from "@/hooks/useApi";
 
-const isSuperadmin = (user: { role: string }) => {
-  return user.role === "superadmin";
-};
-
-const isPanitia = (user: { role: string }) => {
-  return user.role === "panitia";
-};
-
-const isOrganisator = (user: { role: string }) => {
-  return user.role === "organisator";
+type Organisator = {
+  id: number;
+  name: string;
+  nim: string;
+  email: string;
+  stateId: number;
+  isVerified: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  state: {
+    id: number;
+    name: string;
+  };
 };
 
 const Organisator = () => {
-  // const { user } = useAuth();
+  const auth = useAuth();
 
-  // mock data dummy
-  const mockUser = { role: "superadmin" };
-  // const mockUser = { role: "panitia" };
-  // const mockUser = { role: "organisator" };
-  const user = mockUser;
+  const toast = useToast();
+  const nav = useNavigate();
+  const api = useApi();
+  const errorHandler = useToastErrorHandler();
 
-  const [role, setRole] = useState<
-    "superadmin" | "panitia" | "organisator" | null
-  >(null);
+  const organisatorData = useSWR<Organisator[]>("/organisator/");
 
   useEffect(() => {
-    if (user) {
-      if (isSuperadmin(user)) {
-        setRole("superadmin");
-      } else if (isOrganisator(user)) {
-        setRole("organisator");
-      } else if (isPanitia(user)) {
-        setRole("panitia");
-      }
+    if (auth.status === "loading") {
+      return;
     }
-  }, [user]);
+    if (auth.user?.role !== "panitia") {
+      toast({
+        title: "Unauthorized",
+        description: "You are not allowed to access this page",
+        status: "error",
+        isClosable: true,
+      });
+      nav("/dashboard");
+    }
+  }, [auth]);
 
   type ModalState = {
-    id?: number;
+    organisator: Organisator;
     mode: "create" | "delete"; // enum
   };
 
@@ -79,12 +86,18 @@ const Organisator = () => {
     name: "",
   }; // init empty object
 
-  if (role === "superadmin" || role === "panitia") {
+  const superadminList = [1, 2];
+
+  if (
+    auth.user?.role === "panitia" &&
+    superadminList.includes(auth.user?.data.divisiId)
+  ) {
     actionColumn = {
       name: "id",
       label: "Action",
       options: {
-        customBodyRender: (value: number) => {
+        customBodyRender: (_value: number, tableMeta) => {
+          const data = organisatorData.data?.[tableMeta.rowIndex];
           return (
             <Stack direction={"row"} gap={"1rem"}>
               {/* {role === "superadmin" && (
@@ -98,21 +111,21 @@ const Organisator = () => {
                   </MuiButton>
                 </Link>
               )} */}
-              {(role === "superadmin" || role === "panitia") && (
-                <MuiButton
-                  variant={"contained"}
-                  color={"error"}
-                  sx={{
-                    borderRadius: "md",
-                    minWidth: "0",
-                    paddingX: "0.5rem",
-                    boxShadow: "none",
-                  }}
-                  onClick={() => setModalState({ id: value, mode: "delete" })}
-                >
-                  <MdDeleteForever />
-                </MuiButton>
-              )}
+              <MuiButton
+                variant={"contained"}
+                color={"error"}
+                sx={{
+                  borderRadius: "md",
+                  minWidth: "0",
+                  paddingX: "0.5rem",
+                  boxShadow: "none",
+                }}
+                onClick={() =>
+                  setModalState({ organisator: data!, mode: "delete" })
+                }
+              >
+                <MdDeleteForever />
+              </MuiButton>
             </Stack>
           );
         },
@@ -122,7 +135,7 @@ const Organisator = () => {
 
   const colDefs: MUIDataTableColumn[] = [
     {
-      name: "nama",
+      name: "name",
       label: "Nama",
     },
     {
@@ -136,26 +149,12 @@ const Organisator = () => {
     {
       name: "state",
       label: "STATE",
+      options: {
+        customBodyRender: (value: { id: number; name: string }) => value.name,
+      },
     },
     actionColumn,
   ];
-
-  const data = [
-    ["Joe James", "12345", "Yonkers@student.ac.id", "NY"],
-    ["John Walsh", "12346", "Hartford@student.ac.id", "CT"],
-    ["Bob Herm", "12347", "Tampa@student.ac.id", "FL"],
-    ["James Houston", "12348", "Dallas@student.ac.id", "TX"],
-    ["Joe James", "12349", "Yonkers@student.ac.id", "NY"],
-    ["John Walsh", "12350", "Hartford@student.ac.id", "CT"],
-    ["Bob Herm", "12351", "Tampa@student.ac.id", "FL"],
-    ["James Houston", "12352", "Dallas@student.ac.id", "TX"],
-    ["Joe James", "12353", "Yonkers@student.ac.id", "NY"],
-    ["John Walsh", "12354", "Hartford@student.ac.id", "CT"],
-    ["Bob Herm", "12355", "Tampa@student.ac.id", "FL"],
-    ["James Houston", "12356", "Dallas@student.ac.id", "TX"],
-  ];
-
-  const toast = useToast();
 
   return (
     <>
@@ -209,7 +208,14 @@ const Organisator = () => {
           overflow={"auto"}
           flex={1}
         >
-          {data && <DataTable colDefs={colDefs} data={data} />}
+          {/* {data && <DataTable colDefs={colDefs} data={data} />} */}
+          {!organisatorData.data || organisatorData.isLoading ? (
+            <Stack flex={1} align={"center"} justify={"center"}>
+              <Spinner size={"xl"} />
+            </Stack>
+          ) : (
+            <DataTable colDefs={colDefs} data={organisatorData.data} />
+          )}
         </Box>
       </Stack>
 
@@ -228,7 +234,9 @@ const Organisator = () => {
 
           <ModalBody>
             {modalState?.mode === "delete" && (
-              <Text>Are you sure to delete? </Text>
+              <Text>
+                Are you sure to delete <b>{modalState.organisator.name}</b>?
+              </Text>
             )}
           </ModalBody>
 
@@ -239,12 +247,31 @@ const Organisator = () => {
                 onClick={() => {
                   console.log("Data deleted");
                   //nanti implementasi dari backend
-                  toast({
-                    title: "Deleted",
-                    description: `Data ${modalState.id} has been deleted`,
-                    status: "error",
-                  });
-                  setModalState(undefined);
+                  // toast({
+                  //   title: "Deleted",
+                  //   description: `Data ${modalState.organisator.name} has been deleted`,
+                  //   status: "error",
+                  //   isClosable: true,
+                  // });
+                  // setModalState(undefined);
+
+                  api
+                    .delete<ResponseModel>(
+                      `/organisator/${modalState.organisator.id}`
+                    )
+                    .then((value) => {
+                      toast({
+                        title: "Deleted",
+                        description: `${value.data.message}`,
+                        status: "error",
+                        isClosable: true,
+                      });
+                    })
+                    .catch(errorHandler)
+                    .finally(() => {
+                      organisatorData.mutate();
+                      setModalState(undefined);
+                    });
                 }}
               >
                 Delete
