@@ -53,7 +53,7 @@ class FilePicker extends React.Component<FilePickerProps, FilePickerState> {
       }
       this.setState({
         ...this.state,
-        fileName: fileArray.map((f) => f.name).join(" & "),
+        fileName: fileArray.map((f) => f.name).join(", "),
       });
       this.props.onFileChange(fileArray);
     }
@@ -62,7 +62,15 @@ class FilePicker extends React.Component<FilePickerProps, FilePickerState> {
   public reset = (): void => this.handleOnClearClick();
 
   private handleOnFileChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ ...this.state, files: ev.target.files });
+    const fileArray = new Array<File>();
+    if (ev.target.files) {
+      for (const file of ev.target.files) {
+        fileArray.push(file);
+      }
+    }
+    // this.setState({ ...this.state, files: ev.target.files });
+    this.setState({ fileName: fileArray.map((f) => f.name).join(", ") });
+    this.props.onFileChange(fileArray);
     this.clearInnerInput();
   };
 
@@ -104,7 +112,7 @@ class FilePicker extends React.Component<FilePickerProps, FilePickerState> {
           style={{ display: "none" }}
           multiple={multipleFiles}
           onChange={this.handleOnFileChange}
-          data-testid={inputProps?._placeholder ?? placeholder}
+          data-testid={placeholder}
           disabled={this.props.disabled}
         />
         <Input

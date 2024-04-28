@@ -157,7 +157,7 @@ const stateSchema = z.object({
       {
         required_error: "Gallery cannot be empty",
         invalid_type_error: "Gallery must be an array of files",
-        message: "Gallery must be an array of images, max 5 files",
+        // message: "Gallery must be an array of images, max 5 files",
       }
     )
     .max(5, "Gallery must be under 5 files")
@@ -682,6 +682,7 @@ const Organisator = () => {
                     render={({ field: { onChange } }) => (
                       <FilePicker
                         onFileChange={(files) => {
+                          console.log(files);
                           const file = files[0];
                           if (!file) return;
 
