@@ -1,5 +1,4 @@
 import {
-  Box,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
@@ -196,7 +195,7 @@ const Toggles = () => {
           `}
       </style>
 
-      <Stack gap={7}>
+      <Stack gap={7} flex={1}>
         {/* Breadcrumb */}
         <Show above="md">
           <Breadcrumb fontWeight="medium" fontSize="sm">
@@ -243,7 +242,7 @@ const Toggles = () => {
           </Stack>
         </Show>
         {/* Content */}
-        <Box
+        <Stack
           bgColor={"white"}
           // w={"full"}
           // h={"full"}
@@ -256,10 +255,11 @@ const Toggles = () => {
             <DataTable colDefs={colDefs} data={toggleData.data} />
           ) : (
             <Stack flex={1} align={"center"} justify={"center"}>
-              <Spinner />
+              <Spinner size={"xl"} />
+              <Text>Loading...</Text>
             </Stack>
           )}
-        </Box>
+        </Stack>
       </Stack>
       <Modal
         isCentered

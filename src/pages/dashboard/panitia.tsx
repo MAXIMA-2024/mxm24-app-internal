@@ -5,7 +5,6 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
-  Box,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -271,7 +270,7 @@ const Panitia = () => {
         {/* HEADER END */}
 
         {/* CONTENT START */}
-        <Box
+        <Stack
           bgColor={"white"}
           // w={"full"}
           // h={"full"}
@@ -282,12 +281,13 @@ const Panitia = () => {
         >
           {!panitiaData.data || panitiaData.isLoading ? (
             <Stack flex={1} justify={"center"} alignItems={"center"}>
-              <Spinner />
+              <Spinner size={"xl"} />
+              <Text>Loading...</Text>
             </Stack>
           ) : (
             <DataTable colDefs={colDefs} data={panitiaData.data} />
           )}
-        </Box>
+        </Stack>
         {/* CONTENT END */}
       </Stack>
 

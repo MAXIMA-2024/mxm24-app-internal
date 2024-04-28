@@ -1,5 +1,4 @@
 import {
-  Box,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
@@ -262,7 +261,7 @@ const Organisator = () => {
           </Stack>
         </Show>
         {/* Content */}
-        <Box
+        <Stack
           bgColor={"white"}
           // w={"full"}
           // h={"full"}
@@ -275,11 +274,12 @@ const Organisator = () => {
           {!organisatorData.data || organisatorData.isLoading ? (
             <Stack flex={1} align={"center"} justify={"center"}>
               <Spinner size={"xl"} />
+              <Text>Loading...</Text>
             </Stack>
           ) : (
             <DataTable colDefs={colDefs} data={organisatorData.data} />
           )}
-        </Box>
+        </Stack>
       </Stack>
 
       {/* MODAL START */}
