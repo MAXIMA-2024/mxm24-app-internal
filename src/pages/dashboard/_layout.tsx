@@ -28,7 +28,8 @@ import { IoLogOutOutline } from "react-icons/io5";
 import { useEffect, useRef, useState } from "react";
 import useAuth from "@/hooks/useAuth";
 import { useNavigate } from "@/router";
-import useSWR from "swr";
+
+const superadmin = [1, 2]; // BPH, Charta
 
 const DesktopLayout = () => {
   const loc = useLocation();
@@ -49,11 +50,11 @@ const DesktopLayout = () => {
   ];
 
   const regularButtons = [
-    {
-      label: "Dashboard",
-      path: "/dashboard",
-      icon: "/icons/dashboard.png",
-    },
+    // {
+    //   label: "Dashboard",
+    //   path: "/dashboard",
+    //   icon: "/icons/dashboard.png",
+    // },
     {
       label: "Panitia",
       path: "/dashboard/panitia",
@@ -149,219 +150,320 @@ const DesktopLayout = () => {
             w={"full"}
             mt={["1rem", "1rem", "1rem", "2rem"]}
             gap={["0.5rem", "0.5rem", "0.5rem", "0.75rem"]}
+            // overflowY={"auto"}
           >
-            {/* Special Buttons */}
-            {specialButtons.map((button, index) => (
-              <Link key={index} to={button.path}>
-                <Button
-                  variant={"ghost"}
-                  w={"full"}
-                  justifyContent={"start"}
-                  p={buttonResponsiveProps.p}
-                  _hover={{
-                    transform: "scale(1.05)",
-                    color: "brand.maroon",
-                    "> img": {
-                      opacity: 1,
-                      transition: "opacity 0.2s ease-in-out",
-                    },
-                    bgColor: "button.gray",
-                  }}
-                  transition={"transform 0.2s ease-in-out"}
-                  bgColor={
-                    loc.pathname === button.path ? "button.gray" : "transparent"
-                  }
-                >
-                  <Image
-                    src={button.icon}
-                    w={buttonResponsiveProps.imageSize}
-                    mr={"1rem"}
-                    opacity={currentPath === button.path ? 1 : 0.25}
-                  ></Image>
-                  <Text
-                    fontSize={buttonResponsiveProps.fontSize}
-                    fontWeight={
-                      currentPath === button.path ? "semibold" : "medium"
-                    }
-                    color={
-                      currentPath === button.path
-                        ? "brand.maroon"
-                        : "text.primary"
-                    }
-                  >
-                    {button.label}
-                  </Text>
-                </Button>
-              </Link>
-            ))}
-            {/* Special Buttons */}
-
-            {/* Divider Special & Regular Buttons */}
-            <Stack gap={0} direction={"row"}>
-              <Divider
-                bgColor={"#EFEFEF"}
-                height={"0.1rem"}
-                ml={["-5", "-5", "-8", "-10"]}
-                w={"full"}
-                my={1}
-              />
-              <Divider
-                bgColor={"#EFEFEF"}
-                height={"0.1rem"}
-                mr={["-5", "-5", "-8", "-10"]}
-                w={"full"}
-                my={1}
-              />
-            </Stack>
-            {/* Divider Special & Regular Buttons */}
-            {regularButtons.map((button, index) => (
-              <Link key={index} to={button.path}>
-                <Button
-                  variant={"ghost"}
-                  w={"full"}
-                  justifyContent={"start"}
-                  p={buttonResponsiveProps.p}
-                  _hover={{
-                    transform: "scale(1.05)",
-                    color: "brand.maroon",
-                    "> img": {
-                      opacity: 1,
-                      transition: "opacity 0.2s ease-in-out",
-                    },
-                    bgColor: "button.gray",
-                  }}
-                  transition={"transform 0.2s ease-in-out"}
-                  bgColor={
-                    loc.pathname === button.path ? "button.gray" : "transparent"
-                  }
-                >
-                  <Image
-                    src={button.icon}
-                    w={
-                      button.label === "State"
-                        ? stateImageSize.w
-                        : buttonResponsiveProps.imageSize
-                    }
-                    mr={button.label === "State" ? "0.75rem" : "1rem"}
-                    opacity={currentPath === button.path ? 1 : 0.25}
-                  ></Image>
-                  <Text
-                    fontSize={buttonResponsiveProps.fontSize}
-                    fontWeight={
-                      currentPath === button.path ? "semibold" : "medium"
-                    }
-                    color={
-                      currentPath === button.path
-                        ? "brand.maroon"
-                        : "text.primary"
-                    }
-                  >
-                    {button.label}
-                  </Text>
-                </Button>
-              </Link>
-            ))}
-
-            {/* QR Button */}
-            <Box
-              _hover={{
-                transform: "scale(1.05)",
-              }}
-              transition={"transform 0.2s ease-in-out"}
-            >
-              <Accordion
-                allowToggle
-                gap={0}
-                index={loc.pathname.includes("/qrscanner/") ? 0 : undefined}
-              >
-                <AccordionItem border={"none"}>
-                  {({ isExpanded }) => (
-                    <>
-                      <AccordionButton
-                        _hover={{
-                          "> div > img": {
-                            opacity: 1,
-                            transition: "opacity 0.2s ease-in-out",
-                          },
-                          bgColor: "button.gray",
-                        }}
+            {auth.user?.role === "panitia" &&
+              superadmin.includes(auth.user.data.divisiId) && (
+                <>
+                  {/* Special Buttons */}
+                  {specialButtons.map((button, index) => (
+                    <Link key={index} to={button.path}>
+                      <Button
+                        variant={"ghost"}
                         w={"full"}
-                        bgColor={
-                          loc.pathname.includes("qrscanner") || isExpanded
-                            ? "button.gray"
-                            : "transparent"
-                        }
-                        roundedTop={"md"}
-                        roundedBottom={!isExpanded ? "md" : "none"}
-                      >
-                        <Stack
-                          direction={"row"}
-                          flex={1}
-                          align={"center"}
-                          justify={"start"}
-                          px={"0.5"}
-                        >
-                          <Image
-                            src="/icons/qr.png"
-                            w={["1rem", "1rem", "1rem", "1.3rem"]}
-                            mr={[0, 0, 0, "0.5rem"]}
-                            opacity={
-                              currentPath === "/dashboard/qrscanner/state" ||
-                              currentPath === "/dashboard/qrscanner/malpun" ||
-                              isExpanded
-                                ? 1
-                                : 0.25
-                            }
-                            transition="opacity 0.2s ease-in-out"
-                          />
-                          <Text
-                            fontSize={buttonResponsiveProps.fontSize}
-                            fontWeight={
-                              currentPath === "/dashboard/qrscanner/state" ||
-                              currentPath === "/dashboard/qrscanner/malpun" ||
-                              isExpanded
-                                ? "semibold"
-                                : "medium"
-                            }
-                            color={
-                              currentPath === "/dashboard/qrscanner/state" ||
-                              currentPath === "/dashboard/qrscanner/malpun" ||
-                              isExpanded
-                                ? "brand.maroon"
-                                : "text.primary"
-                            }
-                            transition="opacity 0.2s ease-in-out"
-                          >
-                            QR Scan
-                          </Text>
-                          <Icon
-                            as={HiChevronDown}
-                            w={6}
-                            h={6}
-                            color={"brand.maroon"}
-                            ml={"auto"}
-                            transform={isExpanded ? "rotate(180deg)" : ""}
-                            transition={"transform 0.2s ease-in-out"}
-                          />
-                        </Stack>
-                      </AccordionButton>
-                      <AccordionPanel
-                        w={"full"}
-                        bgColor={"button.gray"}
+                        justifyContent={"start"}
+                        p={buttonResponsiveProps.p}
                         _hover={{
+                          transform: "scale(1.05)",
                           color: "brand.maroon",
                           "> img": {
                             opacity: 1,
                             transition: "opacity 0.2s ease-in-out",
                           },
+                          bgColor: "button.gray",
                         }}
-                        roundedBottom={"md"}
                         transition={"transform 0.2s ease-in-out"}
+                        bgColor={
+                          loc.pathname === button.path
+                            ? "button.gray"
+                            : "transparent"
+                        }
                       >
-                        <Link to="/dashboard/qrscanner/state">
-                          <Button
-                            justifyContent={"start"}
-                            variant={"ghost"}
+                        <Image
+                          src={button.icon}
+                          w={buttonResponsiveProps.imageSize}
+                          mr={"1rem"}
+                          opacity={currentPath === button.path ? 1 : 0.25}
+                        ></Image>
+                        <Text
+                          fontSize={buttonResponsiveProps.fontSize}
+                          fontWeight={
+                            currentPath === button.path ? "semibold" : "medium"
+                          }
+                          color={
+                            currentPath === button.path
+                              ? "brand.maroon"
+                              : "text.primary"
+                          }
+                        >
+                          {button.label}
+                        </Text>
+                      </Button>
+                    </Link>
+                  ))}
+                  {/* Special Buttons */}
+
+                  {/* Divider Special & Regular Buttons */}
+                  <Stack gap={0} direction={"row"}>
+                    <Divider
+                      bgColor={"#EFEFEF"}
+                      height={"0.1rem"}
+                      ml={["-5", "-5", "-8", "-10"]}
+                      w={"full"}
+                      my={1}
+                    />
+                    <Divider
+                      bgColor={"#EFEFEF"}
+                      height={"0.1rem"}
+                      mr={["-5", "-5", "-8", "-10"]}
+                      w={"full"}
+                      my={1}
+                    />
+                  </Stack>
+                </>
+              )}
+
+            {/* Divider Special & Regular Buttons */}
+
+            <Link to={`/dashboard`}>
+              <Button
+                variant={"ghost"}
+                w={"full"}
+                justifyContent={"start"}
+                p={buttonResponsiveProps.p}
+                _hover={{
+                  transform: "scale(1.05)",
+                  color: "brand.maroon",
+                  "> img": {
+                    opacity: 1,
+                    transition: "opacity 0.2s ease-in-out",
+                  },
+                  bgColor: "button.gray",
+                }}
+                transition={"transform 0.2s ease-in-out"}
+                bgColor={
+                  loc.pathname === "/dashboard" ? "button.gray" : "transparent"
+                }
+              >
+                <Image
+                  src={"/icons/dashboard.png"}
+                  w={buttonResponsiveProps.imageSize}
+                  mr={"0.75rem"}
+                  opacity={currentPath === "/dashboard" ? 1 : 0.25}
+                ></Image>
+                <Text
+                  fontSize={buttonResponsiveProps.fontSize}
+                  fontWeight={
+                    currentPath === "/dashboard" ? "semibold" : "medium"
+                  }
+                  color={
+                    currentPath === "/dashboard"
+                      ? "brand.maroon"
+                      : "text.primary"
+                  }
+                >
+                  Dashboard
+                </Text>
+              </Button>
+            </Link>
+
+            {auth.user?.role === "organisator" && (
+              <Link to={`/dashboard/state/${auth.user.data.stateId}`}>
+                <Button
+                  variant={"ghost"}
+                  w={"full"}
+                  justifyContent={"start"}
+                  p={buttonResponsiveProps.p}
+                  _hover={{
+                    transform: "scale(1.05)",
+                    color: "brand.maroon",
+                    "> img": {
+                      opacity: 1,
+                      transition: "opacity 0.2s ease-in-out",
+                    },
+                    bgColor: "button.gray",
+                  }}
+                  transition={"transform 0.2s ease-in-out"}
+                  bgColor={
+                    loc.pathname.includes("/dashboard/state")
+                      ? "button.gray"
+                      : "transparent"
+                  }
+                >
+                  <Image
+                    src={"/icons/state.png"}
+                    w={stateImageSize.w}
+                    mr={"0.75rem"}
+                    opacity={
+                      currentPath.includes("/dashboard/state") ? 1 : 0.25
+                    }
+                  ></Image>
+                  <Text
+                    fontSize={buttonResponsiveProps.fontSize}
+                    fontWeight={
+                      currentPath.includes("/dashboard/state")
+                        ? "semibold"
+                        : "medium"
+                    }
+                    color={
+                      currentPath.includes("/dashboard/state")
+                        ? "brand.maroon"
+                        : "text.primary"
+                    }
+                  >
+                    STATE
+                  </Text>
+                </Button>
+              </Link>
+            )}
+
+            {auth.user?.role !== "organisator" &&
+              regularButtons.map((button, index) => (
+                <Link key={index} to={button.path}>
+                  <Button
+                    variant={"ghost"}
+                    w={"full"}
+                    justifyContent={"start"}
+                    p={buttonResponsiveProps.p}
+                    _hover={{
+                      transform: "scale(1.05)",
+                      color: "brand.maroon",
+                      "> img": {
+                        opacity: 1,
+                        transition: "opacity 0.2s ease-in-out",
+                      },
+                      bgColor: "button.gray",
+                    }}
+                    transition={"transform 0.2s ease-in-out"}
+                    bgColor={
+                      loc.pathname.includes(button.path)
+                        ? "button.gray"
+                        : "transparent"
+                    }
+                  >
+                    <Image
+                      src={button.icon}
+                      w={
+                        button.label === "State"
+                          ? stateImageSize.w
+                          : buttonResponsiveProps.imageSize
+                      }
+                      mr={button.label === "State" ? "0.75rem" : "1rem"}
+                      opacity={currentPath.includes(button.path) ? 1 : 0.25}
+                    ></Image>
+                    <Text
+                      fontSize={buttonResponsiveProps.fontSize}
+                      fontWeight={
+                        currentPath.includes(button.path)
+                          ? "semibold"
+                          : "medium"
+                      }
+                      color={
+                        currentPath.includes(button.path)
+                          ? "brand.maroon"
+                          : "text.primary"
+                      }
+                    >
+                      {button.label}
+                    </Text>
+                  </Button>
+                </Link>
+              ))}
+
+            {/* QR Button */}
+            {auth.user?.role === "panitia" &&
+              [1, 2, 4].includes(auth.user.data.divisiId) && (
+                <Box
+                  _hover={{
+                    transform: "scale(1.05)",
+                  }}
+                  transition={"transform 0.2s ease-in-out"}
+                >
+                  <Accordion
+                    allowToggle
+                    gap={0}
+                    index={loc.pathname.includes("/qrscanner/") ? 0 : undefined}
+                  >
+                    <AccordionItem border={"none"}>
+                      {({ isExpanded }) => (
+                        <>
+                          <AccordionButton
+                            _hover={{
+                              "> div > img": {
+                                opacity: 1,
+                                transition: "opacity 0.2s ease-in-out",
+                              },
+                              bgColor: "button.gray",
+                            }}
+                            w={"full"}
+                            bgColor={
+                              loc.pathname.includes("qrscanner") || isExpanded
+                                ? "button.gray"
+                                : "transparent"
+                            }
+                            roundedTop={"md"}
+                            roundedBottom={!isExpanded ? "md" : "none"}
+                          >
+                            <Stack
+                              direction={"row"}
+                              flex={1}
+                              align={"center"}
+                              justify={"start"}
+                              px={"0.5"}
+                            >
+                              <Image
+                                src="/icons/qr.png"
+                                w={["1rem", "1rem", "1rem", "1.3rem"]}
+                                mr={[0, 0, 0, "0.5rem"]}
+                                opacity={
+                                  currentPath ===
+                                    "/dashboard/qrscanner/state" ||
+                                  currentPath ===
+                                    "/dashboard/qrscanner/malpun" ||
+                                  isExpanded
+                                    ? 1
+                                    : 0.25
+                                }
+                                transition="opacity 0.2s ease-in-out"
+                              />
+                              <Text
+                                fontSize={buttonResponsiveProps.fontSize}
+                                fontWeight={
+                                  currentPath ===
+                                    "/dashboard/qrscanner/state" ||
+                                  currentPath ===
+                                    "/dashboard/qrscanner/malpun" ||
+                                  isExpanded
+                                    ? "semibold"
+                                    : "medium"
+                                }
+                                color={
+                                  currentPath ===
+                                    "/dashboard/qrscanner/state" ||
+                                  currentPath ===
+                                    "/dashboard/qrscanner/malpun" ||
+                                  isExpanded
+                                    ? "brand.maroon"
+                                    : "text.primary"
+                                }
+                                transition="opacity 0.2s ease-in-out"
+                              >
+                                QR Scan
+                              </Text>
+                              <Icon
+                                as={HiChevronDown}
+                                w={6}
+                                h={6}
+                                color={"brand.maroon"}
+                                ml={"auto"}
+                                transform={isExpanded ? "rotate(180deg)" : ""}
+                                transition={"transform 0.2s ease-in-out"}
+                              />
+                            </Stack>
+                          </AccordionButton>
+                          <AccordionPanel
+                            w={"full"}
+                            bgColor={"button.gray"}
                             _hover={{
                               color: "brand.maroon",
                               "> img": {
@@ -369,81 +471,99 @@ const DesktopLayout = () => {
                                 transition: "opacity 0.2s ease-in-out",
                               },
                             }}
-                            w={"full"}
+                            roundedBottom={"md"}
+                            transition={"transform 0.2s ease-in-out"}
                           >
-                            <Image
-                              src="/icons/qr.png"
-                              w={"1rem"}
-                              mr={"0.75rem"}
-                              opacity={
-                                currentPath === "/dashboard/qrscanner/state"
-                                  ? 1
-                                  : 0.25
-                              }
-                            />
-                            <Text
-                              fontSize={"0.75rem"}
-                              fontWeight={
-                                currentPath === "/dashboard/qrscanner/state"
-                                  ? "semibold"
-                                  : "medium"
-                              }
-                              color={
-                                currentPath === "/dashboard/qrscanner/state"
-                                  ? "brand.maroon"
-                                  : "text.primary"
-                              }
-                            >
-                              STATE
-                            </Text>
-                          </Button>
-                        </Link>
-                        <Link to="/dashboard/qrscanner/malpun">
-                          <Button
-                            justifyContent={"start"}
-                            variant={"ghost"}
-                            _hover={{
-                              color: "brand.maroon",
-                              "> img": {
-                                opacity: 1,
-                                transition: "opacity 0.2s ease-in-out",
-                              },
-                            }}
-                            w={"full"}
-                          >
-                            <Image
-                              src="/icons/qr.png"
-                              w={"1rem"}
-                              mr={"0.75rem"}
-                              opacity={
-                                currentPath === "/dashboard/qrscanner/malpun"
-                                  ? 1
-                                  : 0.25
-                              }
-                            />
-                            <Text
-                              fontSize={"0.75rem"}
-                              fontWeight={
-                                currentPath === "/dashboard/qrscanner/malpun"
-                                  ? "semibold"
-                                  : "medium"
-                              }
-                              color={
-                                currentPath === "/dashboard/qrscanner/malpun"
-                                  ? "brand.maroon"
-                                  : "text.primary"
-                              }
-                            >
-                              Malpun
-                            </Text>
-                          </Button>
-                        </Link>
-                      </AccordionPanel>
-                    </>
-                  )}
-                </AccordionItem>
-              </Accordion>
-            </Box>
+                            <Link to="/dashboard/qrscanner/state">
+                              <Button
+                                justifyContent={"start"}
+                                variant={"ghost"}
+                                _hover={{
+                                  color: "brand.maroon",
+                                  "> img": {
+                                    opacity: 1,
+                                    transition: "opacity 0.2s ease-in-out",
+                                  },
+                                }}
+                                w={"full"}
+                              >
+                                <Image
+                                  src="/icons/qr.png"
+                                  w={"1rem"}
+                                  mr={"0.75rem"}
+                                  opacity={
+                                    currentPath === "/dashboard/qrscanner/state"
+                                      ? 1
+                                      : 0.25
+                                  }
+                                />
+                                <Text
+                                  fontSize={"0.75rem"}
+                                  fontWeight={
+                                    currentPath === "/dashboard/qrscanner/state"
+                                      ? "semibold"
+                                      : "medium"
+                                  }
+                                  color={
+                                    currentPath === "/dashboard/qrscanner/state"
+                                      ? "brand.maroon"
+                                      : "text.primary"
+                                  }
+                                >
+                                  STATE
+                                </Text>
+                              </Button>
+                            </Link>
+                            <Link to="/dashboard/qrscanner/malpun">
+                              <Button
+                                justifyContent={"start"}
+                                variant={"ghost"}
+                                _hover={{
+                                  color: "brand.maroon",
+                                  "> img": {
+                                    opacity: 1,
+                                    transition: "opacity 0.2s ease-in-out",
+                                  },
+                                }}
+                                w={"full"}
+                              >
+                                <Image
+                                  src="/icons/qr.png"
+                                  w={"1rem"}
+                                  mr={"0.75rem"}
+                                  opacity={
+                                    currentPath ===
+                                    "/dashboard/qrscanner/malpun"
+                                      ? 1
+                                      : 0.25
+                                  }
+                                />
+                                <Text
+                                  fontSize={"0.75rem"}
+                                  fontWeight={
+                                    currentPath ===
+                                    "/dashboard/qrscanner/malpun"
+                                      ? "semibold"
+                                      : "medium"
+                                  }
+                                  color={
+                                    currentPath ===
+                                    "/dashboard/qrscanner/malpun"
+                                      ? "brand.maroon"
+                                      : "text.primary"
+                                  }
+                                >
+                                  Malpun
+                                </Text>
+                              </Button>
+                            </Link>
+                          </AccordionPanel>
+                        </>
+                      )}
+                    </AccordionItem>
+                  </Accordion>
+                </Box>
+              )}
           </Stack>
         </Stack>
         <Stack w={"full"}>
@@ -490,11 +610,15 @@ const DesktopLayout = () => {
                   alignItems={"start"}
                   ml={"0.5rem"}
                   gap={0}
+                  overflow={"hidden"}
                 >
                   <Text
                     fontSize={buttonResponsiveProps.fontSize}
-                    fontWeight={"medium"}
+                    fontWeight={"semibold"}
                     color={"text.primary"}
+                    noOfLines={1}
+                    isTruncated={true}
+                    textOverflow={"ellipsis"}
                   >
                     {auth.user?.role !== "unknown" && auth.user?.data.name}
                   </Text>
@@ -551,8 +675,13 @@ const MobileLayout = () => {
   const auth = useAuth();
 
   const currentPageName =
-    currentPath.charAt(currentPath.lastIndexOf("/") + 1).toUpperCase() +
-    currentPath.slice(currentPath.lastIndexOf("/") + 2);
+    auth.user?.role === "panitia" && currentPath.includes("/dashboard/state")
+      ? "Detail & Peserta"
+      : auth.user?.role === "organisator" &&
+        currentPath.includes("/dashboard/state")
+      ? auth.user.data.state.name
+      : currentPath.charAt(currentPath.lastIndexOf("/") + 1).toUpperCase() +
+        currentPath.slice(currentPath.lastIndexOf("/") + 2);
 
   const [isMenuExpanded, setIsMenuExpanded] = useState(false);
   const [isStatusMenuExpanded, setIsStatusMenuExpanded] = useState(false);
@@ -738,6 +867,10 @@ const MobileLayout = () => {
         {/* Super Admin */}
         <Menu>
           <MenuButton
+            isDisabled={
+              auth.user?.role !== "panitia" ||
+              !superadmin.includes(auth.user?.data.divisiId)
+            }
             ref={menuRef}
             as={Button}
             variant={"ghost"}
@@ -950,6 +1083,10 @@ const MobileLayout = () => {
 
         <Menu placement="top">
           <MenuButton
+            isDisabled={
+              auth.user?.role !== "panitia" ||
+              ![1, 2, 4].includes(auth.user.data.divisiId)
+            }
             ref={menuRef}
             as={Button}
             variant={"ghost"}
@@ -1088,6 +1225,7 @@ const MobileLayout = () => {
         {/* Right */}
         <Menu>
           <MenuButton
+            isDisabled={auth.user?.role !== "panitia"}
             ref={statusMenuRef}
             as={Button}
             variant={"ghost"}
@@ -1272,7 +1410,7 @@ const MobileLayout = () => {
                 src="/icons/menu.png"
                 w={["1.25rem", "1.25rem", "1.25rem", "1.5rem"]}
                 opacity={
-                  currentPath === "/dashboard/state" ||
+                  currentPath.includes("/dashboard/state") ||
                   currentPath === "/dashboard/malpun" ||
                   isAcaraMenuExpanded
                     ? 1
@@ -1282,14 +1420,14 @@ const MobileLayout = () => {
               <Text
                 fontSize={"0.5rem"}
                 fontWeight={
-                  currentPath === "/dashboard/state" ||
+                  currentPath.includes("/dashboard/state") ||
                   currentPath === "/dashboard/malpun" ||
                   isAcaraMenuExpanded
                     ? "semibold"
                     : "medium"
                 }
                 color={
-                  currentPath === "/dashboard/state" ||
+                  currentPath.includes("/dashboard/state") ||
                   currentPath === "/dashboard/malpun" ||
                   isAcaraMenuExpanded
                     ? "brand.maroon"
@@ -1302,21 +1440,27 @@ const MobileLayout = () => {
           </MenuButton>
 
           <MenuList minW={"auto"} rounded={"2xl"}>
-            <Link to="/dashboard/state">
+            <Link
+              to={
+                auth.user?.role === "organisator"
+                  ? `/dashboard/state/${auth.user.data.stateId}`
+                  : "/dashboard/state"
+              }
+            >
               <MenuItem>
                 <Image
                   src="/icons/state.png"
                   w={"0.75rem"}
                   mr={"0.75rem"}
-                  opacity={currentPath === "/dashboard/state" ? 1 : 0.25}
+                  opacity={currentPath.includes("state") ? 1 : 0.25}
                 />
                 <Text
                   fontSize={"0.55rem"}
                   fontWeight={
-                    currentPath === "/dashboard/state" ? "semibold" : "medium"
+                    currentPath.includes("state") ? "semibold" : "medium"
                   }
                   color={
-                    currentPath === "/dashboard/state"
+                    currentPath.includes("state")
                       ? "brand.maroon"
                       : "text.primary"
                   }
@@ -1325,29 +1469,31 @@ const MobileLayout = () => {
                 </Text>
               </MenuItem>
             </Link>
-            <Link to="/dashboard/malpun">
-              <MenuItem>
-                <Image
-                  src="/icons/malpun.png"
-                  w={"0.75rem"}
-                  mr={"0.75rem"}
-                  opacity={currentPath === "/dashboard/malpun" ? 1 : 0.25}
-                />
-                <Text
-                  fontSize={"0.55rem"}
-                  fontWeight={
-                    currentPath === "/dashboard/malpun" ? "semibold" : "medium"
-                  }
-                  color={
-                    currentPath === "/dashboard/malpun"
-                      ? "brand.maroon"
-                      : "text.primary"
-                  }
-                >
-                  MalPun
-                </Text>
-              </MenuItem>
-            </Link>
+            <MenuItem
+              as={Link}
+              to="/dashboard/malpun"
+              isDisabled={auth.user?.role !== "panitia"}
+            >
+              <Image
+                src="/icons/malpun.png"
+                w={"0.75rem"}
+                mr={"0.75rem"}
+                opacity={currentPath === "/dashboard/malpun" ? 1 : 0.25}
+              />
+              <Text
+                fontSize={"0.55rem"}
+                fontWeight={
+                  currentPath === "/dashboard/malpun" ? "semibold" : "medium"
+                }
+                color={
+                  currentPath === "/dashboard/malpun"
+                    ? "brand.maroon"
+                    : "text.primary"
+                }
+              >
+                MalPun
+              </Text>
+            </MenuItem>
           </MenuList>
         </Menu>
         {/* <Text>Bottom Bar</Text> */}
@@ -1373,6 +1519,15 @@ const DashboardLayout = () => {
     }
 
     if (auth.status === "authenticated") {
+      if (auth.user?.role === "mahasiswa") {
+        toast({
+          title: "Unauthorized",
+          description: "You are not allowed to access this page",
+        });
+        auth.logout();
+        return;
+      }
+
       if (auth.user?.role === "unknown") {
         nav("/auth/onboarding");
         return;
@@ -1386,6 +1541,7 @@ const DashboardLayout = () => {
           title: "Akun belum diverifikasi",
           description:
             "Akunmu belum diverifikasi oleh SUPERADMIN, silahkan coba beberapa saat lagi",
+          isClosable: true,
         });
         auth.logout();
       }

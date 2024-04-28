@@ -27,8 +27,6 @@ import {
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { Link as RouterLink } from "react-router-dom";
-
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -529,13 +527,12 @@ const OnboardingPage = () => {
                 <Image src="/dashboard/congrats.png" my={"1rem"} />
 
                 <Button
-                  as={RouterLink}
-                  to={"/dashboard"}
+                  onClick={auth.logout}
                   bgColor={"#185C99"}
                   w={["75%", "16rem", "24rem", "24rem", "32rem"]}
                   py={"1.75rem"}
                 >
-                  <Text textColor={"white"}>Go to Dashboard</Text>
+                  <Text textColor={"white"}>Done!</Text>
                 </Button>
               </Stack>
             )}
