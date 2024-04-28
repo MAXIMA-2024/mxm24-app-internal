@@ -1,4 +1,4 @@
-import { Heading, Text, Stack, Show, Image, Hide } from "@chakra-ui/react";
+import { Heading, Text, Stack, Show, Image, Hide, Box } from "@chakra-ui/react";
 import iconPanitia from "/icons/iconPanitia.png";
 import iconMahasiswa from "/icons/iconMahasiswa.png";
 import iconSTATE from "/icons/iconSTATE.png";
@@ -60,7 +60,7 @@ const Dashboard = () => {
           p={25}
           rounded={"xl"}
           flexDirection={"column"}
-          w={["full", "full", "29rem", "40rem", "full"]}
+          // w={["full", "full", "29rem", "40rem", "full"]}
         >
           <Stack>
             <Text fontWeight={"medium"} color={"text.primary"} opacity={0.8}>
@@ -73,7 +73,7 @@ const Dashboard = () => {
               🤩
             </Text>
           </Stack>
-          <Stack>
+          <Stack w={"full"}>
             {/* TAB CARDS START */}
             <Text
               fontWeight={"medium"}
@@ -118,32 +118,38 @@ const Dashboard = () => {
             </Hide>
 
             <Show above="md">
-              <Stack direction={"row"} spacing={6} overflow={"auto"}>
+              {/* sementara tunggu fix dari gian */}
+              <Stack
+                direction={"row"}
+                w={"full"}
+                spacing={6}
+                overflow={"scroll"}
+                wrap={"wrap"}
+              >
                 {cardsData.map((data, index) => (
-                  <Stack key={index} direction={"column"} spacing={6}>
+                  <Stack
+                    key={index}
+                    bgColor={data.bgColor}
+                    w={["275px", "350px", "225px", "225px"]}
+                    h={"120px"}
+                    borderRadius={15}
+                    p={4}
+                    flexDirection={"column"}
+                    spacing={3}
+                  >
                     <Stack
-                      bgColor={data.bgColor}
-                      w={["275px", "350px", "225px", "225px"]}
-                      h={"120px"}
-                      borderRadius={15}
-                      p={4}
-                      flexDirection={"column"}
-                      spacing={3}
+                      direction={"row"}
+                      spacing={2}
+                      justifyContent={"space-between"}
                     >
-                      <Stack
-                        direction={"row"}
-                        spacing={2}
-                        justifyContent={"space-between"}
-                      >
-                        <Text fontWeight={"medium"} fontSize={"xl"}>
-                          {data.nama}
-                        </Text>
-                        <Image src={data.icon} />
-                      </Stack>
-                      <Text fontWeight={"bold"} fontSize={"3xl"}>
-                        {data.angka}
+                      <Text fontWeight={"medium"} fontSize={"xl"}>
+                        {data.nama}
                       </Text>
+                      <Image src={data.icon} />
                     </Stack>
+                    <Text fontWeight={"bold"} fontSize={"3xl"}>
+                      {data.angka}
+                    </Text>
                   </Stack>
                 ))}
               </Stack>
