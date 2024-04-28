@@ -6,10 +6,12 @@ import iconMalPun from "/icons/iconMalPun.png";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import React, { useState } from "react";
 import Chart from "react-apexcharts";
+import useAuth from "@/hooks/useAuth";
 
 const Dashboard = () => {
+  const auth = useAuth();
+
   const cardsData = [
     { nama: "Panitia", icon: iconPanitia, angka: 249, bgColor: "orange" },
     {
@@ -31,39 +33,12 @@ const Dashboard = () => {
     autoplaySpeed: 2000,
   };
 
-  const [chartData, setChartData] = useState({
-    options: {
-      chart: {
-        id: "basic-bar",
-      },
-      xaxis: {
-        categories: ["Panitia", "Mahasiswa", "State", "MalPun"],
-      },
-      plotOptions: {
-        bar: {
-          distributed: "true",
-          dataLabels: {
-            // position: "bottom",
-          },
-        },
-      },
-      dataLabels: {
-        enabled: true,
-
-        style: {
-          fontSize: "1rem",
-          colors: ["#1b2625"],
-        },
-      },
-      colors: ["#f8a400", "#f8f082", "#f0ac4d", "#fcebc6"],
+  const series = [
+    {
+      name: "Jumlah Peserta",
+      data: [30, 40, 45, 50],
     },
-    series: [
-      {
-        name: "Jumlah Peserta",
-        data: [30, 40, 45, 50],
-      },
-    ],
-  });
+  ];
 
   return (
     <>
@@ -89,7 +64,13 @@ const Dashboard = () => {
         >
           <Stack>
             <Text fontWeight={"medium"} color={"text.primary"} opacity={0.8}>
-              Selamat datang, <strong>John Ryan R.</strong> 🤩
+              Selamat datang,{" "}
+              <strong>
+                {(auth.user?.role === "panitia" ||
+                  auth.user?.role === "organisator") &&
+                  auth.user.data.name}
+              </strong>{" "}
+              🤩
             </Text>
           </Stack>
           <Stack>
@@ -187,8 +168,32 @@ const Dashboard = () => {
 
               <Stack flex={1} overflow={"hidden"}>
                 <Chart
-                  options={chartData.options}
-                  series={chartData.series}
+                  options={{
+                    chart: {
+                      id: "basic-bar",
+                    },
+                    xaxis: {
+                      categories: ["Panitia", "Mahasiswa", "State", "MalPun"],
+                    },
+                    plotOptions: {
+                      bar: {
+                        // distributed: "true",
+                        dataLabels: {
+                          // position: "bottom",
+                        },
+                      },
+                    },
+                    dataLabels: {
+                      enabled: true,
+
+                      style: {
+                        fontSize: "1rem",
+                        colors: ["#1b2625"],
+                      },
+                    },
+                    colors: ["#f8a400", "#f8f082", "#f0ac4d", "#fcebc6"],
+                  }}
+                  series={series}
                   type="bar"
                   width="100%"
                   height="80%"
