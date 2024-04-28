@@ -71,7 +71,7 @@ const Dashboard = () => {
         {`
         `}
       </style>
-      <Stack flex={1} spacing={6}>
+      <Stack flex={1} spacing={6} overflow={"hidden"}>
         <Show above={"md"}>
           <Heading fontFamily={"Poppins"} color={"text.primary"}>
             Dashboard
@@ -170,7 +170,7 @@ const Dashboard = () => {
           </Stack>
           {/* TAB CARDS END */}
           {/* GRAFIK START */}
-          <Stack w={"full"} h={["23rem", "23rem", "full", "full"]} mt={10}>
+          <Stack w={"full"} h={["23rem", "23rem", "full", "full"]} mt={5}>
             <Text fontWeight={"medium"} color={"text.primary"} opacity={0.8}>
               Grafik
             </Text>
@@ -185,13 +185,13 @@ const Dashboard = () => {
                 <strong>Mahasiswa / Peserta STATE</strong>
               </Text>
 
-              <Stack flex={1}>
+              <Stack flex={1} overflow={"hidden"}>
                 <Chart
                   options={chartData.options}
                   series={chartData.series}
                   type="bar"
                   width="100%"
-                  height="100%"
+                  height="80%"
                 />
               </Stack>
             </Stack>
