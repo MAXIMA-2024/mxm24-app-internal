@@ -1519,6 +1519,15 @@ const DashboardLayout = () => {
     }
 
     if (auth.status === "authenticated") {
+      if (auth.user?.role === "mahasiswa") {
+        toast({
+          title: "Unauthorized",
+          description: "You are not allowed to access this page",
+        });
+        auth.logout();
+        return;
+      }
+
       if (auth.user?.role === "unknown") {
         nav("/auth/onboarding");
         return;
