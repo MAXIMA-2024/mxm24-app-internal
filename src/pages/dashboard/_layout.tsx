@@ -110,6 +110,7 @@ const DesktopLayout = () => {
       minW={"100vw"}
       gap={0}
       direction={"row"}
+      overflow={"scroll"}
     >
       <Stack
         w={["20rem", "20rem", "15rem", "25rem"]}
