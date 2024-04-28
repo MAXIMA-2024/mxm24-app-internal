@@ -994,7 +994,7 @@ const MobileLayout = () => {
         <Link to={"/dashboard"}>
           <Button
             bg="white"
-            mr={5}
+            // mr={5}
             variant={"ghost"}
             alignItems={"center"}
             justifyContent={"center"}
@@ -1230,7 +1230,7 @@ const MobileLayout = () => {
             as={Button}
             variant={"ghost"}
             p={0}
-            ml={5}
+            // ml={5}
             _hover={{
               transform: "scale(1.05)",
             }}
