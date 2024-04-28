@@ -27,8 +27,6 @@ import {
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { Link as RouterLink } from "react-router-dom";
-
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
