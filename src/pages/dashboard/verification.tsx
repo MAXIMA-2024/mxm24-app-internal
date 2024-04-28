@@ -1,5 +1,4 @@
 import {
-  Box,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
@@ -230,7 +229,7 @@ const Verification = () => {
           </Stack>
         </Show>
         {/* Content */}
-        <Box
+        <Stack
           bgColor={"white"}
           // w={"full"}
           // h={"full"}
@@ -242,9 +241,12 @@ const Verification = () => {
           {verificationData.data ? (
             <DataTable data={verificationData.data} colDefs={colDefs} />
           ) : (
-            <Spinner />
+            <Stack flex={1} justify={"center"} align={"center"}>
+              <Spinner size={"xl"} />
+              <Text>Loading...</Text>
+            </Stack>
           )}
-        </Box>
+        </Stack>
       </Stack>
 
       {/* MODAL START */}
