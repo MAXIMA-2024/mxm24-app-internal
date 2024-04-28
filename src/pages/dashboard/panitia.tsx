@@ -35,7 +35,7 @@ import { useNavigate } from "@/router";
 import useSWR from "swr";
 import useApi, { ResponseModel, useToastErrorHandler } from "@/hooks/useApi";
 import { useForm, Controller } from "react-hook-form";
-import { object, z } from "zod";
+import { z } from "zod";
 
 const panitiaSchema = z.object({
   name: z
@@ -297,7 +297,8 @@ const Panitia = () => {
         isOpen={!!modalState}
         onClose={() => setModalState(undefined)}
       >
-        <ModalOverlay />
+        <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
+
         <ModalContent>
           <ModalHeader>
             {modalState?.mode === "delete" && "Delete"}
