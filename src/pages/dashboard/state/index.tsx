@@ -19,99 +19,143 @@ import {
   FormLabel,
   FormErrorMessage,
   Input,
+  Spinner,
+  Textarea,
+  Select,
 } from "@chakra-ui/react";
 
-import { Form, Link } from "react-router-dom";
-import { useState } from "react";
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import DataTable from "../../../components/datatables";
 import { MUIDataTableColumn } from "mui-datatables";
 import { MdDeleteForever } from "react-icons/md";
 import { Button as MuiButton } from "@mui/material";
 import { MdInfo } from "react-icons/md";
 import { MdEdit } from "react-icons/md";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import useApi, { ResponseModel, useToastErrorHandler } from "@/hooks/useApi";
+import { useNavigate } from "@/router";
+import useAuth from "@/hooks/useAuth";
+import useSWR from "swr";
 
-type StateData = {
-  nama_kegiatan: string;
-  hari: Date;
-  kuota: number;
-  lokasi: string;
-  deskripsi: string;
-  // logo: File;
-  // foto_kegiatan: File;
+type State = {
+  day: {
+    id: number;
+    code: string;
+    date: Date;
+  };
+  id: number;
+  _count: {
+    StateRegistration: number;
+  };
+  name: string;
+  logo: string;
+  quota: number;
 };
 
-type StateDataFillable = Pick<
-  StateData,
-  "nama_kegiatan" | "hari" | "kuota" | "lokasi" | "deskripsi"
-  // | "logo"
-  // | "foto_kegiatan"
->;
+type DayManagement = {
+  id: number;
+  code: string;
+  date: string;
+};
 
 type ModalState = {
-  id?: number;
+  state?: State;
   mode: "create" | "delete";
 };
 
-const addButtonSchema = z.object({
-  nama_kegiatan: z
-    .string({ required_error: "Nama kegiatan harus diisi" })
-    .min(1, "Nama kegiatan harus diisi")
-    .max(255, "Nama kegiatan maksimal 255 karakter"),
-  hari: z.date({ required_error: "Hari harus diisi" }),
-  kuota: z.number({ required_error: "Kuota harus diisi" }),
-  lokasi: z
-    .string({ required_error: "Lokasi harus diisi" })
-    .min(1, "Lokasi harus diisi")
-    .max(255, "Lokasi maksimal 255 karakter"),
-  deskripsi: z
-    .string({ required_error: "Deskripsi harus diisi" })
-    .min(1, "Deskripsi harus diisi")
-    .max(255, "Deskripsi maksimal 255 karakter"),
-  // logo: z.string({ required_error: "Logo harus diisi" }),
-  // foto_kegiatan: z.string({ required_error: "Foto kegiatan harus diisi" }),
+const stateSchema = z.object({
+  name: z.string({ required_error: "Name cannot be empty" }),
+  dayId: z.preprocess(
+    (val) => Number(val),
+    z.number().int("Id must be integer").positive("Id must be positive"),
+    { required_error: "Id is required" }
+  ),
+  description: z
+    .string({ required_error: "Description cannot be empty" })
+    .max(500, "Description must be under 500 characters"),
+  location: z.string({ required_error: "Location cannot be empty" }),
+  quota: z
+    .number({
+      required_error: "Quota cannot be empty",
+      invalid_type_error: "Quota must be a number",
+    })
+    .min(1, "Quota must be at least 1"),
 });
 
+type StateDataFillable = z.infer<typeof stateSchema>;
+
 const StatePanitia = () => {
+  //untuk bph, charta, actus, scriptum dan kalau masukin id lainnya seperti [5, 6, dst] tidak akan muncul delete dan add button
   const allowedEditIds = [1, 2, 3, 4];
-  const mockUserIds = [1, 2, 3, 4]; //untuk bph, charta, actus, scriptum dan kalau masukin id lainnya seperti [5, 6, dst] tidak akan muncul delete dan add button
-  const user = { ids: mockUserIds };
 
-  const [modalState, setModalState] = useState<ModalState | undefined>();
-
+  const auth = useAuth();
   const toast = useToast();
+  const api = useApi();
+  const errorHandler = useToastErrorHandler();
+  const nav = useNavigate();
+
+  // fetcher
+  const stateData = useSWR<State[]>("/state");
+  const dayManagementData = useSWR<DayManagement[]>(
+    "/state/enum/dayManagement"
+  );
 
   const {
     handleSubmit,
     register,
+    reset,
+    control,
     formState: { errors },
   } = useForm<StateDataFillable>({
-    resolver: zodResolver(addButtonSchema),
+    resolver: zodResolver(stateSchema),
   });
 
-  // const OverlayOne = () => (
-  //   <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
-  // );
+  const [modalState, setModalState] = useState<ModalState | undefined>();
 
-  // const { isOpen, onOpen, onClose } = useDisclosure();
-  // const [overlay, setOverlay] = React.useState(<OverlayOne />);
+  useEffect(() => {
+    if (auth.status === "loading") {
+      return;
+    }
+
+    if (auth.user?.role !== "panitia") {
+      toast({
+        title: "Unauthorized",
+        description: "You are not authorized to access this page",
+        status: "error",
+        isClosable: true,
+      });
+      nav("/dashboard");
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth]);
+
+  useEffect(() => {
+    reset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [modalState]);
 
   let actionColumn: MUIDataTableColumn = {
     name: "",
   };
 
-  if (user.ids.some((id) => allowedEditIds.includes(id))) {
+  if (
+    auth.user?.role === "panitia" &&
+    allowedEditIds.includes(auth.user?.data.divisiId)
+  ) {
     actionColumn = {
       name: "id",
       label: "Action",
       options: {
-        customBodyRender: (value: number) => {
+        customBodyRender: (value: number, tableMeta) => {
+          const data = stateData.data?.[tableMeta.rowIndex];
+
           return (
             <Stack direction={"row"} gap={"1rem"}>
-              {" "}
-              <Link to={`${value}`}>
+              <Link to={`/dashboard/state/${value}`}>
                 <MuiButton
                   variant={"contained"}
                   color={"primary"}
@@ -138,7 +182,7 @@ const StatePanitia = () => {
                   boxShadow: "none",
                   backgroundColor: "button.success",
                 }}
-                onClick={() => setModalState({ id: value, mode: "delete" })}
+                onClick={() => setModalState({ state: data!, mode: "delete" })}
               >
                 <MdDeleteForever />
               </MuiButton>
@@ -151,29 +195,41 @@ const StatePanitia = () => {
 
   const colDefs: MUIDataTableColumn[] = [
     {
-      name: "stateName",
-      label: "Nama State",
+      name: "name",
+      label: "Nama STATE",
     },
     {
-      name: "kuota",
+      name: "quota",
       label: "Kuota",
+      options: {
+        customBodyRender: (value: number, tableMeta) => {
+          const data = stateData.data?.[tableMeta.rowIndex];
+          return `${data?._count.StateRegistration}/${value}`;
+        },
+      },
+    },
+    {
+      name: "day",
+      label: "Hari",
+      options: {
+        customBodyRender: (value: { id: number; code: string; date: Date }) => {
+          const date = new Date(value.date);
+          const formattedDate = date
+            .toLocaleDateString("id-ID", {
+              // format tanggal: Senin, 1 Januari 2021 - 08:00
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            })
+            .replace("pukul", "-");
+          return `${value.code} - ${formattedDate}`;
+        },
+      },
     },
     actionColumn,
-  ];
-
-  const data = [
-    ["Joe James", "12/345"],
-    ["John Walsh", "12/346"],
-    ["Bob Herm", "12/347"],
-    ["James Houston", "12/348"],
-    ["Joe James", "12/349"],
-    ["John Walsh", "12/350"],
-    ["Bob Herm", "12/351"],
-    ["James Houston", "12/352"],
-    ["Joe James", "12/353"],
-    ["John Walsh", "12/354"],
-    ["Bob Herm", "12/355"],
-    ["James Houston", "12/356"],
   ];
 
   return (
@@ -226,18 +282,19 @@ const StatePanitia = () => {
             </Stack>
 
             {/* add button */}
-            {user.ids.some((id) => allowedEditIds.includes(id)) && (
-              <Button
-                leftIcon={<MdEdit />}
-                colorScheme="blue"
-                bgColor={"button.primary"}
-                borderRadius={"full"}
-                color={"white"}
-                onClick={() => setModalState({ mode: "create" })}
-              >
-                <Text color={"white"}> Add</Text>
-              </Button>
-            )}
+            {auth.user?.role === "panitia" &&
+              allowedEditIds.includes(auth.user.data.divisiId) && (
+                <Button
+                  leftIcon={<MdEdit />}
+                  colorScheme="blue"
+                  bgColor={"button.primary"}
+                  borderRadius={"full"}
+                  color={"white"}
+                  onClick={() => setModalState({ mode: "create" })}
+                >
+                  <Text color={"white"}> Add</Text>
+                </Button>
+              )}
           </Stack>
         </Show>
         {/* HEADER END */}
@@ -252,7 +309,14 @@ const StatePanitia = () => {
           rounded={"xl"}
           overflow={"auto"}
         >
-          {data && <DataTable colDefs={colDefs} data={data} />}
+          {!stateData.data || stateData.isLoading ? (
+            <Stack flex={1} align={"center"} justify={"center"}>
+              <Spinner size={"xl"} />
+              <Text>Loading...</Text>
+            </Stack>
+          ) : (
+            <DataTable colDefs={colDefs} data={stateData.data} />
+          )}
         </Stack>
         {/* CONTENT END */}
       </Stack>
@@ -263,151 +327,143 @@ const StatePanitia = () => {
         isOpen={!!modalState}
         onClose={() => setModalState(undefined)}
       >
-        <ModalOverlay />
+        <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
         <ModalContent>
           <ModalHeader fontWeight={"bold"}>
-            {modalState?.mode === "delete" ? "Delete" : "Create"}
+            {modalState?.mode === "delete" ? "Delete STATE" : "Create STATE"}
           </ModalHeader>
           <ModalCloseButton />
 
           <ModalBody>
             {modalState?.mode === "delete" && (
-              <Text>Are you sure to delete? </Text>
+              <Text>
+                Are you sure to delete <b>{modalState.state?.name}</b> ?{" "}
+              </Text>
             )}
 
             {modalState?.mode === "create" && (
               <form
                 id="add-data"
                 onSubmit={handleSubmit((data) => {
-                  if (Object.keys(errors).length === 0) {
-                    console.log(data);
-                    toast({
-                      title: "Created",
-                      description: `Kegiatan ${data.nama_kegiatan} has been created`,
-                      status: "success",
+                  api
+                    .post<ResponseModel>("/state", data)
+                    .then((res) => {
+                      toast({
+                        title: "Success",
+                        description: res.data.message,
+                        status: "success",
+                      });
+                    })
+                    .catch(errorHandler)
+                    .finally(() => {
+                      stateData.mutate();
+                      setModalState(undefined);
                     });
-                    setModalState(undefined);
-                  } else {
-                    console.error("Form errors:", errors);
-                  }
                 })}
               >
                 <Stack spacing={4}>
                   {/* NAMA ORGANISASI START */}
-                  <FormControl isInvalid={!!errors.nama_kegiatan}>
-                    <FormLabel>Nama</FormLabel>
+                  <FormControl isInvalid={!!errors.name}>
+                    <FormLabel>Nama STATE</FormLabel>
 
                     <Input
-                      placeholder="Nama Organisasi"
-                      {...register("nama_kegiatan")}
+                      placeholder="Nama STATE"
+                      {...register("name")}
                       type="text"
                     />
 
                     <FormErrorMessage>
-                      {errors.nama_kegiatan && errors.nama_kegiatan.message}
+                      {errors.name && errors.name.message}
                     </FormErrorMessage>
                   </FormControl>
                   {/* NAMA ORGANISASI END */}
 
                   {/* HARI START */}
-                  <FormControl isInvalid={!!errors.hari}>
+                  <FormControl isInvalid={!!errors.dayId}>
                     <FormLabel>Hari</FormLabel>
 
-                    <Input
-                      placeholder="Hari"
-                      {...register("hari", {
-                        valueAsDate: true,
-                      })}
-                      type="date"
+                    <Controller
+                      control={control}
+                      name="dayId"
+                      render={({ field }) => (
+                        <Select {...field}>
+                          {dayManagementData.data?.map((day) => {
+                            const date = new Date(day.date);
+                            const formattedDate = date
+                              .toLocaleDateString("id-ID", {
+                                // format tanggal: Senin, 1 Januari 2021 - 08:00
+                                weekday: "long",
+                                day: "numeric",
+                                month: "long",
+                                year: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })
+                              .replace("pukul", "-");
+                            return (
+                              <option key={day.id} value={day.id}>
+                                {day.code} - {formattedDate}
+                              </option>
+                            );
+                          })}
+                        </Select>
+                      )}
                     />
 
                     <FormErrorMessage>
-                      {errors.hari && errors.hari.message}
+                      {errors.dayId && errors.dayId.message}
                     </FormErrorMessage>
                   </FormControl>
                   {/* HARI END */}
 
                   {/* KUOTA START */}
-                  <FormControl isInvalid={!!errors.kuota}>
+                  <FormControl isInvalid={!!errors.quota}>
                     <FormLabel>Kuota</FormLabel>
 
                     <Input
                       placeholder="Kuota"
-                      {...register("kuota", {
+                      {...register("quota", {
                         valueAsNumber: true,
                       })}
                       type="number"
                     />
 
                     <FormErrorMessage>
-                      {errors.kuota && errors.kuota.message}
+                      {errors.quota && errors.quota.message}
                     </FormErrorMessage>
                   </FormControl>
                   {/* KUOTA END */}
 
                   {/* LOKASI START */}
-                  <FormControl isInvalid={!!errors.lokasi}>
+                  <FormControl isInvalid={!!errors.location}>
                     <FormLabel>Lokasi</FormLabel>
 
                     <Input
                       placeholder="Lokasi"
-                      {...register("lokasi")}
+                      {...register("location")}
                       type="text"
                     />
 
                     <FormErrorMessage>
-                      {errors.lokasi && errors.lokasi.message}
+                      {errors.location && errors.location.message}
                     </FormErrorMessage>
                   </FormControl>
                   {/* LOKASI END */}
 
                   {/* DESKRIPSI START */}
-                  <FormControl isInvalid={!!errors.deskripsi}>
+                  <FormControl isInvalid={!!errors.description}>
                     <FormLabel>Deskripsi</FormLabel>
 
-                    <Input
+                    <Textarea
                       placeholder="Deskripsi"
-                      {...register("deskripsi")}
-                      type="text"
+                      {...register("description")}
                     />
 
                     <FormErrorMessage>
-                      {errors.deskripsi && errors.deskripsi.message}
+                      {errors.description && errors.description.message}
                     </FormErrorMessage>
                   </FormControl>
                   {/* DESKRIPSI END */}
-
-                  {/* LOGO ORGANISASI START */}
-                  {/* <FormControl isInvalid={!!errors.logo}>
-                    <FormLabel>Logo</FormLabel>
-
-                    <Input
-                      placeholder="Logo Organisasi"
-                      {...register("logo")}
-                      type="file"
-                    />
-
-                    <FormErrorMessage>
-                      {errors.logo && errors.logo.message}
-                    </FormErrorMessage>
-                  </FormControl> */}
-                  {/* LOGO ORGANISASI END */}
-
-                  {/* FOTO KEGIATAN START */}
-                  {/* <FormControl isInvalid={!!errors.foto_kegiatan}>
-                    <FormLabel>Foto Kegiatan</FormLabel>
-
-                    <Input
-                      placeholder="Foto Kegiatan"
-                      {...register("foto_kegiatan")}
-                      type="file"
-                    />
-
-                    <FormErrorMessage>
-                      {errors.foto_kegiatan && errors.foto_kegiatan.message}
-                    </FormErrorMessage>
-                  </FormControl> */}
-                  {/* FOTO KEGIATAN END */}
                 </Stack>
               </form>
             )}
@@ -417,17 +473,21 @@ const StatePanitia = () => {
             {modalState?.mode === "delete" && (
               <Button
                 colorScheme="red"
-                type="submit"
-                form="delete-data"
                 onClick={() => {
-                  console.log("Data deleted");
-                  //nanti implementasi dari backend
-                  toast({
-                    title: "Deleted",
-                    description: `Data has been deleted`,
-                    status: "error",
-                  });
-                  setModalState(undefined);
+                  api
+                    .delete<ResponseModel>(`/state/${modalState.state?.id}`)
+                    .then((res) => {
+                      toast({
+                        title: "Deleted",
+                        description: res.data.message,
+                        status: "error",
+                      });
+                    })
+                    .catch(errorHandler)
+                    .finally(() => {
+                      stateData.mutate();
+                      setModalState(undefined);
+                    });
                 }}
               >
                 Delete
@@ -435,15 +495,7 @@ const StatePanitia = () => {
             )}
 
             {modalState?.mode === "create" && (
-              <Button
-                colorScheme="blue"
-                type="submit"
-                form="add-data"
-                // onClick={() => {
-                //   // console.log("Data added");
-                //   setModalState(undefined);
-                // }}
-              >
+              <Button colorScheme="blue" type="submit" form="add-data">
                 Add
               </Button>
             )}
