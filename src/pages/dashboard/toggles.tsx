@@ -30,14 +30,13 @@ import Switch from "@mui/material/Switch";
 import { MdDeleteForever } from "react-icons/md";
 import MuiButton from "@mui/material/Button";
 import { useEffect, useState } from "react";
-import React from "react";
 import { z } from "zod";
 //import { useToastErrorHandler } from "@/hooks/useApi";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useAuth from "@/hooks/useAuth";
 import { useNavigate } from "@/router";
-import useApi, { useToastErrorHandler } from "@/hooks/useApi";
+import useApi, { ResponseModel, useToastErrorHandler } from "@/hooks/useApi";
 import useSWR from "swr";
 
 type Toggles = {
@@ -283,11 +282,11 @@ const Toggles = () => {
                 id="add-toggles"
                 onSubmit={handleSubmit((data) => {
                   api
-                    .post("/toggle", data)
-                    .then(() => {
+                    .post<ResponseModel>("/toggle", data)
+                    .then((res) => {
                       toast({
                         title: "Berhasil",
-                        description: `Toggle ${data.name} berhasil ditambahkan`,
+                        description: res.data.message,
                         status: "success",
                         isClosable: true,
                       });
@@ -325,11 +324,11 @@ const Toggles = () => {
                 colorScheme="red"
                 onClick={() => {
                   api
-                    .delete(`/toggle/${modalToggles.id}`)
-                    .then(() => {
+                    .delete<ResponseModel>(`/toggle/${modalToggles.id}`)
+                    .then((res) => {
                       toast({
                         title: "Berhasil",
-                        description: `Toggle berhasil dihapus`,
+                        description: res.data.message,
                         status: "success",
                         isClosable: true,
                       });
