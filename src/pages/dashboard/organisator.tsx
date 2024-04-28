@@ -5,13 +5,8 @@ import {
   BreadcrumbLink,
   Heading,
   Stack,
-  // Tag,
   Show,
   Button,
-  // FormControl,
-  // FormErrorMessage,
-  // FormLabel,
-  // Input,
   useToast,
   Modal,
   ModalBody,
@@ -22,9 +17,14 @@ import {
   ModalOverlay,
   Text,
   Spinner,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Input,
+  Select,
   // Modal,
 } from "@chakra-ui/react";
-import { MdDeleteForever } from "react-icons/md";
+import { MdDeleteForever, MdOutlineEdit } from "react-icons/md";
 import { Link } from "react-router-dom";
 import DataTable from "../../components/datatables";
 import { MUIDataTableColumn } from "mui-datatables";
@@ -34,6 +34,8 @@ import useAuth from "@/hooks/useAuth";
 import { useNavigate } from "@/router";
 import useSWR from "swr";
 import useApi, { ResponseModel, useToastErrorHandler } from "@/hooks/useApi";
+import { z } from "zod";
+import { Controller, useForm } from "react-hook-form";
 
 type Organisator = {
   id: number;
@@ -50,6 +52,43 @@ type Organisator = {
   };
 };
 
+type OrganisatorEnum = {
+  id: number;
+  name: string;
+};
+
+type ModalState = {
+  organisator: Organisator;
+  mode: "edit" | "delete"; // enum
+};
+
+const organisatorSchema = z.object({
+  name: z
+    .string({ required_error: "Name cannot be empty" })
+    .min(3, "Name must be at least 3 characters")
+    .max(100, "Name must be at most 100 characters"),
+  nim: z
+    .string({ required_error: "NIM cannot be empty" })
+    .length(11, "NIM must be 11 characters")
+    .startsWith("00000", { message: "NIM must start with 00000/0" }),
+  email: z
+    .string({
+      required_error: "Email cannot be empty",
+    })
+    .email("Email must be a valid email address")
+    .endsWith(
+      "@student.umn.ac.id",
+      "Email must be a valid UMN student email address"
+    ),
+  stateId: z.preprocess(
+    (val) => Number(val),
+    z.number().int("Id must be integer").positive("Id must be positive"),
+    { required_error: "Id is required" }
+  ),
+});
+
+type OrganisatorFillable = z.infer<typeof organisatorSchema>;
+
 const Organisator = () => {
   const auth = useAuth();
 
@@ -59,6 +98,17 @@ const Organisator = () => {
   const errorHandler = useToastErrorHandler();
 
   const organisatorData = useSWR<Organisator[]>("/organisator/");
+  const organisatorEnum = useSWR<OrganisatorEnum[]>("/state/enum/organisator");
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm<OrganisatorFillable>();
+
+  const [modalState, setModalState] = useState<ModalState | undefined>();
 
   useEffect(() => {
     if (auth.status === "loading") {
@@ -73,14 +123,21 @@ const Organisator = () => {
       });
       nav("/dashboard");
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
 
-  type ModalState = {
-    organisator: Organisator;
-    mode: "create" | "delete"; // enum
-  };
-
-  const [modalState, setModalState] = useState<ModalState | undefined>();
+  useEffect(() => {
+    if (modalState && modalState.mode === "edit") {
+      reset({
+        stateId: modalState.organisator.stateId,
+        name: modalState.organisator.name,
+        nim: modalState.organisator.nim,
+        email: modalState.organisator.email,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [modalState]);
 
   let actionColumn: MUIDataTableColumn = {
     name: "",
@@ -100,17 +157,23 @@ const Organisator = () => {
           const data = organisatorData.data?.[tableMeta.rowIndex];
           return (
             <Stack direction={"row"} gap={"1rem"}>
-              {/* {role === "superadmin" && (
-                <Link to={`/details/${value}`}>
-                  <MuiButton
-                    variant={"contained"}
-                    color={"primary"}
-                    sx={{ borderRadius: "4rem" }}
-                  >
-                    Details
-                  </MuiButton>
-                </Link>
-              )} */}
+              <MuiButton
+                startIcon={<MdOutlineEdit />}
+                variant={"outlined"}
+                color={"info"}
+                sx={{
+                  borderRadius: "1rem",
+                  minWidth: "0",
+                  paddingX: "0.8rem",
+                  boxShadow: "none",
+                  backgroundColor: "button.success",
+                }}
+                onClick={() =>
+                  setModalState({ organisator: data!, mode: "edit" })
+                }
+              >
+                Sunting
+              </MuiButton>
               <MuiButton
                 variant={"contained"}
                 color={"error"}
@@ -225,7 +288,7 @@ const Organisator = () => {
         isOpen={!!modalState}
         onClose={() => setModalState(undefined)}
       >
-        <ModalOverlay />
+        <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
         <ModalContent>
           <ModalHeader fontWeight={"bold"}>
             {modalState?.mode === "delete" ? "Delete" : "Sunting"}
@@ -233,6 +296,106 @@ const Organisator = () => {
           <ModalCloseButton />
 
           <ModalBody>
+            {modalState?.mode === "edit" && (
+              <form
+                id="editOrganisator"
+                onSubmit={handleSubmit((data) => {
+                  api
+                    .put<ResponseModel>(
+                      `/organisator/${modalState.organisator.id}`,
+                      data
+                    )
+                    .then((res) => {
+                      toast({
+                        title: "Berhasil",
+                        description: res.data.message,
+                        status: "success",
+                        isClosable: true,
+                      });
+                    })
+                    .catch(errorHandler)
+                    .finally(() => {
+                      organisatorData.mutate();
+                      setModalState(undefined);
+                    });
+                })}
+              >
+                <Stack spacing={4}>
+                  {/* NAMA START */}
+                  <FormControl isInvalid={!!errors.name}>
+                    <FormLabel>Nama</FormLabel>
+
+                    <Input
+                      placeholder="Nama"
+                      {...register("name")}
+                      type="text"
+                    />
+
+                    <FormErrorMessage>
+                      {errors.name && errors.name.message}
+                    </FormErrorMessage>
+                  </FormControl>
+                  {/* NAMA END */}
+
+                  {/* NIM START */}
+                  <FormControl isInvalid={!!errors.nim}>
+                    <FormLabel>NIM</FormLabel>
+
+                    <Input
+                      placeholder="NIM"
+                      {...register("nim")}
+                      type="number"
+                    />
+
+                    <FormErrorMessage>
+                      {errors.nim && errors.nim.message}
+                    </FormErrorMessage>
+                  </FormControl>
+                  {/* NIM END */}
+
+                  {/* EMAIL START */}
+                  <FormControl isInvalid={!!errors.email}>
+                    <FormLabel>Email</FormLabel>
+
+                    <Input
+                      placeholder="Email"
+                      {...register("email")}
+                      type="email"
+                    />
+
+                    <FormErrorMessage>
+                      {errors.email && errors.email.message}
+                    </FormErrorMessage>
+                  </FormControl>
+                  {/* EMAIL END */}
+
+                  {/* DIVISI ID START */}
+                  <FormControl isInvalid={!!errors.stateId}>
+                    <FormLabel>Divisi</FormLabel>
+
+                    <Controller
+                      control={control}
+                      name="stateId"
+                      render={({ field }) => (
+                        <Select {...field}>
+                          {organisatorEnum.data?.map((divisi) => (
+                            <option key={divisi.id} value={divisi.id}>
+                              {divisi.name}
+                            </option>
+                          ))}
+                        </Select>
+                      )}
+                    />
+
+                    <FormErrorMessage>
+                      {errors.stateId && errors.stateId.message}
+                    </FormErrorMessage>
+                  </FormControl>
+                  {/* DIVISI ID END */}
+                </Stack>
+              </form>
+            )}
+
             {modalState?.mode === "delete" && (
               <Text>
                 Are you sure to delete <b>{modalState.organisator.name}</b>?
@@ -241,20 +404,16 @@ const Organisator = () => {
           </ModalBody>
 
           <ModalFooter>
+            {modalState?.mode === "edit" && (
+              <Button colorScheme="blue" form="editOrganisator" type="submit">
+                Save
+              </Button>
+            )}
             {modalState?.mode === "delete" && (
               <Button
                 colorScheme="red"
                 onClick={() => {
                   console.log("Data deleted");
-                  //nanti implementasi dari backend
-                  // toast({
-                  //   title: "Deleted",
-                  //   description: `Data ${modalState.organisator.name} has been deleted`,
-                  //   status: "error",
-                  //   isClosable: true,
-                  // });
-                  // setModalState(undefined);
-
                   api
                     .delete<ResponseModel>(
                       `/organisator/${modalState.organisator.id}`
