@@ -183,7 +183,7 @@ const Dashboard = () => {
                     },
                     plotOptions: {
                       bar: {
-                        // distributed: "true",
+                        distributed: true,
                         dataLabels: {
                           // position: "bottom",
                         },
