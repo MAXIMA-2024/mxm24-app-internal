@@ -1,4 +1,4 @@
-import { Heading, Text, Stack, Show, Image, Hide, Box } from "@chakra-ui/react";
+import { Heading, Text, Stack, Show, Image, Hide } from "@chakra-ui/react";
 import iconPanitia from "/icons/iconPanitia.png";
 import iconMahasiswa from "/icons/iconMahasiswa.png";
 import iconSTATE from "/icons/iconSTATE.png";
