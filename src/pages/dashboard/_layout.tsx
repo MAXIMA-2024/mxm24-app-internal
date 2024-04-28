@@ -906,7 +906,7 @@ const MobileLayout = () => {
             >
               <Image
                 src="/icons/stateSunting.png"
-                w={["1.25rem", "1.25rem", "1.25rem", "1.5rem"]}
+                w={["1.6rem", "1.6rem", "1.25rem", "1.5rem"]}
                 ml={["0.5rem", "0.5rem", "0.5rem", "1rem"]}
                 opacity={
                   currentPath === "/dashboard/verification" ||
@@ -917,7 +917,7 @@ const MobileLayout = () => {
                 }
               />
               <Text
-                fontSize={"0.5rem"}
+                fontSize={"0.4rem"}
                 fontWeight={
                   currentPath === "/dashboard/verification" ||
                   currentPath === "/dashboard/toggles" ||
@@ -1017,7 +1017,7 @@ const MobileLayout = () => {
               opacity={currentPath === "/dashboard" ? 1 : 0.25}
             ></Image>
             <Text
-              fontSize={"0.5rem"}
+              fontSize={"0.4rem"}
               fontWeight={currentPath === "/dashboard" ? "semibold" : "medium"}
               color={
                 currentPath === "/dashboard" ? "brand.maroon" : "text.primary"
@@ -1272,7 +1272,7 @@ const MobileLayout = () => {
                 }
               />
               <Text
-                fontSize={"0.5rem"}
+                fontSize={"0.4rem"}
                 fontWeight={
                   currentPath === "/dashboard/organisator" ||
                   currentPath === "/dashboard/panitia" ||
@@ -1418,7 +1418,7 @@ const MobileLayout = () => {
                 }
               />
               <Text
-                fontSize={"0.5rem"}
+                fontSize={"0.4rem"}
                 fontWeight={
                   currentPath.includes("/dashboard/state") ||
                   currentPath === "/dashboard/malpun" ||
