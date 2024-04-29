@@ -106,11 +106,11 @@ const DesktopLayout = () => {
       bgSize={"cover"}
       bgRepeat={"no-repeat"}
       bgPos={"right"}
-      minH={"100vh"}
-      minW={"100vw"}
+      flex={1}
       gap={0}
       direction={"row"}
-      overflow={"scroll"}
+      overflowX={"hidden"}
+      overflowY={"hidden"}
     >
       <Stack
         w={["20rem", "20rem", "15rem", "25rem"]}
@@ -663,7 +663,7 @@ const DesktopLayout = () => {
         </Stack>
       </Stack>
 
-      <Stack p={50} gap={"1rem"} flex={1}>
+      <Stack p={50} gap={"1rem"} flex={1} overflow={"hidden"}>
         <Outlet />
       </Stack>
     </Stack>

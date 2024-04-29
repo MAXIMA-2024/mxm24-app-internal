@@ -14,7 +14,7 @@ const GlobalLayout = () => {
       minW={"100vw"}
       minH={"100vh"}
       fontFamily={"Poppins"}
-      // overflow={"hidden"}
+      overflow={"hidden"}
     >
       <SWRConfig
         value={{
