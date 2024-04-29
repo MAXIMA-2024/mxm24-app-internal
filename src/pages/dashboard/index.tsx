@@ -1,12 +1,4 @@
-import {
-  Heading,
-  Text,
-  Stack,
-  Show,
-  Image,
-  Hide,
-  useToast,
-} from "@chakra-ui/react";
+import { Heading, Text, Stack, Show, Image, Hide } from "@chakra-ui/react";
 import iconPanitia from "/icons/iconPanitia.svg";
 import iconMahasiswa from "/icons/iconMahasiswa.svg";
 import iconSTATE from "/icons/iconSTATE.svg";
@@ -17,10 +9,9 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Chart from "react-apexcharts";
 import useAuth from "@/hooks/useAuth";
-import useApi from "@/hooks/useApi";
-import useSWR from "swr";
 import { useEffect } from "react";
 import StatisticCards from "@/components/statisticCards";
+import useSWR from "swr";
 
 type DashboardPanitia = {
   panitia: number;
