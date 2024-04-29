@@ -1301,12 +1301,12 @@ const MobileLayout = () => {
               <MenuItem>
                 <Image
                   src="/icons/panitia.png"
-                  w={"1rem"}
-                  mr={"0.5rem"}
+                  w={"0.75rem"}
+                  mr={"0.75rem"}
                   opacity={currentPath === "/dashboard/panitia" ? 1 : 0.25}
                 />
                 <Text
-                  fontSize={"0.55rem"}
+                  fontSize={"0.75rem"}
                   fontWeight={
                     currentPath === "/dashboard/panitia" ? "semibold" : "medium"
                   }
@@ -1329,7 +1329,7 @@ const MobileLayout = () => {
                   opacity={currentPath === "/dashboard/organisator" ? 1 : 0.25}
                 />
                 <Text
-                  fontSize={"0.55rem"}
+                  fontSize={"0.75rem"}
                   fontWeight={
                     currentPath === "/dashboard/organisator"
                       ? "semibold"
@@ -1354,7 +1354,7 @@ const MobileLayout = () => {
                   opacity={currentPath === "/dashboard/mahasiswa" ? 1 : 0.25}
                 />
                 <Text
-                  fontSize={"0.55rem"}
+                  fontSize={"0.75rem"}
                   fontWeight={
                     currentPath === "/dashboard/mahasiswa"
                       ? "semibold"
@@ -1456,7 +1456,7 @@ const MobileLayout = () => {
                   opacity={currentPath.includes("state") ? 1 : 0.25}
                 />
                 <Text
-                  fontSize={"0.55rem"}
+                  fontSize={"0.75rem"}
                   fontWeight={
                     currentPath.includes("state") ? "semibold" : "medium"
                   }
@@ -1482,7 +1482,7 @@ const MobileLayout = () => {
                 opacity={currentPath === "/dashboard/malpun" ? 1 : 0.25}
               />
               <Text
-                fontSize={"0.55rem"}
+                fontSize={"0.75rem"}
                 fontWeight={
                   currentPath === "/dashboard/malpun" ? "semibold" : "medium"
                 }
