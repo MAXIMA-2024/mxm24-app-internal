@@ -54,7 +54,7 @@ const Dashboard = () => {
     }
   }, [auth]);
 
-  const cardsDataPanitia = [
+  const cardsData = [
     {
       nama: "Panitia",
       icon: iconPanitia,
@@ -80,22 +80,28 @@ const Dashboard = () => {
       bgColor: "orange.300",
     },
     { nama: "MalPun", icon: iconMalPun, angka: 0, bgColor: "orange.100" },
-  ];
-
-  const cardsDataOrganisator = [
     {
       nama: "State Organisator",
       icon: iconMahasiswa,
       angka: dashboardData.data?.stateOrganisator,
       bgColor: "yellow.200",
     },
-    {
-      nama: "Mahasiswa",
-      icon: iconMahasiswa,
-      angka: dashboardData.data?.mahasiswa,
-      bgColor: "yellow.200",
-    },
   ];
+
+  // const cardsDataOrganisator = [
+  //   {
+  //     nama: "State Organisator",
+  //     icon: iconMahasiswa,
+  //     angka: dashboardData.data?.stateOrganisator,
+  //     bgColor: "yellow.200",
+  //   },
+  //   {
+  //     nama: "Mahasiswa",
+  //     icon: iconMahasiswa,
+  //     angka: dashboardData.data?.mahasiswa,
+  //     bgColor: "yellow.200",
+  //   },
+  // ];
 
   //charts
   const settings = {
@@ -191,7 +197,7 @@ const Dashboard = () => {
 
             <Hide above={"md"}>
               <Slider {...settings}>
-                {cardsDataPanitia.map((data, index) => (
+                {cardsData.map((data, index) => (
                   <Stack key={index} px={2}>
                     <Stack
                       bgColor={data.bgColor}
@@ -225,7 +231,7 @@ const Dashboard = () => {
               {/* sementara tunggu fix dari gian */}
 
               <Stack direction={"row"} spacing={6} overflow={"auto"}>
-                {cardsDataPanitia.map((data) => (
+                {cardsData.map((data) => (
                   <StatisticCards data={data} />
                 ))}
               </Stack>
