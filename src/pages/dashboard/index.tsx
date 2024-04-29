@@ -45,7 +45,7 @@ const Dashboard = () => {
     }
   }, [auth]);
 
-  const cardsData = [
+  const cardsDataPanitia = [
     {
       nama: "Panitia",
       icon: iconPanitia,
@@ -71,28 +71,22 @@ const Dashboard = () => {
       bgColor: "orange.300",
     },
     { nama: "MalPun", icon: iconMalPun, angka: 0, bgColor: "orange.100" },
+  ];
+
+  const cardsDataOrganisator = [
     {
-      nama: "State Organisator",
+      nama: "Organisator",
       icon: iconMahasiswa,
       angka: dashboardData.data?.stateOrganisator,
+      bgColor: "orange.200",
+    },
+    {
+      nama: "Mahasiswa",
+      icon: iconMahasiswa,
+      angka: dashboardData.data?.mahasiswa,
       bgColor: "yellow.200",
     },
   ];
-
-  // const cardsDataOrganisator = [
-  //   {
-  //     nama: "State Organisator",
-  //     icon: iconMahasiswa,
-  //     angka: dashboardData.data?.stateOrganisator,
-  //     bgColor: "yellow.200",
-  //   },
-  //   {
-  //     nama: "Mahasiswa",
-  //     icon: iconMahasiswa,
-  //     angka: dashboardData.data?.mahasiswa,
-  //     bgColor: "yellow.200",
-  //   },
-  // ];
 
   //charts
   const settings = {
@@ -187,45 +181,88 @@ const Dashboard = () => {
             </Text>
 
             <Hide above={"md"}>
-              <Slider {...settings}>
-                {cardsData.map((data, index) => (
-                  <Stack key={index} px={2}>
-                    <Stack
-                      bgColor={data.bgColor}
-                      w={["full", "full", "225px"]}
-                      h={"120px"}
-                      borderRadius={15}
-                      p={4}
-                      flexDirection={"column"}
-                      spacing={3}
-                    >
+              {auth.user?.role === "panitia" && (
+                <Slider {...settings}>
+                  {cardsDataPanitia.map((data, index) => (
+                    <Stack key={index} px={2}>
                       <Stack
-                        direction={"row"}
-                        spacing={2}
-                        justifyContent={"space-between"}
+                        bgColor={data.bgColor}
+                        w={["full", "full", "225px"]}
+                        h={"120px"}
+                        borderRadius={15}
+                        p={4}
+                        flexDirection={"column"}
+                        spacing={3}
                       >
-                        <Text fontWeight={"medium"} fontSize={"xl"}>
-                          {data.nama}
+                        <Stack
+                          direction={"row"}
+                          spacing={2}
+                          justifyContent={"space-between"}
+                        >
+                          <Text fontWeight={"medium"} fontSize={"xl"}>
+                            {data.nama}
+                          </Text>
+                          <Image src={data.icon} />
+                        </Stack>
+                        <Text fontWeight={"bold"} fontSize={"3xl"}>
+                          {data.angka}
                         </Text>
-                        <Image src={data.icon} />
                       </Stack>
-                      <Text fontWeight={"bold"} fontSize={"3xl"}>
-                        {data.angka}
-                      </Text>
                     </Stack>
-                  </Stack>
-                ))}
-              </Slider>
+                  ))}
+                </Slider>
+              )}
+              {auth.user?.role === "organisator" && (
+                <Slider {...settings}>
+                  {cardsDataOrganisator.map((data, index) => (
+                    <Stack key={index} px={2}>
+                      <Stack
+                        bgColor={data.bgColor}
+                        w={["full", "full", "225px"]}
+                        h={"120px"}
+                        borderRadius={15}
+                        p={4}
+                        flexDirection={"column"}
+                        spacing={3}
+                      >
+                        <Stack
+                          direction={"row"}
+                          spacing={2}
+                          justifyContent={"space-between"}
+                        >
+                          <Text fontWeight={"medium"} fontSize={"xl"}>
+                            {data.nama}
+                          </Text>
+                          <Image src={data.icon} />
+                        </Stack>
+                        <Text fontWeight={"bold"} fontSize={"3xl"}>
+                          {data.angka}
+                        </Text>
+                      </Stack>
+                    </Stack>
+                  ))}
+                </Slider>
+              )}
             </Hide>
 
             <Show above="md">
               {/* sementara tunggu fix dari gian */}
 
-              <Stack direction={"row"} spacing={6} overflow={"auto"}>
-                {cardsData.map((data) => (
-                  <StatisticCards data={data} />
-                ))}
-              </Stack>
+              {auth.user?.role === "panitia" && (
+                <Stack direction={"row"} spacing={6} overflowX={"auto"}>
+                  {cardsDataPanitia.map((data) => (
+                    <StatisticCards data={data} />
+                  ))}
+                </Stack>
+              )}
+
+              {auth.user?.role === "organisator" && (
+                <Stack direction={"row"} spacing={6} overflowX={"auto"}>
+                  {cardsDataOrganisator.map((data) => (
+                    <StatisticCards data={data} />
+                  ))}
+                </Stack>
+              )}
             </Show>
           </Stack>
           {/* TAB CARDS END */}
