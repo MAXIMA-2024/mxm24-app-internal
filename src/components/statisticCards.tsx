@@ -1,5 +1,4 @@
 import { Stack, Text, Image } from "@chakra-ui/react";
-import React from "react";
 
 type StatisticCardsProps = {
   data: {
