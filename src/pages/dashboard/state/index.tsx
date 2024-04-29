@@ -22,6 +22,7 @@ import {
   Spinner,
   Textarea,
   Select,
+  Hide,
 } from "@chakra-ui/react";
 
 import { Link } from "react-router-dom";
@@ -31,7 +32,7 @@ import { MUIDataTableColumn } from "mui-datatables";
 import { MdDeleteForever } from "react-icons/md";
 import { Button as MuiButton } from "@mui/material";
 import { MdInfo } from "react-icons/md";
-import { MdEdit } from "react-icons/md";
+import { MdAdd } from "react-icons/md";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -285,14 +286,11 @@ const StatePanitia = () => {
             {auth.user?.role === "panitia" &&
               allowedEditIds.includes(auth.user.data.divisiId) && (
                 <Button
-                  leftIcon={<MdEdit />}
                   colorScheme="blue"
-                  bgColor={"button.primary"}
                   borderRadius={"full"}
-                  color={"white"}
                   onClick={() => setModalState({ mode: "create" })}
                 >
-                  <Text color={"white"}> Add</Text>
+                  + Add
                 </Button>
               )}
           </Stack>
@@ -309,6 +307,20 @@ const StatePanitia = () => {
           rounded={"xl"}
           overflow={"auto"}
         >
+          {/* add button */}
+          {auth.user?.role === "panitia" &&
+            allowedEditIds.includes(auth.user.data.divisiId) && (
+              <Hide above="md">
+                <Button
+                  colorScheme="blue"
+                  borderRadius={"full"}
+                  m={4}
+                  onClick={() => setModalState({ mode: "create" })}
+                >
+                  + Add
+                </Button>
+              </Hide>
+            )}
           {!stateData.data || stateData.isLoading ? (
             <Stack flex={1} align={"center"} justify={"center"}>
               <Spinner size={"xl"} />

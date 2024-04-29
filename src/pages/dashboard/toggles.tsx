@@ -21,6 +21,7 @@ import {
   FormLabel,
   Input,
   Spinner,
+  Hide,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import DataTable from "../../components/datatables";
@@ -236,6 +237,7 @@ const Toggles = () => {
                 setModalToggles({ mode: "create" });
               }}
               colorScheme="blue"
+              borderRadius={"full"}
             >
               + Add Toggles
             </Button>
@@ -251,6 +253,18 @@ const Toggles = () => {
           rounded={"xl"}
           overflow={"auto"}
         >
+          <Hide above="md">
+            <Button
+              m={4}
+              borderRadius={"full"}
+              onClick={() => {
+                setModalToggles({ mode: "create" });
+              }}
+              colorScheme="blue"
+            >
+              + Add Toggles
+            </Button>
+          </Hide>
           {toggleData.data ? (
             <DataTable colDefs={colDefs} data={toggleData.data} />
           ) : (

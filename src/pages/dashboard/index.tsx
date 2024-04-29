@@ -1,29 +1,103 @@
-import { Heading, Text, Stack, Show, Image, Hide } from "@chakra-ui/react";
-import iconPanitia from "/icons/iconPanitia.png";
-import iconMahasiswa from "/icons/iconMahasiswa.png";
-import iconSTATE from "/icons/iconSTATE.png";
-import iconMalPun from "/icons/iconMalPun.png";
+import {
+  Heading,
+  Text,
+  Stack,
+  Show,
+  Image,
+  Hide,
+  useToast,
+} from "@chakra-ui/react";
+import iconPanitia from "/icons/iconPanitia.svg";
+import iconMahasiswa from "/icons/iconMahasiswa.svg";
+import iconSTATE from "/icons/iconSTATE.svg";
+import iconMalPun from "/icons/iconMalPun.svg";
+import iconOrganisator from "/icons/iconOrganisator.svg";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Chart from "react-apexcharts";
 import useAuth from "@/hooks/useAuth";
+import useApi from "@/hooks/useApi";
+import useSWR from "swr";
+import { useEffect } from "react";
+import StatisticCards from "@/components/statisticCards";
+
+type DashboardPanitia = {
+  panitia: number;
+  mahasiswa: number;
+  organisator: number;
+  state: number;
+  malpun: number;
+};
+
+type DashboardOrganisator = {
+  stateOrganisator: number;
+  mahasiswa: number;
+};
+
+// jadi kalau role nya panitia yang muncul itu ada stats jumlah panitia, mahasiswa, organisator, state, dan malpun
+
+// jadi kalau role nya organisator yang muncul itu ada stats mahasiswa dan StateOrganisator
 
 const Dashboard = () => {
   const auth = useAuth();
 
-  const cardsData = [
-    { nama: "Panitia", icon: iconPanitia, angka: 249, bgColor: "orange" },
+  const dashboardData = useSWR<DashboardPanitia & DashboardOrganisator>(
+    auth.user?.role === "panitia"
+      ? "/dashboard/panitia"
+      : "/dashboard/organisator"
+  );
+
+  useEffect(() => {
+    if (auth.status === "loading") {
+      return;
+    }
+  }, [auth]);
+
+  const cardsDataPanitia = [
+    {
+      nama: "Panitia",
+      icon: iconPanitia,
+      angka: dashboardData.data?.panitia,
+      bgColor: "orange",
+    },
     {
       nama: "Mahasiswa",
       icon: iconMahasiswa,
-      angka: 49,
+      angka: dashboardData.data?.mahasiswa,
       bgColor: "yellow.200",
     },
-    { nama: "STATE", icon: iconSTATE, angka: 3409, bgColor: "orange.300" },
-    { nama: "MalPun", icon: iconMalPun, angka: 245, bgColor: "orange.100" },
+    {
+      nama: "Organisator",
+      icon: iconOrganisator,
+      angka: dashboardData.data?.organisator,
+      bgColor: "orange.200",
+    },
+    {
+      nama: "STATE",
+      icon: iconSTATE,
+      angka: dashboardData.data?.state,
+      bgColor: "orange.300",
+    },
+    { nama: "MalPun", icon: iconMalPun, angka: 0, bgColor: "orange.100" },
   ];
 
+  const cardsDataOrganisator = [
+    {
+      nama: "State Organisator",
+      icon: iconMahasiswa,
+      angka: dashboardData.data?.stateOrganisator,
+      bgColor: "yellow.200",
+    },
+    {
+      nama: "Mahasiswa",
+      icon: iconMahasiswa,
+      angka: dashboardData.data?.mahasiswa,
+      bgColor: "yellow.200",
+    },
+  ];
+
+  //charts
   const settings = {
     dots: true,
     infinite: true,
@@ -33,19 +107,56 @@ const Dashboard = () => {
     autoplaySpeed: 2000,
   };
 
+  const options = {
+    chart: {
+      id: "basic-bar",
+    },
+    xaxis: {
+      categories:
+        auth.user?.role === "panitia"
+          ? ["Panitia", "Mahasiswa", "Organisator", "State", "MalPun"]
+          : ["State Organisator", "Mahasiswa"],
+    },
+    plotOptions: {
+      bar: {
+        distributed: true,
+        dataLabels: {
+          // position: "bottom",
+        },
+      },
+    },
+    dataLabels: {
+      enabled: true,
+
+      style: {
+        fontSize: "1rem",
+        colors: ["#1b2625"],
+      },
+    },
+    colors: ["#f8a400", "#f8f082", "#fcebc6", "#f0ac4d", "#fcebc6"],
+  };
+
   const series = [
     {
       name: "Jumlah Peserta",
-      data: [30, 40, 45, 50],
+      data:
+        auth.user?.role === "panitia"
+          ? [
+              dashboardData.data?.panitia ?? 0,
+              dashboardData.data?.mahasiswa ?? 0,
+              dashboardData.data?.organisator ?? 0,
+              dashboardData.data?.state ?? 0,
+              0,
+            ]
+          : [
+              dashboardData.data?.stateOrganisator ?? 0,
+              dashboardData.data?.mahasiswa ?? 0,
+            ],
     },
   ];
 
   return (
     <>
-      <style>
-        {`
-        `}
-      </style>
       <Stack flex={1} spacing={6} overflow={"hidden"}>
         <Show above={"md"}>
           <Heading fontFamily={"Poppins"} color={"text.primary"}>
@@ -53,15 +164,7 @@ const Dashboard = () => {
           </Heading>
         </Show>
 
-        <Stack
-          bgColor={"white"}
-          flex={1}
-          shadow={"lg"}
-          p={25}
-          rounded={"xl"}
-          flexDirection={"column"}
-          // w={["full", "full", "29rem", "40rem", "full"]}
-        >
+        <Stack bgColor={"white"} flex={1} shadow={"lg"} p={25} rounded={"xl"}>
           <Stack>
             <Text fontWeight={"medium"} color={"text.primary"} opacity={0.8}>
               Selamat datang,{" "}
@@ -73,7 +176,8 @@ const Dashboard = () => {
               🤩
             </Text>
           </Stack>
-          <Stack w={"full"}>
+
+          <Stack>
             {/* TAB CARDS START */}
             <Text
               fontWeight={"medium"}
@@ -87,7 +191,7 @@ const Dashboard = () => {
 
             <Hide above={"md"}>
               <Slider {...settings}>
-                {cardsData.map((data, index) => (
+                {cardsDataPanitia.map((data, index) => (
                   <Stack key={index} px={2}>
                     <Stack
                       bgColor={data.bgColor}
@@ -119,43 +223,16 @@ const Dashboard = () => {
 
             <Show above="md">
               {/* sementara tunggu fix dari gian */}
-              <Stack
-                direction={"row"}
-                w={"full"}
-                spacing={6}
-                overflow={"scroll"}
-                wrap={"wrap"}
-              >
-                {cardsData.map((data, index) => (
-                  <Stack
-                    key={index}
-                    bgColor={data.bgColor}
-                    w={["275px", "350px", "225px", "225px"]}
-                    h={"120px"}
-                    borderRadius={15}
-                    p={4}
-                    flexDirection={"column"}
-                    spacing={3}
-                  >
-                    <Stack
-                      direction={"row"}
-                      spacing={2}
-                      justifyContent={"space-between"}
-                    >
-                      <Text fontWeight={"medium"} fontSize={"xl"}>
-                        {data.nama}
-                      </Text>
-                      <Image src={data.icon} />
-                    </Stack>
-                    <Text fontWeight={"bold"} fontSize={"3xl"}>
-                      {data.angka}
-                    </Text>
-                  </Stack>
+
+              <Stack direction={"row"} spacing={6} overflow={"auto"}>
+                {cardsDataPanitia.map((data) => (
+                  <StatisticCards data={data} />
                 ))}
               </Stack>
             </Show>
           </Stack>
           {/* TAB CARDS END */}
+
           {/* GRAFIK START */}
           <Stack w={"full"} h={["23rem", "23rem", "full", "full"]} mt={5}>
             <Text fontWeight={"medium"} color={"text.primary"} opacity={0.8}>
@@ -174,31 +251,7 @@ const Dashboard = () => {
 
               <Stack flex={1} overflow={"hidden"}>
                 <Chart
-                  options={{
-                    chart: {
-                      id: "basic-bar",
-                    },
-                    xaxis: {
-                      categories: ["Panitia", "Mahasiswa", "State", "MalPun"],
-                    },
-                    plotOptions: {
-                      bar: {
-                        distributed: true,
-                        dataLabels: {
-                          // position: "bottom",
-                        },
-                      },
-                    },
-                    dataLabels: {
-                      enabled: true,
-
-                      style: {
-                        fontSize: "1rem",
-                        colors: ["#1b2625"],
-                      },
-                    },
-                    colors: ["#f8a400", "#f8f082", "#f0ac4d", "#fcebc6"],
-                  }}
+                  options={options}
                   series={series}
                   type="bar"
                   width="100%"
