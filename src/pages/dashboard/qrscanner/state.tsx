@@ -1,6 +1,12 @@
-import { Scanner } from "@yudiel/react-qr-scanner";
+import QRScanner from "@/components/qrscanner";
 
-const State = () => {
-  return <Scanner onScan={(result) => console.log(result)} />;
+const STATEScanner = () => {
+  return (
+    <QRScanner
+      validation={(id) => id}
+      onError={(id) => console.error(id)}
+      onSuccess={(id) => console.log(id)}
+    />
+  );
 };
-export default State;
+export default STATEScanner;

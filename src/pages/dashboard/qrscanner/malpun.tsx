@@ -1,6 +1,12 @@
-import { Scanner } from "@yudiel/react-qr-scanner";
+import QRScanner from "@/components/qrscanner";
 
-const Malpun = () => {
-  return <Scanner onScan={(result) => console.log(result)} />;
+const MalpunScanner = () => {
+  return (
+    <QRScanner
+      validation={(id) => id}
+      onError={(id) => console.error(id)}
+      onSuccess={(id) => console.log(id)}
+    />
+  );
 };
-export default Malpun;
+export default MalpunScanner;

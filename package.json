@@ -20,7 +20,7 @@
     "@mui/material": "^5.15.15",
     "@nikolovlazar/chakra-ui-prose": "^1.2.1",
     "@vitejs/plugin-basic-ssl": "^1.1.0",
-    "@yudiel/react-qr-scanner": "^2.0.4",
+    "@yudiel/react-qr-scanner": "1.1.9",
     "axios": "^1.6.8",
     "framer-motion": "^11.0.25",
     "mui-datatables": "^4.3.0",
