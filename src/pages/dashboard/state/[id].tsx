@@ -460,7 +460,9 @@ const Organisator = () => {
                     src={
                       stateData.data.logo === "-"
                         ? "/icons/imgplaceholder.png"
-                        : stateData.data?.logo
+                        : `${import.meta.env.VITE_STORAGE_URL}${
+                            stateData.data?.logo
+                          }`
                     }
                     rounded={"md"}
                     fit={"contain"}
@@ -664,7 +666,9 @@ const Organisator = () => {
                       src={
                         stateData.data?.logo === "-"
                           ? "/icons/imgplaceholder.png"
-                          : stateData.data?.logo
+                          : `${import.meta.env.VITE_STORAGE_URL}${
+                              stateData.data?.logo
+                            }`
                       }
                       rounded={"md"}
                       fit={"contain"}
@@ -729,7 +733,9 @@ const Organisator = () => {
                       stateData.data?.gallery.map((gallery) => (
                         <ImageGallery
                           key={gallery.id}
-                          src={gallery.url}
+                          src={`${import.meta.env.VITE_STORAGE_URL}${
+                            gallery.url
+                          }`}
                           onDelete={() => {
                             api
                               .delete<ResponseModel>(
