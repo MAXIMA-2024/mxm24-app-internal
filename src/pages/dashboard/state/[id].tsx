@@ -586,7 +586,10 @@ const Organisator = () => {
                         isClosable: true,
                       });
                     })
-                    .catch(errorHandler);
+                    .catch(errorHandler)
+                    .finally(() => {
+                      stateData.mutate();
+                    });
                 }
 
                 if (gallery) {
