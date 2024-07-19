@@ -3,87 +3,93 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
-  Checkbox,
   Heading,
   Stack,
-  Text,
   Show,
-  Modal,
-  Button,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
+  Spinner,
+  Text,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import DataTable from "../../components/datatables";
+import DataTable from "@/components/datatables";
 import { MUIDataTableColumn } from "mui-datatables";
-import Switch from "@mui/material/Switch";
-import { Button as MuiButton } from "@mui/material";
-import { MdDeleteForever } from "react-icons/md";
-import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
+import { Checkbox as MuiCheckbox } from "@mui/material";
+import useSWR from "swr";
+import useAuth from "@/hooks/useAuth";
 import { useState } from "react";
+import AbsenMalpun from "@/components/absen/malpun";
 
-type ModalState = {
-  id?: number;
-  mode: "delete";
-};
-
-const BsCheckCircleFilled = () => <BsCheckCircleFill color="green" size={20} />;
-const BsXCircleFilled = () => <BsXCircleFill color="red" size={20} />;
-
-interface CheckingProps {
-  isChecked: boolean;
-}
-
-const Checking: React.FC<CheckingProps> = (props) => {
-  const { isChecked } = props;
-  return <>{isChecked ? <BsCheckCircleFilled /> : <BsXCircleFilled />}</>;
+type PesertaMalpun = {
+  id: number;
+  code: string;
+  name: string;
+  email: string;
+  attendance: boolean;
+  attendanceTime: Date | null;
+  status: "internal" | "external";
 };
 
 const Malpun = () => {
-  const [modalState, setModalState] = useState<ModalState | undefined>();
+  const { data, isLoading } = useSWR<PesertaMalpun[]>(`/peserta/malpun`);
+  const [codeAbsen, setCodeAbsen] = useState<string | undefined>();
+
+  const auth = useAuth();
+
+  const allowedAbsenIds = [1, 2, 4];
+
   const colDefs: MUIDataTableColumn[] = [
+    {
+      name: "id",
+      label: "ID",
+      options: {
+        display: false,
+      },
+    },
     {
       name: "name",
       label: "Name",
     },
     {
-      name: "nim",
-      label: "NIM",
+      name: "status",
+      label: "Status",
+      options: {
+        customBodyRender: (value: string) =>
+          value === "internal" ? "Internal" : "External",
+      },
     },
     {
       name: "email",
       label: "Email",
     },
     {
-      name: "kehadiran",
+      name: "attendance",
       label: "Kehadiran",
       options: {
-        customBodyRender: (value) => {
+        customBodyRender: (attendance: boolean, tableMeta) => {
           return (
-            <Checkbox checked={value} icon={<Checking isChecked={value} />} />
+            // <Stack flex={1} align={"center"} justify={"center"}>
+            <MuiCheckbox
+              checked={attendance}
+              disabled={
+                attendance ||
+                !(
+                  auth.user?.role === "panitia" &&
+                  allowedAbsenIds.includes(auth.user.data.divisiId)
+                )
+              }
+              onChange={() => {
+                const id = tableMeta.rowData[0] as number;
+
+                const user = data?.find((u) => u.id === id);
+
+                // implement disini
+                setCodeAbsen(user?.code);
+              }}
+            />
+            // </Stack>
           );
         },
       },
     },
-  ];
-
-  const data = [
-    ["Joe James", "12345", "Yonkers@student.umn.ac.id", "NY"],
-    ["John Walsh", "12346", "Hartford@student.umn.ac.id", "CT"],
-    ["Bob Herm", "12347", "Tampa@student.umn.ac.id", "FL"],
-    ["James Houston", "12348", "Dallas@student.umn.ac.id", "TX"],
-    ["Joe James", "12349", "Yonkers@student.umn.ac.id", "NY"],
-    ["John Walsh", "12350", "Hartford@student.umn.ac.id", "CT"],
-    ["Bob Herm", "12351", "Tampa@student.umn.ac.id", "FL"],
-    ["James Houston", "12352", "Dallas@student.umn.ac.id", "TX"],
-    ["Joe James", "12353", "Yonkers@student.umn.ac.id", "NY"],
-    ["John Walsh", "12354", "Hartford@student.umn.ac.id", "CT"],
-    ["Bob Herm", "12355", "Tampa@student.umn.ac.id", "FL"],
-    ["James Houston", "12356", "Dallas@student.umn.ac.id", "TX"],
   ];
 
   return (
@@ -138,9 +144,17 @@ const Malpun = () => {
           rounded={"xl"}
           overflow={"auto"}
         >
+          {isLoading && (
+            <Stack flex={1} align={"center"} justify={"center"}>
+              <Spinner size={"xl"} />
+              <Text>Loading...</Text>
+            </Stack>
+          )}
           {data && <DataTable colDefs={colDefs} data={data} />}
         </Box>
       </Stack>
+
+      {codeAbsen && <AbsenMalpun code={codeAbsen} setCode={setCodeAbsen} />}
     </>
   );
 };
