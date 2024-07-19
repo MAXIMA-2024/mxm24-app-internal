@@ -171,64 +171,58 @@ const Mahasiswa = () => {
       label: "NIM",
     },
     {
-      name: "id",
+      name: "StateRegistration",
       label: "STATE 1",
       options: {
-        customBodyRender: (_value, tableMeta) => {
-          const index = tableMeta.rowIndex;
-          const rowData = data![index];
-
-          const state = rowData.StateRegistration;
-          if (state.length === 0) {
+        customBodyRender: (
+          stateRegistration: MahasiswaWithSTATE["StateRegistration"]
+        ) => {
+          if (stateRegistration.length === 0) {
             return "-";
           }
 
           return getStatusState(
-            rowData.StateRegistration[0].state.name,
-            rowData.StateRegistration[0].firstAttendance &&
-              rowData.StateRegistration[0].lastAttendance
+            stateRegistration[0].state.name,
+            stateRegistration[0].firstAttendance &&
+              stateRegistration[0].lastAttendance
           );
         },
       },
     },
     {
-      name: "id",
+      name: "StateRegistration",
       label: "STATE 2",
       options: {
-        customBodyRender: (_value, tableMeta) => {
-          const index = tableMeta.rowIndex;
-          const rowData = data![index];
-
-          const state = rowData.StateRegistration;
-          if (state.length === 1) {
+        customBodyRender: (
+          stateRegistration: MahasiswaWithSTATE["StateRegistration"]
+        ) => {
+          if (stateRegistration.length <= 1) {
             return "-";
           }
 
           return getStatusState(
-            rowData.StateRegistration[1].state.name,
-            rowData.StateRegistration[1].firstAttendance &&
-              rowData.StateRegistration[1].lastAttendance
+            stateRegistration[1].state.name,
+            stateRegistration[1].firstAttendance &&
+              stateRegistration[1].lastAttendance
           );
         },
       },
     },
     {
-      name: "id",
+      name: "StateRegistration",
       label: "STATE 3",
       options: {
-        customBodyRender: (_value, tableMeta) => {
-          const index = tableMeta.rowIndex;
-          const rowData = data![index];
-
-          const state = rowData.StateRegistration;
-          if (state.length === 2) {
+        customBodyRender: (
+          stateRegistration: MahasiswaWithSTATE["StateRegistration"]
+        ) => {
+          if (stateRegistration.length <= 2) {
             return "-";
           }
 
           return getStatusState(
-            rowData.StateRegistration[2].state.name,
-            rowData.StateRegistration[2].firstAttendance &&
-              rowData.StateRegistration[2].lastAttendance
+            stateRegistration[2].state.name,
+            stateRegistration[2].firstAttendance &&
+              stateRegistration[2].lastAttendance
           );
         },
       },
@@ -243,10 +237,7 @@ const Mahasiswa = () => {
       name: "id",
       label: "Action",
       options: {
-        customBodyRender: (_value, tableMeta) => {
-          const index = tableMeta.rowIndex;
-          const rowData = data![index];
-
+        customBodyRender: (id: number) => {
           return (
             <Stack direction={"row"} gap={"1rem"}>
               <MuiButton
@@ -262,9 +253,7 @@ const Mahasiswa = () => {
                 }}
                 onClick={() =>
                   api
-                    .get<ResponseModel<Mahasiswa>>(
-                      `/peserta/mahasiswa/${rowData.id}`
-                    )
+                    .get<ResponseModel<Mahasiswa>>(`/peserta/mahasiswa/${id}`)
                     .then((res) => {
                       setModalState({ mahasiswa: res.data.data, mode: "edit" });
                     })
@@ -284,9 +273,7 @@ const Mahasiswa = () => {
                 }}
                 onClick={() =>
                   api
-                    .get<ResponseModel<Mahasiswa>>(
-                      `/peserta/mahasiswa/${rowData.id}`
-                    )
+                    .get<ResponseModel<Mahasiswa>>(`/peserta/mahasiswa/${id}`)
                     .then((res) => {
                       setModalState({
                         mahasiswa: res.data.data,
@@ -351,9 +338,9 @@ const Mahasiswa = () => {
         {/* CONTENT START */}
         <Stack bgColor={"white"} flex={1} shadow={"lg"} rounded={"xl"}>
           {/* {loading bar} */}
-          {isLoading && (
-            <Stack>
-              <Spinner />
+          {(isLoading || !data) && (
+            <Stack flex={1} align={"center"} justify={"center"}>
+              <Spinner size={"xl"} />
               <Text>Loading...</Text>
             </Stack>
           )}
