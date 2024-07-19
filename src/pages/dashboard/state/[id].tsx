@@ -38,7 +38,7 @@ import { Link } from "react-router-dom";
 import DataTable2 from "@/components/datatables2";
 //import datatables tamnbahan untuk page yang index.tsx
 import { MUIDataTableColumn } from "mui-datatables";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -52,6 +52,7 @@ import FilePicker from "@/components/file-picker";
 import ImageGallery from "@/components/image-gallery";
 
 import imageCompression from "browser-image-compression";
+import AbsenState from "@/components/absen/state";
 
 type StateData = {
   id: number;
@@ -85,6 +86,7 @@ type Mahasiswa = {
   name: string;
   nim: string;
   email: string;
+  token: string;
 };
 
 type PesertaState = {
@@ -199,6 +201,9 @@ const Organisator = () => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  // logic absen
+  const [tokenAbsen, setTokenAbsen] = useState<string | undefined>();
+
   useEffect(() => {
     if (!isOpen) return;
 
@@ -247,6 +252,13 @@ const Organisator = () => {
 
   const colDefs: MUIDataTableColumn[] = [
     {
+      name: "id",
+      label: "ID",
+      options: {
+        display: false,
+      },
+    },
+    {
       name: "mahasiswa",
       label: "Nama",
       options: {
@@ -268,24 +280,29 @@ const Organisator = () => {
       },
     },
     {
-      name: "id",
+      name: "firstAttendance",
       label: "Absen Masuk",
       options: {
-        customBodyRender: (_value: number, tableMeta) => {
-          const data = pesertaStateData.data?.[tableMeta.rowIndex];
+        customBodyRender: (firstAttendance: boolean, tableMeta) => {
           return (
             <Stack flex={1} align={"center"} justify={"center"}>
               <MuiCheckbox
-                checked={data?.firstAttendance}
+                checked={firstAttendance}
                 disabled={
-                  data?.firstAttendance ||
+                  firstAttendance ||
                   !(
                     auth.user?.role === "panitia" &&
                     allowedAbsenIds.includes(auth.user.data.divisiId)
                   )
                 }
                 onChange={() => {
-                  console.log("unimplemented absen masuk");
+                  const id = tableMeta.rowData[0] as number;
+                  const data = pesertaStateData.data?.find(
+                    (psd) => psd.id === id
+                  );
+
+                  // implement disini
+                  setTokenAbsen(data?.mahasiswa.token);
                 }}
               />
             </Stack>
@@ -294,24 +311,29 @@ const Organisator = () => {
       },
     },
     {
-      name: "id",
+      name: "lastAttendance",
       label: "Absen Keluar",
       options: {
-        customBodyRender: (_value: number, tableMeta) => {
-          const data = pesertaStateData.data?.[tableMeta.rowIndex];
+        customBodyRender: (lastAttendance: boolean, tableMeta) => {
           return (
             <Stack flex={1} align={"center"} justify={"center"}>
               <MuiCheckbox
-                checked={data?.lastAttendance}
+                checked={lastAttendance}
                 disabled={
-                  data?.lastAttendance ||
+                  tableMeta.rowData[4] || // firstAttendance
+                  lastAttendance ||
                   !(
                     auth.user?.role === "panitia" &&
                     allowedAbsenIds.includes(auth.user.data.divisiId)
                   )
                 }
                 onChange={() => {
-                  console.log("unimplemented absen keluar");
+                  const id = tableMeta.rowData[0] as number;
+                  const data = pesertaStateData.data?.find(
+                    (psd) => psd.id === id
+                  );
+
+                  setTokenAbsen(data?.mahasiswa.token);
                 }}
               />
             </Stack>
@@ -914,6 +936,10 @@ const Organisator = () => {
         </ModalContent>
       </Modal>
       {/* MODAL END */}
+
+      {/* MODAL ABSEN START */}
+      {tokenAbsen && <AbsenState token={tokenAbsen} setToken={setTokenAbsen} />}
+      {/* MODAL ABSEN END */}
     </>
   );
 };
