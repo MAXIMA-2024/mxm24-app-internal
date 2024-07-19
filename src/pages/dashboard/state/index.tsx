@@ -27,7 +27,7 @@ import {
 
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import DataTable from "../../../components/datatables";
+import DataTable from "@/components/datatables";
 import { MUIDataTableColumn } from "mui-datatables";
 import { MdDeleteForever } from "react-icons/md";
 import { Button as MuiButton } from "@mui/material";
@@ -150,12 +150,10 @@ const StatePanitia = () => {
       name: "id",
       label: "Action",
       options: {
-        customBodyRender: (value: number, tableMeta) => {
-          const data = stateData.data?.[tableMeta.rowIndex];
-
+        customBodyRender: (id: number) => {
           return (
             <Stack direction={"row"} gap={"1rem"}>
-              <Link to={`/dashboard/state/${value}`}>
+              <Link to={`/dashboard/state/${id}`}>
                 <MuiButton
                   variant={"contained"}
                   color={"primary"}
@@ -182,7 +180,10 @@ const StatePanitia = () => {
                   boxShadow: "none",
                   backgroundColor: "button.success",
                 }}
-                onClick={() => setModalState({ state: data!, mode: "delete" })}
+                onClick={() => {
+                  const state = stateData.data?.find((s) => s.id === id);
+                  setModalState({ mode: "delete", state });
+                }}
               >
                 <MdDeleteForever />
               </MuiButton>
@@ -199,12 +200,19 @@ const StatePanitia = () => {
       label: "Nama STATE",
     },
     {
+      name: "_count",
+      label: "Jumlah Pendaftar",
+      options: {
+        display: "excluded",
+      },
+    },
+    {
       name: "quota",
       label: "Kuota",
       options: {
-        customBodyRender: (value: number, tableMeta) => {
-          const data = stateData.data?.[tableMeta.rowIndex];
-          return `${data?._count.StateRegistration}/${value}`;
+        customBodyRender: (quota: number, tableMeta) => {
+          const current = tableMeta.rowData[1] as State["_count"];
+          return `${current.StateRegistration}/${quota}`;
         },
       },
     },
@@ -212,7 +220,7 @@ const StatePanitia = () => {
       name: "day",
       label: "Hari",
       options: {
-        customBodyRender: (value: { id: number; code: string; date: Date }) => {
+        customBodyRender: (value: State["day"]) => {
           const date = new Date(value.date);
           const formattedDate = date
             .toLocaleDateString("id-ID", {

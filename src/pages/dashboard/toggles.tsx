@@ -25,7 +25,7 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import DataTable from "../../components/datatables";
-import { MUIDataTableColumn } from "mui-datatables";
+import { MUIDataTableColumn, MUIDataTableMeta } from "mui-datatables";
 import Switch from "@mui/material/Switch";
 import { MdDeleteForever } from "react-icons/md";
 import MuiButton from "@mui/material/Button";
@@ -115,6 +115,13 @@ const Toggles = () => {
 
   const colDefs: MUIDataTableColumn[] = [
     {
+      name: "id",
+      label: "ID",
+      options: {
+        display: false,
+      },
+    },
+    {
       name: "name",
       label: "Toggle",
     },
@@ -122,20 +129,23 @@ const Toggles = () => {
       name: "toggle",
       label: "Status",
       options: {
-        customBodyRender: (value: boolean, tableMeta) => {
-          const { rowIndex } = tableMeta;
-          const data = toggleData.data?.[rowIndex];
+        customBodyRender: (
+          value: boolean,
+          tableMeta: MUIDataTableMeta<Toggles>
+        ) => {
+          const toggleId = tableMeta.rowData[0] as number;
+          const toggleName = tableMeta.rowData[1] as string;
 
           return (
             <Switch
               checked={value}
               onChange={() =>
                 api
-                  .put(`/toggle/${data?.id}`)
+                  .put(`/toggle/${toggleId}`)
                   .then(() => {
                     toast({
                       title: "Berhasil",
-                      description: `Toggle ${data?.name} berhasil di update`,
+                      description: `Toggle ${toggleName} berhasil di update`,
                       status: "success",
                       isClosable: true,
                     });
