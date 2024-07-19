@@ -24,7 +24,7 @@ import {
 
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import DataTable from "../../components/datatables";
+import DataTable from "@/components/datatables";
 import { MUIDataTableColumn } from "mui-datatables";
 import { MdDeleteForever, MdOutlineEdit } from "react-icons/md";
 import { Button as MuiButton } from "@mui/material";
@@ -154,8 +154,7 @@ const Panitia = () => {
       name: "id",
       label: "Action",
       options: {
-        customBodyRender: (_value: number, tableMeta) => {
-          const data = panitiaData.data?.[tableMeta.rowIndex];
+        customBodyRender: (id: number) => {
           return (
             <Stack direction={"row"} gap={"1rem"}>
               {/* EDIT BUTTON START */}
@@ -170,7 +169,12 @@ const Panitia = () => {
                   boxShadow: "none",
                   backgroundColor: "button.success",
                 }}
-                onClick={() => setModalState({ panitia: data!, mode: "edit" })}
+                onClick={() => {
+                  const data = panitiaData.data?.find((pd) => pd.id === id);
+                  if (data) {
+                    setModalState({ panitia: data, mode: "edit" });
+                  }
+                }}
               >
                 Sunting
               </MuiButton>
@@ -187,9 +191,12 @@ const Panitia = () => {
                   boxShadow: "none",
                   backgroundColor: "button.success",
                 }}
-                onClick={() =>
-                  setModalState({ panitia: data!, mode: "delete" })
-                }
+                onClick={() => {
+                  const data = panitiaData.data?.find((pd) => pd.id === id);
+                  if (data) {
+                    setModalState({ panitia: data, mode: "delete" });
+                  }
+                }}
               >
                 <MdDeleteForever />
               </MuiButton>
@@ -218,7 +225,7 @@ const Panitia = () => {
       name: "divisi",
       label: "Divisi",
       options: {
-        customBodyRender: (value: { id: number; name: string }) => {
+        customBodyRender: (value: Panitia["divisi"]) => {
           return value.name;
         },
       },

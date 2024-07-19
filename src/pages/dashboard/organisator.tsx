@@ -25,7 +25,7 @@ import {
 } from "@chakra-ui/react";
 import { MdDeleteForever, MdOutlineEdit } from "react-icons/md";
 import { Link } from "react-router-dom";
-import DataTable from "../../components/datatables";
+import DataTable from "@/components/datatables";
 import { MUIDataTableColumn } from "mui-datatables";
 import { useEffect, useState } from "react";
 import { Button as MuiButton } from "@mui/material";
@@ -152,8 +152,7 @@ const Organisator = () => {
       name: "id",
       label: "Action",
       options: {
-        customBodyRender: (_value: number, tableMeta) => {
-          const data = organisatorData.data?.[tableMeta.rowIndex];
+        customBodyRender: (id: number) => {
           return (
             <Stack direction={"row"} gap={"1rem"}>
               <MuiButton
@@ -167,9 +166,12 @@ const Organisator = () => {
                   boxShadow: "none",
                   backgroundColor: "button.success",
                 }}
-                onClick={() =>
-                  setModalState({ organisator: data!, mode: "edit" })
-                }
+                onClick={() => {
+                  const data = organisatorData.data?.find((od) => od.id === id);
+                  if (data) {
+                    setModalState({ organisator: data, mode: "edit" });
+                  }
+                }}
               >
                 Sunting
               </MuiButton>
@@ -182,9 +184,12 @@ const Organisator = () => {
                   paddingX: "0.5rem",
                   boxShadow: "none",
                 }}
-                onClick={() =>
-                  setModalState({ organisator: data!, mode: "delete" })
-                }
+                onClick={() => {
+                  const data = organisatorData.data?.find((od) => od.id === id);
+                  if (data) {
+                    setModalState({ organisator: data, mode: "delete" });
+                  }
+                }}
               >
                 <MdDeleteForever />
               </MuiButton>
@@ -212,7 +217,7 @@ const Organisator = () => {
       name: "state",
       label: "STATE",
       options: {
-        customBodyRender: (value: { id: number; name: string }) => value.name,
+        customBodyRender: (value: Organisator["state"]) => value.name,
       },
     },
     actionColumn,
