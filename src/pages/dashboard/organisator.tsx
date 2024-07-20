@@ -142,7 +142,7 @@ const Organisator = () => {
     name: "",
   }; // init empty object
 
-  const superadminList = [1, 2];
+  const superadminList = [1, 2, 3];
 
   if (
     auth.user?.role === "panitia" &&
