@@ -521,7 +521,7 @@ const OnboardingPage = () => {
                 </Text>
                 <Text my={"-0.25rem"}>Akunmu berhasil dibuat</Text>
                 <Text fontSize={["xs", "sm", "md", "md", "md"]}>
-                  Tunggu verifikasi dari Novator dan Charta ya
+                  Tunggu verifikasi dari SUPERADMIN ya
                 </Text>
 
                 <Image src="/dashboard/congrats.png" my={"1rem"} />
