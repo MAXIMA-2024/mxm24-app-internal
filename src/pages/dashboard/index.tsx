@@ -70,7 +70,12 @@ const Dashboard = () => {
       angka: dashboardData.data?.state,
       bgColor: "orange.300",
     },
-    { nama: "MalPun", icon: iconMalPun, angka: 0, bgColor: "orange.100" },
+    {
+      nama: "MalPun",
+      icon: iconMalPun,
+      angka: dashboardData.data?.malpun,
+      bgColor: "orange.100",
+    },
   ];
 
   const cardsDataOrganisator = [
