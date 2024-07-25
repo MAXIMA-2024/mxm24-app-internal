@@ -282,9 +282,10 @@ const Verification = () => {
                 const data = verificationData.data?.find(
                   (data) => data.nim === modalState?.nim
                 );
+
                 if (data?.role === "panitia") {
                   api
-                    .delete(`/panitia/${modalState?.nim}`)
+                    .delete(`/panitia/${data.id}`)
                     .then(() => {
                       toast({
                         title: "Berhasil",
@@ -301,7 +302,7 @@ const Verification = () => {
                     });
                 } else {
                   api
-                    .delete(`/organisator/${modalState?.nim}`)
+                    .delete(`/organisator/${data?.id}`)
                     .then(() => {
                       toast({
                         title: "Berhasil Dihapus!",
