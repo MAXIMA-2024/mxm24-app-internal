@@ -40,6 +40,7 @@ type Data = {
   role: string;
   id: number;
   name: string;
+  email: string;
   nim: string;
   isVerified: boolean;
 };
@@ -99,6 +100,10 @@ const Verification = () => {
     {
       name: "nim",
       label: "NIM",
+    },
+    {
+      name: "email",
+      label: "Email",
     },
     {
       name: "role",
