@@ -31,7 +31,7 @@ import useApi, { useToastErrorHandler } from "@/hooks/useApi";
 import useAuth from "@/hooks/useAuth";
 
 type ModalState = {
-  id?: number;
+  nim: string;
   mode: "delete";
 };
 
@@ -143,10 +143,10 @@ const Verification = () => {
       },
     },
     {
-      name: "id",
+      name: "nim",
       label: "Action",
       options: {
-        customBodyRender: (value: number) => {
+        customBodyRender: (nim: string) => {
           return (
             <MuiButton
               variant={"contained"}
@@ -158,7 +158,7 @@ const Verification = () => {
                 boxShadow: "none",
                 backgroundColor: "button.success",
               }}
-              onClick={() => setModalState({ id: value, mode: "delete" })}
+              onClick={() => setModalState({ nim, mode: "delete" })}
             >
               <MdDeleteForever />
             </MuiButton>
@@ -267,7 +267,7 @@ const Verification = () => {
               <b>
                 {
                   verificationData.data?.find(
-                    (data) => data.id === modalState?.id
+                    (data) => data.nim === modalState?.nim
                   )?.name
                 }
               </b>{" "}
@@ -280,11 +280,11 @@ const Verification = () => {
               colorScheme="red"
               onClick={() => {
                 const data = verificationData.data?.find(
-                  (data) => data.id === modalState?.id
+                  (data) => data.nim === modalState?.nim
                 );
                 if (data?.role === "panitia") {
                   api
-                    .delete(`/panitia/${modalState?.id}`)
+                    .delete(`/panitia/${modalState?.nim}`)
                     .then(() => {
                       toast({
                         title: "Berhasil",
@@ -301,7 +301,7 @@ const Verification = () => {
                     });
                 } else {
                   api
-                    .delete(`/organisator/${modalState?.id}`)
+                    .delete(`/organisator/${modalState?.nim}`)
                     .then(() => {
                       toast({
                         title: "Berhasil Dihapus!",
