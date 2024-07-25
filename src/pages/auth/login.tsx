@@ -197,6 +197,7 @@ const LoginPage = () => {
               textColor={"#185C99"}
               pt={"1rem"}
               onClick={handleCheckButtonClick}
+              cursor={"pointer"}
             >
               Using special code?
             </Text>

@@ -16,6 +16,7 @@
     "@fontsource/poppins": "^5.0.13",
     "@generouted/react-router": "^1.18.7",
     "@hookform/resolvers": "^3.3.4",
+    "@marsidev/react-turnstile": "^0.7.2",
     "@mui/icons-material": "^5.15.15",
     "@mui/material": "^5.15.15",
     "@nikolovlazar/chakra-ui-prose": "^1.2.1",
