@@ -1,13 +1,24 @@
 import useAuth from "@/hooks/useAuth";
 import { useNavigate } from "@/router";
 import { Button, Stack, Image, Text, Show } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import ModalCheck from "@/components/ModalCheck";
 
 const LoginPage = () => {
   const auth = useAuth();
   const nav = useNavigate();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleCheckButtonClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   // NOTE: comment useEffect ini buat disable handling auth
   // biar slicing nya gampang
@@ -48,7 +59,7 @@ const LoginPage = () => {
             justify={"center"}
             w={["85%", "24rem", "36rem", "36rem", "48rem"]}
             pt={"2rem"}
-            pb={"6rem"}
+            pb={"4rem"}
             rounded={"2rem"}
             bgPos={"center"}
             objectFit={"cover"}
@@ -182,9 +193,18 @@ const LoginPage = () => {
             >
               <Text textColor={"white"}>Log in with SSO</Text>
             </Button>
+            <Text
+              textColor={"#185C99"}
+              pt={"1rem"}
+              onClick={handleCheckButtonClick}
+              cursor={"pointer"}
+            >
+              Using special code?
+            </Text>
           </Stack>
         </Stack>
       </Stack>
+      <ModalCheck isOpen={isModalOpen} onClose={handleCloseModal} />
     </>
   );
 };
