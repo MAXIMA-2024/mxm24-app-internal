@@ -86,6 +86,13 @@ const Verification = () => {
 
   const colDefs: MUIDataTableColumn[] = [
     {
+      name: "id",
+      label: "Id",
+      options: {
+        display: "excluded",
+      },
+    },
+    {
       name: "name",
       label: "Name",
     },
@@ -117,14 +124,14 @@ const Verification = () => {
               onChange={() => {
                 api
                   .put("/verifikasi", {
-                    id: tableMeta.rowData[5],
-                    role: tableMeta.rowData[2],
+                    id: tableMeta.rowData[0],
+                    role: tableMeta.rowData[3],
                     isVerified: !value,
                   })
                   .then(() => {
                     toast({
                       title: "Berhasil",
-                      description: `Data ${tableMeta.rowData[0]} berhasil diubah`,
+                      description: `Data ${tableMeta.rowData[1]} berhasil diubah`,
                       status: "success",
                       duration: 5000,
                       isClosable: true,
