@@ -6,13 +6,12 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Input,
+  //   Input,
   Text,
   Button,
   HStack,
   PinInput,
   PinInputField,
-  border,
 } from "@chakra-ui/react";
 
 import useApi, { ResponseModel, useToastErrorHandler } from "@/hooks/useApi";
@@ -67,7 +66,11 @@ const ModalCheck = ({ isOpen, onClose }: ModalCheckProps) => {
               pattern="[0-9]*"
               border={"2px solid #00000095"}
             /> */}
-            <HStack border={"black"} borderBlock={"black"}>
+            <HStack
+              border={"black"}
+              borderBlock={"black"}
+              justifyContent={"center"}
+            >
               <PinInput
                 // value={specialCode}
                 size="md"
@@ -82,6 +85,9 @@ const ModalCheck = ({ isOpen, onClose }: ModalCheckProps) => {
                 <PinInputField />
               </PinInput>
             </HStack>
+            <Text textAlign={"center"} color={"red"}>
+              ReCAPHTCA
+            </Text>
           </ModalBody>
 
           <ModalFooter>
