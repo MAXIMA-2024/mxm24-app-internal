@@ -130,7 +130,7 @@ const Verification = () => {
                 api
                   .put("/verifikasi", {
                     id: tableMeta.rowData[0],
-                    role: tableMeta.rowData[3],
+                    role: tableMeta.rowData[4],
                     isVerified: !value,
                   })
                   .then(() => {
