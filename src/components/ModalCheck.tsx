@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Modal,
   ModalBody,
@@ -6,8 +6,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  //   Input,
-  Text,
   Button,
   HStack,
   PinInput,
