@@ -66,6 +66,10 @@ type ModalState = {
   mode: "create" | "delete";
 };
 
+const maxWords = (max: number) => (value: string) => {
+  return value.trim().split(/\s+/).length <= max;
+};
+
 const stateSchema = z.object({
   name: z.string({ required_error: "Name cannot be empty" }),
   dayId: z.preprocess(
@@ -75,7 +79,9 @@ const stateSchema = z.object({
   ),
   description: z
     .string({ required_error: "Description cannot be empty" })
-    .max(500, "Description must be under 500 characters"),
+    .refine(maxWords(150), {
+      message: "Must have 150 words or fewer",
+    }),
   location: z.string({ required_error: "Location cannot be empty" }),
   quota: z
     .number({
