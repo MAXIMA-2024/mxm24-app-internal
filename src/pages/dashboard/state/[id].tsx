@@ -317,6 +317,42 @@ const Organisator = () => {
       },
     },
     {
+      name: "firstAttendanceTime",
+      label: "Waktu Absen Masuk",
+      options: {
+        customBodyRender: (firstAttendanceTime: Date | null) => {
+          if (!firstAttendanceTime) {
+            return "-";
+          }
+
+          const timeAttend = new Date(firstAttendanceTime);
+
+          const lateThresholdInMinutes = 17 * 60 + 50;
+          const timeAttendInMinutes =
+            timeAttend.getHours() * 60 + timeAttend.getMinutes();
+          if (timeAttendInMinutes >= lateThresholdInMinutes) {
+            return (
+              <Text color={"red.500"}>
+                {timeAttend
+                  .toLocaleString("id-ID")
+                  .replace(".", ":")
+                  .replace(".", ":")}
+              </Text>
+            );
+          } else {
+            return (
+              <Text color={"green.500"}>
+                {timeAttend
+                  .toLocaleString("id-ID")
+                  .replace(".", ":")
+                  .replace(".", ":")}
+              </Text>
+            );
+          }
+        },
+      },
+    },
+    {
       name: "lastAttendance",
       label: "Absen Keluar",
       options: {
@@ -326,7 +362,7 @@ const Organisator = () => {
               <MuiCheckbox
                 checked={lastAttendance}
                 disabled={
-                  tableMeta.rowData[4] || // firstAttendance
+                  tableMeta.rowData[6] || // firstAttendance
                   lastAttendance ||
                   !(
                     auth.user?.role === "panitia" &&
@@ -343,6 +379,43 @@ const Organisator = () => {
                 }}
               />
             </Stack>
+          );
+        },
+      },
+    },
+    {
+      name: "lastAttendanceTime",
+      label: "Waktu Absen Keluar",
+      options: {
+        customBodyRender: (lastAttendanceTime: Date | null) => {
+          if (!lastAttendanceTime) {
+            return "-";
+          }
+
+          const timeAttend = new Date(lastAttendanceTime);
+
+          // if less than 21:00 then it's considered attended but left early
+          // const earlyThresholdInMinutes = 21 * 60;
+          // const timeAttendInMinutes =
+          //   timeAttend.getHours() * 60 + timeAttend.getMinutes();
+
+          // if (timeAttendInMinutes <= earlyThresholdInMinutes) {
+          //   return (
+          //     <Text color={"orange.500"}>
+          //       {timeAttend
+          //         .toLocaleString("id-ID")
+          //         .replace(".", ":")
+          //         .replace(".", ":")}
+          //     </Text>
+          //   );
+          // }
+          return (
+            <Text color={"green.500"}>
+              {timeAttend
+                .toLocaleString("id-ID")
+                .replace(".", ":")
+                .replace(".", ":")}
+            </Text>
           );
         },
       },
