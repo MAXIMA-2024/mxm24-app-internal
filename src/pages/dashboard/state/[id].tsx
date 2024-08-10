@@ -111,6 +111,10 @@ type DayManagement = {
 const maxFileSize = 2 * 1024 * 1024;
 const acceptedMimes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
+const maxWords = (max: number) => (value: string) => {
+  return value.trim().split(/\s+/).length <= max;
+};
+
 const stateSchema = z.object({
   name: z.string({ required_error: "Name cannot be empty" }),
   dayId: z.preprocess(
@@ -166,7 +170,9 @@ const stateSchema = z.object({
     .optional(),
   description: z
     .string({ required_error: "Description cannot be empty" })
-    .max(500, "Description must be under 500 characters"),
+    .refine(maxWords(150), {
+      message: "Must have 150 words or fewer",
+    }),
   location: z.string({ required_error: "Location cannot be empty" }),
   quota: z
     .number({ required_error: "Quota cannot be empty" })
@@ -311,6 +317,42 @@ const Organisator = () => {
       },
     },
     {
+      name: "firstAttendanceTime",
+      label: "Waktu Absen Masuk",
+      options: {
+        customBodyRender: (firstAttendanceTime: Date | null) => {
+          if (!firstAttendanceTime) {
+            return "-";
+          }
+
+          const timeAttend = new Date(firstAttendanceTime);
+
+          const lateThresholdInMinutes = 17 * 60 + 50;
+          const timeAttendInMinutes =
+            timeAttend.getHours() * 60 + timeAttend.getMinutes();
+          if (timeAttendInMinutes >= lateThresholdInMinutes) {
+            return (
+              <Text color={"red.500"}>
+                {timeAttend
+                  .toLocaleString("id-ID")
+                  .replace(".", ":")
+                  .replace(".", ":")}
+              </Text>
+            );
+          } else {
+            return (
+              <Text color={"green.500"}>
+                {timeAttend
+                  .toLocaleString("id-ID")
+                  .replace(".", ":")
+                  .replace(".", ":")}
+              </Text>
+            );
+          }
+        },
+      },
+    },
+    {
       name: "lastAttendance",
       label: "Absen Keluar",
       options: {
@@ -320,7 +362,7 @@ const Organisator = () => {
               <MuiCheckbox
                 checked={lastAttendance}
                 disabled={
-                  tableMeta.rowData[4] || // firstAttendance
+                  tableMeta.rowData[6] || // firstAttendance
                   lastAttendance ||
                   !(
                     auth.user?.role === "panitia" &&
@@ -337,6 +379,43 @@ const Organisator = () => {
                 }}
               />
             </Stack>
+          );
+        },
+      },
+    },
+    {
+      name: "lastAttendanceTime",
+      label: "Waktu Absen Keluar",
+      options: {
+        customBodyRender: (lastAttendanceTime: Date | null) => {
+          if (!lastAttendanceTime) {
+            return "-";
+          }
+
+          const timeAttend = new Date(lastAttendanceTime);
+
+          // if less than 21:00 then it's considered attended but left early
+          // const earlyThresholdInMinutes = 21 * 60;
+          // const timeAttendInMinutes =
+          //   timeAttend.getHours() * 60 + timeAttend.getMinutes();
+
+          // if (timeAttendInMinutes <= earlyThresholdInMinutes) {
+          //   return (
+          //     <Text color={"orange.500"}>
+          //       {timeAttend
+          //         .toLocaleString("id-ID")
+          //         .replace(".", ":")
+          //         .replace(".", ":")}
+          //     </Text>
+          //   );
+          // }
+          return (
+            <Text color={"green.500"}>
+              {timeAttend
+                .toLocaleString("id-ID")
+                .replace(".", ":")
+                .replace(".", ":")}
+            </Text>
           );
         },
       },
@@ -529,7 +608,12 @@ const Organisator = () => {
                   </Stack>
                   <Stack flex={1}>
                     <Heading size="md">Deskripsi</Heading>
-                    <Text fontSize="sm" textAlign={"justify"}>
+                    <Text
+                      fontSize="sm"
+                      textAlign={"justify"}
+                      overflow={"auto"}
+                      maxH={"10rem"}
+                    >
                       {stateData.data.description}
                     </Text>
                     <Show below="md">
