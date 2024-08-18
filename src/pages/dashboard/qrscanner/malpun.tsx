@@ -37,7 +37,13 @@ const MalpunScanner = () => {
         }}
       />
 
-      {codeAbsen && <AbsenMalpun code={codeAbsen} setCode={setCodeAbsen} />}
+      {codeAbsen && (
+        <AbsenMalpun
+          code={codeAbsen}
+          setCode={setCodeAbsen}
+          mutate={() => {}}
+        />
+      )}
     </>
   );
 };

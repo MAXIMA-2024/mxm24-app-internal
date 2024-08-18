@@ -156,7 +156,11 @@ const Malpun = () => {
       </Stack>
 
       {codeAbsen && (
-        <AbsenMalpun code={codeAbsen} setCode={setCodeAbsen} mutate={mutate} />
+        <AbsenMalpun
+          code={codeAbsen}
+          setCode={setCodeAbsen}
+          mutate={() => mutate()}
+        />
       )}
     </>
   );
