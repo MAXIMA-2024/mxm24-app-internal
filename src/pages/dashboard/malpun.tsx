@@ -29,7 +29,8 @@ type PesertaMalpun = {
 };
 
 const Malpun = () => {
-  const { data, isLoading } = useSWR<PesertaMalpun[]>(`/peserta/malpun`);
+  const { data, isLoading, mutate } =
+    useSWR<PesertaMalpun[]>(`/peserta/malpun`);
   const [codeAbsen, setCodeAbsen] = useState<string | undefined>();
 
   const auth = useAuth();
@@ -154,7 +155,13 @@ const Malpun = () => {
         </Box>
       </Stack>
 
-      {codeAbsen && <AbsenMalpun code={codeAbsen} setCode={setCodeAbsen} />}
+      {codeAbsen && (
+        <AbsenMalpun
+          code={codeAbsen}
+          setCode={setCodeAbsen}
+          mutate={() => mutate()}
+        />
+      )}
     </>
   );
 };
