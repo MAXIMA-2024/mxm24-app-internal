@@ -47,7 +47,7 @@ type Absen = {
 };
 
 const AbsenState = ({ token, setToken }: AbsenStateProps) => {
-  const { data, isLoading } = useSWR<Absen>(`/state/absen/${token}`);
+  const { data, isLoading, mutate } = useSWR<Absen>(`/state/absen/${token}`);
   const api = useApi();
   const toast = useToast();
   const errorHandler = useToastErrorHandler();
@@ -74,6 +74,7 @@ const AbsenState = ({ token, setToken }: AbsenStateProps) => {
       .catch(errorHandler)
       .finally(() => {
         setToken(undefined);
+        mutate();
       });
   };
 

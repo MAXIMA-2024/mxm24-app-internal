@@ -24,6 +24,7 @@ import useSWR from "swr";
 type AbsenStateProps = {
   code: string;
   setCode: (token: string | undefined) => void;
+  mutate: () => void;
 };
 
 type AbsenInternal = {
@@ -68,7 +69,7 @@ type AbsenMalpunDto =
       detail: AbsenExternal;
     };
 
-const AbsenMalpun = ({ code, setCode }: AbsenStateProps) => {
+const AbsenMalpun = ({ code, setCode, mutate }: AbsenStateProps) => {
   const { data, isLoading } = useSWR<AbsenMalpunDto>(`/malpun/ticket/${code}`);
 
   const api = useApi();
@@ -97,6 +98,7 @@ const AbsenMalpun = ({ code, setCode }: AbsenStateProps) => {
       .catch(errorHandler)
       .finally(() => {
         setCode(undefined);
+        mutate();
       });
   };
 
