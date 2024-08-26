@@ -142,7 +142,7 @@ const Dashboard = () => {
               dashboardData.data?.mahasiswa ?? 0,
               dashboardData.data?.organisator ?? 0,
               dashboardData.data?.state ?? 0,
-              0,
+              dashboardData.data?.malpun ?? 0,
             ]
           : [
               dashboardData.data?.stateOrganisator ?? 0,
