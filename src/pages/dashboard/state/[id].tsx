@@ -618,27 +618,25 @@ const Organisator = () => {
                         }}
                       ></div>
                     </Prose>
-                    <Show below="md">
-                      {/* sunting button */}
-                      {(auth.user?.role === "organisator" ||
-                        (auth.user?.role === "panitia" &&
-                          allowedEditIds.includes(
-                            auth.user.data.divisiId
-                          ))) && (
-                        <Button
-                          leftIcon={<MdEdit />}
-                          colorScheme="blue"
-                          bgColor={"button.primary"}
-                          borderRadius={"full"}
-                          color={"white"}
-                          onClick={onOpen}
-                          my={"0.25rem"}
-                        >
-                          <Text color={"white"}> Sunting</Text>
-                        </Button>
-                      )}
-                    </Show>
                   </Stack>
+                  <Show below="md">
+                    {/* sunting button */}
+                    {(auth.user?.role === "organisator" ||
+                      (auth.user?.role === "panitia" &&
+                        allowedEditIds.includes(auth.user.data.divisiId))) && (
+                      <Button
+                        leftIcon={<MdEdit />}
+                        colorScheme="blue"
+                        bgColor={"button.primary"}
+                        borderRadius={"full"}
+                        color={"white"}
+                        onClick={onOpen}
+                        my={"0.25rem"}
+                      >
+                        <Text color={"white"}> Sunting</Text>
+                      </Button>
+                    )}
+                  </Show>
                 </Stack>
               </Stack>
 
