@@ -25,7 +25,6 @@ import {
   Spinner,
   useDisclosure,
   Select,
-  Textarea,
 } from "@chakra-ui/react";
 import {
   MdCalendarToday,
@@ -53,6 +52,7 @@ import ImageGallery from "@/components/image-gallery";
 
 import imageCompression from "browser-image-compression";
 import AbsenState from "@/components/absen/state";
+import CKEditorForm from "@/components/ckEditor";
 
 type StateData = {
   id: number;
@@ -921,10 +921,7 @@ const Organisator = () => {
                 <FormControl isInvalid={!!errors.description}>
                   <FormLabel>Deskripsi</FormLabel>
 
-                  <Textarea
-                    placeholder="Deskripsi"
-                    {...register("description")}
-                  />
+                  <CKEditorForm control={control} name={"description"} />
 
                   <FormErrorMessage>
                     {errors.description && errors.description.message}
