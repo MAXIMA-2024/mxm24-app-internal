@@ -25,7 +25,6 @@ import {
   Spinner,
   useDisclosure,
   Select,
-  Textarea,
 } from "@chakra-ui/react";
 import {
   MdCalendarToday,
@@ -53,6 +52,8 @@ import ImageGallery from "@/components/image-gallery";
 
 import imageCompression from "browser-image-compression";
 import AbsenState from "@/components/absen/state";
+import CKEditorForm from "@/components/ckEditor";
+import { Prose } from "@nikolovlazar/chakra-ui-prose";
 
 type StateData = {
   id: number;
@@ -542,7 +543,7 @@ const Organisator = () => {
               <Stack
                 // w={"full"}
                 flex={1}
-                direction={["column", "column", "column", "row", "row"]}
+                // direction={["column", "column", "column", "row", "row"]}
                 spacing={2}
                 justify="center"
                 px={"2rem"}
@@ -553,7 +554,8 @@ const Organisator = () => {
                   align={"center"}
                   justify={"start"}
                   // sm        md      lg       xl       2xl
-                  w={["full", "full", "full", "10rem", "10rem"]}
+                  w={["full", "full", "full", "full", "full"]}
+                  direction={["column", "column", "column", "row", "row"]}
                 >
                   <Image
                     w={"10rem"}
@@ -569,12 +571,6 @@ const Organisator = () => {
                     fit={"contain"}
                     alt={`logo-${stateData.data.name}`}
                   />
-                </Stack>
-                <Stack
-                  divider={<Divider orientation="vertical" />}
-                  direction={["column", "column", "column", "row", "row"]}
-                  flex={1}
-                >
                   <Stack flex={1}>
                     <Heading size="lg">{stateData.data.name}</Heading>
                     <Stack direction="row">
@@ -606,16 +602,22 @@ const Organisator = () => {
                       <Text>{stateData.data.location}</Text>
                     </Stack>
                   </Stack>
-                  <Stack flex={1}>
+                </Stack>
+
+                <Stack
+                  divider={<Divider orientation="vertical" />}
+                  direction={["column", "column", "column", "column", "column"]}
+                  flex={1}
+                >
+                  <Stack flex={1} maxH={"10rem"} overflowY={"auto"}>
                     <Heading size="md">Deskripsi</Heading>
-                    <Text
-                      fontSize="sm"
-                      textAlign={"justify"}
-                      overflow={"auto"}
-                      maxH={"10rem"}
-                    >
-                      {stateData.data.description}
-                    </Text>
+                    <Prose>
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: stateData.data.description,
+                        }}
+                      ></div>
+                    </Prose>
                     <Show below="md">
                       {/* sunting button */}
                       {(auth.user?.role === "organisator" ||
@@ -921,11 +923,9 @@ const Organisator = () => {
                 <FormControl isInvalid={!!errors.description}>
                   <FormLabel>Deskripsi</FormLabel>
 
-                  <Textarea
-                    placeholder="Deskripsi"
-                    {...register("description")}
-                  />
-
+                  <Prose>
+                    <CKEditorForm control={control} name={"description"} />
+                  </Prose>
                   <FormErrorMessage>
                     {errors.description && errors.description.message}
                   </FormErrorMessage>
