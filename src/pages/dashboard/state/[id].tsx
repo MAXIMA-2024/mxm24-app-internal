@@ -6,7 +6,6 @@ import {
   Stack,
   Show,
   Text,
-  Divider,
   Button,
   FormControl,
   FormErrorMessage,
@@ -112,9 +111,9 @@ type DayManagement = {
 const maxFileSize = 2 * 1024 * 1024;
 const acceptedMimes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
-const maxWords = (max: number) => (value: string) => {
-  return value.trim().split(/\s+/).length <= max;
-};
+// const maxWords = (max: number) => (value: string) => {
+//   return value.trim().split(/\s+/).length <= max;
+// };
 
 const stateSchema = z.object({
   name: z.string({ required_error: "Name cannot be empty" }),
@@ -171,9 +170,10 @@ const stateSchema = z.object({
     .optional(),
   description: z
     .string({ required_error: "Description cannot be empty" })
-    .refine(maxWords(150), {
-      message: "Must have 150 words or fewer",
-    }),
+    // .refine(maxWords(150), {
+    //   message: "Must have 150 words or fewer",
+    // }),
+    .max(2500, "Description maximum length is 2500 characters"),
   location: z.string({ required_error: "Location cannot be empty" }),
   quota: z
     .number({ required_error: "Quota cannot be empty" })
@@ -571,7 +571,7 @@ const Organisator = () => {
                     fit={"contain"}
                     alt={`logo-${stateData.data.name}`}
                   />
-                  <Stack flex={1}>
+                  <Stack flex={1} ml={["0", "0", "0", "1.5rem", "1.5rem"]}>
                     <Heading size="lg">{stateData.data.name}</Heading>
                     <Stack direction="row">
                       <Icon as={MdCalendarToday} my={"0.25rem"} />
@@ -605,12 +605,12 @@ const Organisator = () => {
                 </Stack>
 
                 <Stack
-                  divider={<Divider orientation="vertical" />}
+                  // divider={<Divider orientation="vertical" />}
                   direction={["column", "column", "column", "column", "column"]}
                   flex={1}
                 >
+                  <Heading size="md">Deskripsi</Heading>
                   <Stack flex={1} maxH={"10rem"} overflowY={"auto"}>
-                    <Heading size="md">Deskripsi</Heading>
                     <Prose>
                       <div
                         dangerouslySetInnerHTML={{
