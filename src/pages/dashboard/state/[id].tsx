@@ -328,7 +328,7 @@ const Organisator = () => {
 
           const timeAttend = new Date(firstAttendanceTime);
 
-          const lateThresholdInMinutes = 17 * 60 + 50;
+          const lateThresholdInMinutes = 17 * 60 + 35;
           const timeAttendInMinutes =
             timeAttend.getHours() * 60 + timeAttend.getMinutes();
           if (timeAttendInMinutes >= lateThresholdInMinutes) {
