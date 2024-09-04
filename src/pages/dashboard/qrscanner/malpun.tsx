@@ -22,6 +22,7 @@ const MalpunScanner = () => {
         onError={(reason) => {
           toast({
             title: "Error!",
+            position: "top",
             description: reason,
             status: "error",
             isClosable: true,

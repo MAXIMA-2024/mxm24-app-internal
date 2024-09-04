@@ -91,8 +91,10 @@ const AbsenMalpun = ({ code, setCode, mutate }: AbsenStateProps) => {
       .then((res) => {
         toast({
           title: "Berhasil!",
+          position: "top",
           description: res.data.message,
           status: "success",
+          isClosable: true,
         });
       })
       .catch(errorHandler)

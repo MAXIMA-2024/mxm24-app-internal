@@ -24,6 +24,7 @@ const STATEScanner = () => {
             title: "Error!",
             description: reason,
             status: "error",
+            position: "top",
             isClosable: true,
           });
         }}
