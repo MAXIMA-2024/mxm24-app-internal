@@ -191,7 +191,7 @@ const Invitations = () => {
             <BreadcrumbItem isCurrentPage>
               <Link to={"/dashboard/toggles"}>
                 <BreadcrumbLink color={"brand.maroon"} fontWeight={"medium"}>
-                  Toggles
+                  Invitations
                 </BreadcrumbLink>
               </Link>
             </BreadcrumbItem>
@@ -201,7 +201,7 @@ const Invitations = () => {
           <Stack direction={"row"} justifyContent={"space-between"} gap={5}>
             <Stack gap={5} direction={"row"}>
               <Heading fontFamily={"Poppins"} color={"text.primary"}>
-                Toggles
+                Invitations
               </Heading>
               <Stack justifyContent={"end"} mb={2}>
                 <Tag
@@ -222,7 +222,7 @@ const Invitations = () => {
               colorScheme="blue"
               borderRadius={"full"}
             >
-              + Add Toggles
+              + Add Invitations
             </Button>
           </Stack>
         </Show>
