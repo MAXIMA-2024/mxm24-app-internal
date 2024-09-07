@@ -197,6 +197,59 @@ const DesktopLayout = () => {
                       </Button>
                     </Link>
                   ))}
+                  {auth.user?.role === "panitia" &&
+                    [1, 2, 4].includes(auth.user.data.divisiId) && (
+                      <Link to={"/dashboard/invitations"}>
+                        <Button
+                          variant={"ghost"}
+                          w={"full"}
+                          justifyContent={"start"}
+                          p={buttonResponsiveProps.p}
+                          _hover={{
+                            transform: "scale(1.05)",
+                            color: "brand.maroon",
+                            "> img": {
+                              opacity: 1,
+                              transition: "opacity 0.2s ease-in-out",
+                            },
+                            bgColor: "button.gray",
+                          }}
+                          transition={"transform 0.2s ease-in-out"}
+                          bgColor={
+                            loc.pathname === "/dashboard/invitations"
+                              ? "button.gray"
+                              : "transparent"
+                          }
+                        >
+                          <Image
+                            src="/icons/malpun.png"
+                            w={buttonResponsiveProps.imageSize}
+                            mr={"1rem"}
+                            opacity={
+                              currentPath === "/dashboard/invitations"
+                                ? 1
+                                : 0.25
+                            }
+                          ></Image>
+                          <Text
+                            fontSize={buttonResponsiveProps.fontSize}
+                            fontWeight={
+                              currentPath === "/dashboard/invitations"
+                                ? "semibold"
+                                : "medium"
+                            }
+                            color={
+                              currentPath === "/dashboard/invitations"
+                                ? "brand.maroon"
+                                : "text.primary"
+                            }
+                          >
+                            Invitations
+                          </Text>
+                        </Button>
+                      </Link>
+                    )}
+
                   {/* Special Buttons */}
 
                   {/* Divider Special & Regular Buttons */}
@@ -1171,6 +1224,31 @@ const MobileLayout = () => {
                   }
                 >
                   Toggle
+                </Text>
+              </MenuItem>
+            </Link>
+            <Link to="/dashboard/invitations">
+              <MenuItem>
+                <Image
+                  src="/icons/malpun.png"
+                  w={"1rem"}
+                  mr={"0.75rem"}
+                  opacity={currentPath === "/dashboard/invitations" ? 1 : 0.25}
+                />
+                <Text
+                  fontSize={"0.75rem"}
+                  fontWeight={
+                    currentPath === "/dashboard/invitations"
+                      ? "semibold"
+                      : "medium"
+                  }
+                  color={
+                    currentPath === "/dashboard/invitations"
+                      ? "brand.maroon"
+                      : "text.primary"
+                  }
+                >
+                  Invitations
                 </Text>
               </MenuItem>
             </Link>
