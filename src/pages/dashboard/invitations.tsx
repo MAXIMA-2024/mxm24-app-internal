@@ -245,7 +245,7 @@ const Invitations = () => {
               }}
               colorScheme="blue"
             >
-              + Add Toggles
+              + Add Invitations
             </Button>
           </Hide>
           {toggleData.data ? (
@@ -278,21 +278,21 @@ const Invitations = () => {
               <form
                 id="add-toggles"
                 onSubmit={handleSubmit((data) => {
-                  api
-                    .post<ResponseModel>("/toggle", data)
-                    .then((res) => {
-                      toast({
-                        title: "Berhasil",
-                        description: res.data.message,
-                        status: "success",
-                        isClosable: true,
-                      });
-                    })
-                    .catch(errorHandler)
-                    .finally(() => {
-                      toggleData.mutate();
-                      setModalToggles(undefined);
-                    });
+                  //   api
+                  //     .post<ResponseModel>("/toggle", data)
+                  //     .then((res) => {
+                  //       toast({
+                  //         title: "Berhasil",
+                  //         description: res.data.message,
+                  //         status: "success",
+                  //         isClosable: true,
+                  //       });
+                  //     })
+                  //     .catch(errorHandler)
+                  //     .finally(() => {
+                  //       toggleData.mutate();
+                  //       setModalToggles(undefined);
+                  //     });
                 })}
               >
                 <FormControl isInvalid={!!errors.fullName} mb={"1.5rem"}>
@@ -331,20 +331,20 @@ const Invitations = () => {
               <Button
                 colorScheme="red"
                 onClick={() => {
-                  api
-                    .delete<ResponseModel>(`/toggle/${modalToggles.id}`)
-                    .then((res) => {
-                      toast({
-                        title: "Berhasil",
-                        description: res.data.message,
-                        status: "success",
-                        isClosable: true,
-                      });
-                    })
-                    .finally(() => {
-                      toggleData.mutate();
-                      setModalToggles(undefined);
-                    });
+                  //   api
+                  //     .delete<ResponseModel>(`/toggle/${modalToggles.id}`)
+                  //     .then((res) => {
+                  //       toast({
+                  //         title: "Berhasil",
+                  //         description: res.data.message,
+                  //         status: "success",
+                  //         isClosable: true,
+                  //       });
+                  //     })
+                  //     .finally(() => {
+                  //       toggleData.mutate();
+                  //       setModalToggles(undefined);
+                  //     });
                 }}
               >
                 Delete
