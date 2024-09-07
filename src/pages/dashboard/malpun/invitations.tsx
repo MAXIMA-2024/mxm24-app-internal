@@ -28,7 +28,7 @@ type PesertaMalpun = {
   status: "internal" | "external";
 };
 
-const Malpun = () => {
+const InvitationMalpun = () => {
   const { data, isLoading, mutate } =
     useSWR<PesertaMalpun[]>(`/peserta/malpun`);
   const [codeAbsen, setCodeAbsen] = useState<string | undefined>();
@@ -97,17 +97,17 @@ const Malpun = () => {
     <>
       <style>
         {`
-          .tss-hwdp7s-MUIDataTable-liveAnnounce {
-              border: 0 !important;
-              clip: rect(0 0 0 0) !important;
-              height: 1px !important;
-              margin: -1px !important;
-              overflow: hidden !important;
-              padding: 0 !important;
-              position: relative !important;
-              width: 1px !important;
-          }
-        `}
+            .tss-hwdp7s-MUIDataTable-liveAnnounce {
+                border: 0 !important;
+                clip: rect(0 0 0 0) !important;
+                height: 1px !important;
+                margin: -1px !important;
+                overflow: hidden !important;
+                padding: 0 !important;
+                position: relative !important;
+                width: 1px !important;
+            }
+          `}
       </style>
 
       <Stack gap={7} flex={1}>
@@ -122,7 +122,7 @@ const Malpun = () => {
             <BreadcrumbItem isCurrentPage>
               <Link to={"/dashboard/malpun"}>
                 <BreadcrumbLink color={"brand.maroon"} fontWeight={"medium"}>
-                  Malpun
+                  Invitations MalPun
                 </BreadcrumbLink>
               </Link>
             </BreadcrumbItem>
@@ -131,7 +131,7 @@ const Malpun = () => {
           {/* Header */}
           <Stack direction={"row"} gap={5}>
             <Heading fontFamily={"Poppins"} color={"text.primary"}>
-              Malpun
+              Invitations MalPun
             </Heading>
           </Stack>
         </Show>
@@ -166,4 +166,4 @@ const Malpun = () => {
   );
 };
 
-export default Malpun;
+export default InvitationMalpun;
