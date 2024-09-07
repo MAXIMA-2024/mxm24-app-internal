@@ -75,11 +75,6 @@ const DesktopLayout = () => {
       path: "/dashboard/state",
       icon: "/icons/state.png",
     },
-    {
-      label: "Malpun",
-      path: "/dashboard/malpun",
-      icon: "/icons/malpun.png",
-    },
   ];
 
   const stateImageSize = {
@@ -370,7 +365,196 @@ const DesktopLayout = () => {
                   </Button>
                 </Link>
               ))}
-
+            {auth.user?.role === "panitia" &&
+              [1, 2, 4].includes(auth.user.data.divisiId) && (
+                <Box
+                  _hover={{
+                    transform: "scale(1.05)",
+                  }}
+                  transition={"transform 0.2s ease-in-out"}
+                >
+                  <Accordion
+                    allowToggle
+                    gap={0}
+                    index={loc.pathname.includes("/malpun/") ? 0 : undefined}
+                  >
+                    <AccordionItem border={"none"}>
+                      {({ isExpanded }) => (
+                        <>
+                          <AccordionButton
+                            _hover={{
+                              "> div > img": {
+                                opacity: 1,
+                                transition: "opacity 0.2s ease-in-out",
+                              },
+                              bgColor: "button.gray",
+                            }}
+                            w={"full"}
+                            bgColor={
+                              loc.pathname.includes("malpun") || isExpanded
+                                ? "button.gray"
+                                : "transparent"
+                            }
+                            roundedTop={"md"}
+                            roundedBottom={!isExpanded ? "md" : "none"}
+                          >
+                            <Stack
+                              direction={"row"}
+                              flex={1}
+                              align={"center"}
+                              justify={"start"}
+                              px={"0.5"}
+                            >
+                              <Image
+                                src="/icons/malpun.png"
+                                w={["1rem", "1rem", "1rem", "1.3rem"]}
+                                mr={[0, 0, 0, "0.5rem"]}
+                                opacity={
+                                  currentPath === "/dashboard/malpun/peserta" ||
+                                  currentPath ===
+                                    "/dashboard/malpun/invitations" ||
+                                  isExpanded
+                                    ? 1
+                                    : 0.25
+                                }
+                                transition="opacity 0.2s ease-in-out"
+                              />
+                              <Text
+                                fontSize={buttonResponsiveProps.fontSize}
+                                fontWeight={
+                                  currentPath === "/dashboard/malpun/peserta" ||
+                                  currentPath ===
+                                    "/dashboard/malpun/invitations" ||
+                                  isExpanded
+                                    ? "semibold"
+                                    : "medium"
+                                }
+                                color={
+                                  currentPath === "/dashboard/malpun/peserta" ||
+                                  currentPath ===
+                                    "/dashboard/malpun/invitations" ||
+                                  isExpanded
+                                    ? "brand.maroon"
+                                    : "text.primary"
+                                }
+                                transition="opacity 0.2s ease-in-out"
+                              >
+                                MalPun
+                              </Text>
+                              <Icon
+                                as={HiChevronDown}
+                                w={6}
+                                h={6}
+                                color={"brand.maroon"}
+                                ml={"auto"}
+                                transform={isExpanded ? "rotate(180deg)" : ""}
+                                transition={"transform 0.2s ease-in-out"}
+                              />
+                            </Stack>
+                          </AccordionButton>
+                          <AccordionPanel
+                            w={"full"}
+                            bgColor={"button.gray"}
+                            _hover={{
+                              color: "brand.maroon",
+                              "> img": {
+                                opacity: 1,
+                                transition: "opacity 0.2s ease-in-out",
+                              },
+                            }}
+                            roundedBottom={"md"}
+                            transition={"transform 0.2s ease-in-out"}
+                          >
+                            <Link to="/dashboard/malpun/peserta">
+                              <Button
+                                justifyContent={"start"}
+                                variant={"ghost"}
+                                _hover={{
+                                  color: "brand.maroon",
+                                  "> img": {
+                                    opacity: 1,
+                                    transition: "opacity 0.2s ease-in-out",
+                                  },
+                                }}
+                                w={"full"}
+                              >
+                                <Image
+                                  src="/icons/malpun.png"
+                                  w={"1rem"}
+                                  mr={"0.75rem"}
+                                  opacity={
+                                    currentPath === "/dashboard/malpun/peserta"
+                                      ? 1
+                                      : 0.25
+                                  }
+                                />
+                                <Text
+                                  fontSize={"0.75rem"}
+                                  fontWeight={
+                                    currentPath === "/dashboard/malpun/peserta"
+                                      ? "semibold"
+                                      : "medium"
+                                  }
+                                  color={
+                                    currentPath === "/dashboard/malpun/peserta"
+                                      ? "brand.maroon"
+                                      : "text.primary"
+                                  }
+                                >
+                                  Peserta
+                                </Text>
+                              </Button>
+                            </Link>
+                            <Link to="/dashboard/malpun/invitations">
+                              <Button
+                                justifyContent={"start"}
+                                variant={"ghost"}
+                                _hover={{
+                                  color: "brand.maroon",
+                                  "> img": {
+                                    opacity: 1,
+                                    transition: "opacity 0.2s ease-in-out",
+                                  },
+                                }}
+                                w={"full"}
+                              >
+                                <Image
+                                  src="/icons/malpun.png"
+                                  w={"1rem"}
+                                  mr={"0.75rem"}
+                                  opacity={
+                                    currentPath ===
+                                    "/dashboard/malpun/invitations"
+                                      ? 1
+                                      : 0.25
+                                  }
+                                />
+                                <Text
+                                  fontSize={"0.75rem"}
+                                  fontWeight={
+                                    currentPath ===
+                                    "/dashboard/malpun/invitations"
+                                      ? "semibold"
+                                      : "medium"
+                                  }
+                                  color={
+                                    currentPath ===
+                                    "/dashboard/malpun/invitations"
+                                      ? "brand.maroon"
+                                      : "text.primary"
+                                  }
+                                >
+                                  Invitations
+                                </Text>
+                              </Button>
+                            </Link>
+                          </AccordionPanel>
+                        </>
+                      )}
+                    </AccordionItem>
+                  </Accordion>
+                </Box>
+              )}
             {/* QR Button */}
             {auth.user?.role === "panitia" &&
               [1, 2, 4].includes(auth.user.data.divisiId) && (
@@ -766,6 +950,8 @@ const MobileLayout = () => {
           <Heading fontFamily={"Poppins"} fontSize={"0.8rem"}>
             {currentPath.includes("/qrscanner/")
               ? "QR Scan " + currentPageName
+              : currentPath.includes("/malpun/")
+              ? currentPageName + " MalPun"
               : currentPageName}
           </Heading>
         </Stack>
@@ -1216,7 +1402,7 @@ const MobileLayout = () => {
                       : "text.primary"
                   }
                 >
-                  Malpun
+                  MalPun
                 </Text>
               </MenuItem>
             </Link>
@@ -1470,33 +1656,75 @@ const MobileLayout = () => {
                 </Text>
               </MenuItem>
             </Link>
+            <Stack gap={0} direction={"row"}>
+              <Divider
+                bgColor={"#EFEFEF"}
+                height={"0.1rem"}
+                // ml={["-5", "-5", "-8", "-10"]}
+                w={"full"}
+                my={1}
+              />
+            </Stack>
+
             <MenuItem
               as={Link}
-              to="/dashboard/malpun"
+              to="/dashboard/malpun/peserta"
               isDisabled={auth.user?.role !== "panitia"}
             >
               <Image
                 src="/icons/malpun.png"
                 w={"0.75rem"}
                 mr={"0.75rem"}
-                opacity={currentPath === "/dashboard/malpun" ? 1 : 0.25}
+                opacity={currentPath === "/dashboard/malpun/peserta" ? 1 : 0.25}
               />
               <Text
                 fontSize={"0.75rem"}
                 fontWeight={
-                  currentPath === "/dashboard/malpun" ? "semibold" : "medium"
+                  currentPath === "/dashboard/malpun/peserta"
+                    ? "semibold"
+                    : "medium"
                 }
                 color={
-                  currentPath === "/dashboard/malpun"
+                  currentPath === "/dashboard/malpun/peserta"
                     ? "brand.maroon"
                     : "text.primary"
                 }
               >
-                MalPun
+                <b>Peserta</b> MalPun
+              </Text>
+            </MenuItem>
+            <MenuItem
+              as={Link}
+              to="/dashboard/malpun/invitations"
+              isDisabled={auth.user?.role !== "panitia"}
+            >
+              <Image
+                src="/icons/malpun.png"
+                w={"0.75rem"}
+                mr={"0.75rem"}
+                opacity={
+                  currentPath === "/dashboard/malpun/invitations" ? 1 : 0.25
+                }
+              />
+              <Text
+                fontSize={"0.75rem"}
+                fontWeight={
+                  currentPath === "/dashboard/malpun/invitations"
+                    ? "semibold"
+                    : "medium"
+                }
+                color={
+                  currentPath === "/dashboard/malpun/invitations"
+                    ? "brand.maroon"
+                    : "text.primary"
+                }
+              >
+                <b>Invitations</b> MalPun
               </Text>
             </MenuItem>
           </MenuList>
         </Menu>
+
         {/* <Text>Bottom Bar</Text> */}
       </Stack>
     </Stack>
