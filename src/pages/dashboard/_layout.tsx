@@ -107,14 +107,40 @@ const DesktopLayout = () => {
       gap={0}
       direction={"row"}
       overflowX={"hidden"}
-      overflowY={"scroll"}
+      // overflowY={"scroll"}
+      css={{
+        "&::-webkit-scrollbar": {
+          width: "8px",
+        },
+        "&::-webkit-scrollbar-thumb": {
+          backgroundColor: "#D9D9D9",
+          borderRadius: "4px",
+        },
+        "&::-webkit-scrollbar-track": {
+          backgroundColor: "#D9D9D975",
+          borderRadius: "4px",
+        },
+      }}
       maxH={"100vh"}
     >
       <Stack
         w={["20rem", "20rem", "15rem", "25rem"]}
         minH={"100vh"}
-        maxH={"100vh"}
-        overflow={"hidden"}
+        overflowX={"hidden"}
+        css={{
+          "&::-webkit-scrollbar": {
+            width: "8px",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "#D9D9D9",
+            borderRadius: "4px",
+          },
+          "&::-webkit-scrollbar-track": {
+            backgroundColor: "#D9D9D975",
+            borderRadius: "4px",
+          },
+        }}
+        // overflowY={"auto"}
         bg={"white"}
         p={[5, 5, 8, 10]}
         alignItems={"center"}
@@ -151,6 +177,20 @@ const DesktopLayout = () => {
             w={"full"}
             mt={["1rem", "1rem", "1rem", "2rem"]}
             gap={["0.5rem", "0.5rem", "0.5rem", "0.75rem"]}
+            css={{
+              "&::-webkit-scrollbar": {
+                width: "8px",
+              },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: "#D9D9D9",
+                borderRadius: "4px",
+              },
+              "&::-webkit-scrollbar-track": {
+                backgroundColor: "#D9D9D975",
+                borderRadius: "4px",
+              },
+            }}
+            overflow={"hidden"}
             // overflowY={"auto"}
           >
             {auth.user?.role === "panitia" &&
@@ -227,7 +267,12 @@ const DesktopLayout = () => {
 
             {/* Divider Special & Regular Buttons */}
 
-            <Stack flex={1} h={"50vh"} overflowY={"auto"} overflowX={"hidden"}>
+            <Stack
+              flex={1}
+              h={"50vh"}
+              overflowY={"hidden"}
+              overflowX={"hidden"}
+            >
               <Link to={`/dashboard`}>
                 <Button
                   variant={"ghost"}
