@@ -28,7 +28,7 @@ type PesertaMalpun = {
   status: "internal" | "external";
 };
 
-const Malpun = () => {
+const PesertaMalpun = () => {
   const { data, isLoading, mutate } =
     useSWR<PesertaMalpun[]>(`/peserta/malpun`);
   const [codeAbsen, setCodeAbsen] = useState<string | undefined>();
@@ -122,7 +122,7 @@ const Malpun = () => {
             <BreadcrumbItem isCurrentPage>
               <Link to={"/dashboard/malpun"}>
                 <BreadcrumbLink color={"brand.maroon"} fontWeight={"medium"}>
-                  Malpun
+                  Peserta MalPun
                 </BreadcrumbLink>
               </Link>
             </BreadcrumbItem>
@@ -131,7 +131,7 @@ const Malpun = () => {
           {/* Header */}
           <Stack direction={"row"} gap={5}>
             <Heading fontFamily={"Poppins"} color={"text.primary"}>
-              Malpun
+              Peserta MalPun
             </Heading>
           </Stack>
         </Show>
@@ -166,4 +166,4 @@ const Malpun = () => {
   );
 };
 
-export default Malpun;
+export default PesertaMalpun;

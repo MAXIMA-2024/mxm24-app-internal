@@ -10,7 +10,8 @@ export type Path =
   | `/auth/sso`
   | `/dashboard`
   | `/dashboard/mahasiswa`
-  | `/dashboard/malpun`
+  | `/dashboard/malpun/invitations`
+  | `/dashboard/malpun/peserta`
   | `/dashboard/organisator`
   | `/dashboard/panitia`
   | `/dashboard/qrscanner/malpun`
