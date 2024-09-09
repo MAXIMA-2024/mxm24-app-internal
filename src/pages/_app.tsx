@@ -11,10 +11,23 @@ const GlobalLayout = () => {
 
   return (
     <Stack
-      minW={"100vw"}
-      minH={"100vh"}
+      w={"100vw"}
+      h={"100vh"}
       fontFamily={"Poppins"}
-      overflow={"hidden"}
+      overflowX={"hidden"}
+      css={{
+        "&::-webkit-scrollbar": {
+          width: "8px",
+        },
+        "&::-webkit-scrollbar-thumb": {
+          backgroundColor: "#D9D9D9",
+          borderRadius: "4px",
+        },
+        "&::-webkit-scrollbar-track": {
+          backgroundColor: "#D9D9D975",
+          borderRadius: "4px",
+        },
+      }}
     >
       <SWRConfig
         value={{
