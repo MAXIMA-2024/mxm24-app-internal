@@ -9,7 +9,6 @@ export type Path =
   | `/auth/onboarding`
   | `/auth/sso`
   | `/dashboard`
-  | `/dashboard/invitations`
   | `/dashboard/mahasiswa`
   | `/dashboard/malpun/invitations`
   | `/dashboard/malpun/peserta`
