@@ -528,7 +528,8 @@ const Organisator = () => {
           // h={"full"}
           shadow={"lg"}
           rounded={"xl"}
-          overflow={"auto"}
+          // overflow={"auto"}
+          overflowY={"scroll"}
           flex={1}
         >
           {stateData.isLoading && (

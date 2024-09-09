@@ -91,7 +91,7 @@ const DesktopLayout = () => {
 
   const bgImage = currentPath.includes("qrscanner")
     ? "/bg/bg-desktop-all.png"
-    : currentPath === "/dashboard/malpun"
+    : currentPath.includes("/dashboard/malpun")
     ? "/bg/bg-desktop-malpun.png"
     : currentPath.includes("state")
     ? "/bg/bg-desktop-state.png"
@@ -107,12 +107,14 @@ const DesktopLayout = () => {
       gap={0}
       direction={"row"}
       overflowX={"hidden"}
-      overflowY={"hidden"}
+      overflowY={"scroll"}
       maxH={"100vh"}
     >
       <Stack
         w={["20rem", "20rem", "15rem", "25rem"]}
         minH={"100vh"}
+        maxH={"100vh"}
+        overflow={"hidden"}
         bg={"white"}
         p={[5, 5, 8, 10]}
         alignItems={"center"}
@@ -866,7 +868,13 @@ const DesktopLayout = () => {
         </Stack>
       </Stack>
 
-      <Stack p={50} gap={"1rem"} flex={1} overflow={"hidden"}>
+      <Stack
+        p={50}
+        gap={"1rem"}
+        flex={1}
+        overflowX={"hidden"}
+        overflowY={"scroll"}
+      >
         <Outlet />
       </Stack>
     </Stack>
